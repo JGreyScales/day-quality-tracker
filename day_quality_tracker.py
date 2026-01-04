@@ -1,11 +1,10 @@
-import json
 import sys
 import traceback
 from time import sleep
 from datetime import datetime, timedelta
-from pathlib import Path
 
 from dqt_graph import DQTGraph
+from dqt_json import DQTJSON
 
 
 class DayQualityTracker:
@@ -14,9 +13,6 @@ class DayQualityTracker:
     def __init__(self):
         """Load saved data, initialize settings and DQTGraph instance."""
         # Initialize settings
-        self.json_path = Path(__file__).resolve().parent / 'dq_ratings.json'
-        self.saved_ratings = self._get_json()
-
         self.min_time = 20  # Earliest hour the of day to enter rating
         self.min_rating = 1  # 1 recommended
         self.max_rating = 20
@@ -24,9 +20,13 @@ class DayQualityTracker:
         self.rating_inp_dp = 3
 
         self.date_format = '%Y-%m-%d'
-        self.clock_format_12 = True  # Format printed time using 12-hour clock if True
+        # Format printed time using 12-hour clock if True
+        self.clock_format_12 = True
 
-        # Graph instance
+        # JSON manager instance
+        self.json = DQTJSON(self)
+
+        # Graph manager instance
         self.graph = DQTGraph(self)
 
     def run(self):
@@ -34,51 +34,39 @@ class DayQualityTracker:
         print("\n*--- Day Quality Tracker! ---*")
         sleep(1)
 
-        try:
-            if not self._today_rated():
-                self._input_todays_rating()
+        if not self._today_rated():
+            self._input_todays_rating()
 
-            while True:
-                self._check_missing_ratings()
+        while True:
+            self._check_missing_ratings()
 
-                print("\nChoose what to do: ")
-                print("1) [V]iew current ratings graph")
-                print("2) [C]hange today's rating")
-                print("3) Change previous rating")
-                print("4) [P]rint ratings here")
-                print("5) E[x]it")
+            print("\nChoose what to do: ")
+            print("1) [V]iew current ratings graph")
+            print("2) [C]hange today's rating")
+            print("3) Change previous rating")
+            print("4) [P]rint ratings here")
+            print("5) E[x]it")
 
-                match input("> ").lower().strip():
-                    case '1' | 'v':
-                        self._view_ratings_graph()
+            match input("> ").lower().strip():
+                case '1' | 'v':
+                    self._view_ratings_graph()
 
-                    case '2' | 'c':
-                        self._change_todays_rating()
+                case '2' | 'c':
+                    self._change_todays_rating()
 
-                    case '3':
-                        self._change_previous_rating()
+                case '3':
+                    self._change_previous_rating()
 
-                    case '4' | 'p':
-                        self._print_ratings()
+                case '4' | 'p':
+                    self._print_ratings()
 
-                    case '5' | 'x':
-                        print("\nBye!")
-                        sys.exit(0)
+                case '5' | 'x':
+                    print("\nBye!")
+                    raise SystemExit()
 
-                    case _:
-                        print("\nError: Only enter 1~5 or the given letters.")
-                        sleep(1)
-
-        except KeyboardInterrupt:
-            print("\n\nUser interrupted the program.")
-            print("\nSaving changes...")
-            self._update_json()
-            print("Success!")
-            sys.exit()
-        except Exception:
-            print("\n❌ \033[1m\033[31mError!\033[0m")
-            print(traceback.format_exc())
-            sys.exit(1)
+                case _:
+                    print("\nError: Only enter 1~5 or the given letters.")
+                    sleep(1)
 
     # ######################################################## #
     # --------------------- MAIN METHODS --------------------- #
@@ -92,7 +80,7 @@ class DayQualityTracker:
         """
         if datetime.now().time().hour >= self.min_time:
 
-            if self.saved_ratings:
+            if self.json.saved_ratings:
                 self._check_missing_ratings()
 
             if (input("\nWould you like to enter today's rating now? (y/n): ")
@@ -107,8 +95,8 @@ class DayQualityTracker:
 
             # Save data
             todays_date = datetime.today().strftime(self.date_format)
-            self.saved_ratings[todays_date] = todays_rating
-            self._update_json()
+            self.json.saved_ratings[todays_date] = todays_rating
+            self.json.update()
             print("Rating saved!")
             sleep(1)
 
@@ -146,7 +134,7 @@ class DayQualityTracker:
             todays_date = datetime.today().strftime(self.date_format)
             print(
                 f"Today's rating: ",
-                self.saved_ratings[todays_date]
+                self.json.saved_ratings[todays_date]
             )
             sleep(1)
 
@@ -157,8 +145,8 @@ class DayQualityTracker:
 
             # Save data
             todays_date = datetime.today().strftime(self.date_format)
-            self.saved_ratings[todays_date] = todays_rating
-            self._update_json()
+            self.json.saved_ratings[todays_date] = todays_rating
+            self.json.update()
             print("\nRating updated and saved!")
             sleep(1)
 
@@ -193,7 +181,7 @@ class DayQualityTracker:
 
             # Check if date exists in saved ratings
             try:
-                self.saved_ratings[selected_date]
+                self.json.saved_ratings[selected_date]
             except KeyError:
                 print("\nError: Rating for specified date not found.")
                 print("Ensure you have already entered a "
@@ -206,7 +194,7 @@ class DayQualityTracker:
 
         print("\nUpdating:")
         print(f"Date: {selected_date}")
-        print(f"Rating: {self.saved_ratings[selected_date]}"
+        print(f"Rating: {self.json.saved_ratings[selected_date]}"
               f"/{self.max_rating}")
         new_rating = self._input_rating(
             f"Enter new rating for {selected_date} "
@@ -214,8 +202,8 @@ class DayQualityTracker:
         )
 
         # Save data
-        self.saved_ratings[selected_date] = new_rating
-        self._update_json()
+        self.json.saved_ratings[selected_date] = new_rating
+        self.json.update()
         print("\nRating updated and saved!")
         sleep(1)
 
@@ -223,7 +211,7 @@ class DayQualityTracker:
         print("\nRatings from the last 30 days: ")
 
         # Convert dictionary items to a list of tuples
-        items_list = list(self.saved_ratings.items())
+        items_list = list(self.json.saved_ratings.items())
 
         # Get the last 30 items or all items if less than 30
         last_30_items = items_list[-30:]
@@ -237,7 +225,8 @@ class DayQualityTracker:
 
     def _today_rated(self):
         """Check if a rating has been provided for today."""
-        return datetime.today().strftime(self.date_format) in self.saved_ratings
+        today = datetime.today().strftime(self.date_format)
+        return today in self.json.saved_ratings
 
     def _check_missing_ratings(self):
         """Check if any previous days are missing ratings.
@@ -245,10 +234,10 @@ class DayQualityTracker:
         User chooses to enter missing ratings or not. If they do,
         loop through each missing date and prompt rating.
         """
-        if not self.saved_ratings:
+        if not self.json.saved_ratings:
             return
 
-        last_date_str = max(self.saved_ratings.keys())
+        last_date_str = max(self.json.saved_ratings.keys())
         last_date = datetime.strptime(last_date_str, self.date_format).date()
         todays_date = datetime.now().date()
         days_since_last = (todays_date - last_date).days
@@ -278,34 +267,10 @@ class DayQualityTracker:
             )
             new_ratings[datetime.strftime(date, self.date_format)] = rating
 
-        self.saved_ratings.update(new_ratings)
-        self._update_json()
+        self.json.saved_ratings.update(new_ratings)
+        self.json.update()
         print("Rating saved!")
         sleep(1)
-
-    def _update_json(self):
-        """Save updated dict to JSON file."""
-        if not self.json_path.exists():
-            self.json_path.touch()
-
-        with open(self.json_path, 'w') as json_file:
-            json.dump(self.saved_ratings, json_file, indent=4)
-
-    def _get_json(self) -> dict:
-        """Get JSON file contents and return dict."""
-        if not self.json_path.exists():
-            self.json_path.touch()
-
-        if not self.json_path.read_text():
-            return {}
-        with open(self.json_path, 'r') as file:
-            try:
-                contents = json.load(file)
-            except json.decoder.JSONDecodeError:
-                print("\nError! Couldn't load data from JSON file because it is "
-                      "corrupted. Please correct the file and try again.")
-                sys.exit(1)
-            return contents
 
     def _input_rating(self, prompt: str) -> float:
         """Get and validate user float input."""
@@ -331,4 +296,16 @@ class DayQualityTracker:
 
 if __name__ == '__main__':
     dqt = DayQualityTracker()
-    dqt.run()
+
+    try:
+        dqt.run()
+    except KeyboardInterrupt:
+        print("\n\nUser interrupted the program.")
+        print("\nSaving changes...")
+        dqt.json.update()
+        print("Success!")
+        sys.exit()
+    except Exception:
+        print("\n❌ \033[1m\033[31mError!\033[0m")
+        print(traceback.format_exc())
+        sys.exit(1)
