@@ -32,7 +32,6 @@ class DayQualityTracker:
     def run(self):
         """Run Day Quality Tracker."""
         print("\n*--- Day Quality Tracker! ---*")
-        sleep(1)
 
         if not self._today_rated():
             self._input_todays_rating()
@@ -110,9 +109,7 @@ class DayQualityTracker:
                 formatted_time = str(self.min_time)
 
             print(f"\nYou can only input a rating after {formatted_time}.")
-            sleep(1)
             print("\nCome back later!")
-            sleep(1)
 
     def _view_ratings_graph(self):
         self._check_missing_ratings()
