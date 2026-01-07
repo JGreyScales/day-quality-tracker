@@ -13,7 +13,7 @@ class DQTJSON:
         self.dqt = dqt
         self.date_format = self.dqt.date_format
 
-        self.json_path = Path(__file__).resolve().parent / 'dq_ratings.json'
+        self.json_path = Path(__file__).resolve().parent / 'dq_logs.json'
 
         self.saved_ratings = self._load_json()
 

@@ -16,7 +16,7 @@ Before using the program, ensure you have a Python interpreter installed on your
    dqt.run()
    ```
    
-2. A JSON file, **`dq_ratings.json`, is automatically generated on first run**. This file is used to record the ratings
+2. A JSON file, **`dq_logs.json`, is automatically generated on first run**. This file is used to record the ratings
    you enter
 3. Follow the instructions in the program.
     1. Enter day quality ratings as either an integer or float (e.g., 12 or 5.2).
