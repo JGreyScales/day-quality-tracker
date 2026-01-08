@@ -20,8 +20,8 @@ class DQTJSON:
         self.json_path = self.parent_dir / self.json_name
         self.json_path_pre5 = self.parent_dir / self.json_name_pre5
 
-        self.rating_key_name = 'rating'
-        self.mem_entry_key_name = 'memory'
+        self.rating_kyname = 'rating'
+        self.memory_kyname = 'memory'
 
         self._touch()
 
@@ -82,8 +82,8 @@ class DQTJSON:
             # { "YYYY-MM-DD": rating }
             if isinstance(value, (int, float)):
                 validated[date] = {
-                    self.rating_key_name: float(value),
-                    self.mem_entry_key_name: ""  # Default to empty mem-entry
+                    self.rating_kyname: float(value),
+                    self.memory_kyname: ""  # Default to empty mem-entry
                 }
                 updated = True
                 continue
@@ -91,19 +91,19 @@ class DQTJSON:
             # ---------- ≥ DQT-5 format ----------
             # { "YYYY-MM-DD": { "rating": rating, "memory": memory entry } }
             if isinstance(value, dict):
-                if self.rating_key_name not in value:
+                if self.rating_kyname not in value:
                     raise KeyError(f"Missing rating for date {date}")
 
-                rating = float(value[self.rating_key_name])
-                memory = value.get(self.mem_entry_key_name, '')
+                rating = float(value[self.rating_kyname])
+                memory = value.get(self.memory_kyname, '')
 
                 # Auto-fix missing memory entry
-                if self.mem_entry_key_name not in value:
+                if self.memory_kyname not in value:
                     updated = True
 
                 validated[date] = {
-                    self.rating_key_name: rating,
-                    self.mem_entry_key_name: memory
+                    self.rating_kyname: rating,
+                    self.memory_kyname: memory
                 }
                 continue
 
