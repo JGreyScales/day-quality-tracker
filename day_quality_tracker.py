@@ -382,10 +382,29 @@ class DayQualityTracker:
         today = datetime.today().strftime(self.date_format)
         return today in self.json.logs
 
-    def _update_logs(self, date: str, rating: float, memory: str) -> None:
-        self.json.logs[date][self.json.rating_kyname] = rating
-        self.json.logs[date][self.json.memory_kyname] = memory
-        self.json.update()
+    def _update_logs(self,
+                     date: str,
+                     rating: float | None = None,
+                     memory: str | None = None) -> None:
+        """Update saved logs in the JSON file with new values"""
+        # Only rating provided
+        if rating is not None and memory is None:
+            self.json.logs[date][self.json.rating_kyname] = rating
+
+        # Only memory provided
+        elif memory is not None and rating is None:
+            self.json.logs[date][self.json.memory_kyname] = memory
+
+        # Both rating and memory provided
+        elif rating is None and memory is None:
+            self.json.logs[date] = {
+                self.json.rating_kyname: rating,
+                self.json.memory_kyname: memory
+            }
+            self.json.update()
+
+        else:
+            raise ValueError("No new rating and/or memory provided")
 
     # ################################################################## #
 
