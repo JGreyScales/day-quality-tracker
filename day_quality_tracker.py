@@ -1,5 +1,3 @@
-import sys
-import traceback
 from time import sleep
 from datetime import datetime, timedelta
 
@@ -30,22 +28,22 @@ class DayQualityTracker:
         # Graph manager instance
         self.graph = DQTGraph(self)
 
-    def run(self):
+    def run(self) -> None:
         """Run Day Quality Tracker."""
         print("\n*--- Day Quality Tracker! ---*")
         sleep(1)
 
         if not self._today_rated():
-            self._input_todays_rating()
+            self._input_todays_log()
 
         while True:
             self._check_missing_ratings()
 
-            print("\nChoose what to do: ")
-            print("1) [V]iew current ratings graph")
-            print("2) [C]hange today's rating")
-            print("3) Change previous rating...")
-            print("4) [P]rint ratings here")
+            print("\nMAIN MENU — choose what to do: ")
+            print("1) [V]iew ratings graph")
+            print("2) Edit [T]oday's log...")
+            print("3) Edit [P]revious log...")
+            print("4) [S]how all logs...")
             print("5) E[x]it")
 
             match input("> ").lower().strip():
@@ -69,36 +67,45 @@ class DayQualityTracker:
                     print("\nError: Only enter 1~5 or the given letters.")
                     sleep(1)
 
-    # ######################################################## #
-    # --------------------- MAIN METHODS --------------------- #
-    # ######################################################## #
+    # ################################################################## #
+    # -------------------------- MAIN METHODS -------------------------- #
+    # ################################################################## #
 
-    def _input_todays_rating(self):
-        """Get today's rating if it has not been provided yet.
+    def _input_todays_log(self) -> None:
+        """Get today's rating and memory entry if not entered yet.
 
         Reject if the specified earliest time to collect data has not
         passed yet.
         """
         if datetime.now().time().hour >= self.min_time:
 
-            if self.json.saved_ratings:
+            if self.json.logs:
                 self._check_missing_ratings()
 
-            if (input("\nWould you like to enter today's rating now? (y/n): ")
+            if (input("\nWould you like to enter today's log now? (y/n): ")
                     .strip().lower() != 'y'):
-                print("\nRerun the program later to enter your rating!")
+                print("\nRerun the program later to enter your log!")
                 return
 
-            todays_rating = self._input_rating(
+            tdys_rating = self._input_rating(
                 f"Rate your day from {self.min_rating} to {self.max_rating}, "
-                f"{self.median_rating} being an average day: ",
+                f"{self.median_rating} being an average day: "
             )
 
+            if (input("\nWould you like to enter a memory entry now? (y/n): ")
+                    .strip().lower() != 'y'):
+                print("\n'Edit today's log' to enter your memory entry later!")
+                tdys_memory = ''
+            else:
+                tdys_memory = self._input_memory(
+                    f"Enter a memory entry; write a few sentences about your day."
+                    f"\nLeave this blank to skip: "
+                )
+
             # Save data
-            todays_date = datetime.today().strftime(self.date_format)
-            self.json.saved_ratings[todays_date] = todays_rating
-            self.json.update()
-            print("Rating saved!")
+            today = datetime.today().strftime(self.date_format)
+            self._update_logs(today, tdys_rating, tdys_memory)
+            print("\nLog saved!")
             sleep(1)
 
         else:
@@ -110,11 +117,13 @@ class DayQualityTracker:
             else:
                 formatted_time = str(self.min_time)
 
-            print(f"\nYou can only input a rating after {formatted_time}.")
+            print(f"\nYou can only input data after {formatted_time}.")
             print("\nCome back later!")
 
-    def _view_ratings_graph(self):
-        """Display current ratings graph"""
+    # ################################################################## #
+
+    def _view_ratings_graph(self) -> None:
+        """Display current ratings graph."""
         if not self.json.logs:
             print("\nYou haven't entered any ratings yet!")
             sleep(1)
@@ -133,24 +142,27 @@ class DayQualityTracker:
 
         print("\nGraph closed.")
 
-    def _change_todays_rating(self):
+    # ################################################################## #
+
+    def _change_todays_rating(self) -> None:
+        """Prompt the user to enter a new rating for today."""
         if self._today_rated():
 
-            todays_date = datetime.today().strftime(self.date_format)
+            today = datetime.today().strftime(self.date_format)
             print(
-                f"Today's rating: ",
-                self.json.saved_ratings[todays_date]
+                f"Rating to change: ",
+                self.json.logs[today][self.json.rating_kyname],
             )
             sleep(1)
 
-            todays_rating = self._input_rating(
-                "Change your rating for today "
-                f"({self.min_rating}~{self.max_rating}): ",
+            tdys_rating = self._input_rating(
+                "Enter new rating for today "
+                f"({self.min_rating}~{self.max_rating}): "
             )
 
             # Save data
-            todays_date = datetime.today().strftime(self.date_format)
-            self.json.saved_ratings[todays_date] = todays_rating
+            today = datetime.today().strftime(self.date_format)
+            self.json.logs[today][self.json.rating_kyname] = tdys_rating
             self.json.update()
             print("\nRating updated and saved!")
             sleep(1)
@@ -159,7 +171,35 @@ class DayQualityTracker:
             print("\nYou haven't entered a rating yet today!")
             sleep(1)
 
-    def _change_previous_rating(self):
+    def _change_todays_memory(self) -> None:
+        if self._today_rated():
+
+            today = datetime.today().strftime(self.date_format)
+            prev_mem = self.json.logs[today][self.json.memory_kyname]
+            if not prev_mem:
+                prev_mem = "(No entry)"
+            print(f"Memory entry to change: ")
+            print(prev_mem)
+            sleep(1)
+
+            tdys_memory = self._input_memory(
+                "Enter new memory entry for today: "
+            )
+
+            # Save data
+            today = datetime.today().strftime(self.date_format)
+            self.json.logs[today][self.json.memory_kyname] = tdys_memory
+            self.json.update()
+            print("\nMemory entry updated and saved!")
+            sleep(1)
+
+        else:
+            print("\nYou haven't entered a log yet today!")
+            sleep(1)
+
+    # ################################################################## #
+    def _prompt_prev_date(self) -> str:
+        """Prompt the user to enter a previous date."""
         while True:
             inp = input("\nEnter the number of days ago or exact date "
                         f"('{self.date_format_print}'): ").strip()
@@ -178,15 +218,16 @@ class DayQualityTracker:
                 try:
                     datetime.strptime(inp, self.date_format)
                 except ValueError:
-                    print("\nError: Enter a valid date in the "
-                          f"format {self.date_format_print}.")
+                    print("\nError: Enter wither a valid date in the "
+                          f"format {self.date_format_print} or a positive"
+                          "interger.")
                     sleep(1)
                     continue
                 selected_date = inp
 
             # Check if date exists in saved ratings
             try:
-                self.json.saved_ratings[selected_date]
+                self.json.logs[selected_date]
             except KeyError:
                 print("\nError: Rating for specified date not found.")
                 print("Ensure you have already entered a "
@@ -196,10 +237,16 @@ class DayQualityTracker:
                 continue
 
             break
+        return selected_date
+
+    def _change_previous_rating(self) -> None:
+        """Prompt the user to change a rating from a previous day."""
+        selected_date = self._prompt_prev_date()
 
         print("\nUpdating:")
         print(f"Date: {selected_date}")
-        print(f"Rating: {self.json.saved_ratings[selected_date]}"
+        print(f"Rating: "
+              f"{self.json.logs[selected_date][self.json.rating_kyname]})"
               f"/{self.max_rating}")
         new_rating = self._input_rating(
             f"Enter new rating for {selected_date} "
@@ -207,16 +254,41 @@ class DayQualityTracker:
         )
 
         # Save data
-        self.json.saved_ratings[selected_date] = new_rating
+        self.json.logs[selected_date][self.json.rating_kyname] = new_rating
         self.json.update()
         print("\nRating updated and saved!")
         sleep(1)
 
-    def _print_ratings(self):
+    def _change_previous_memory(self) -> None:
+        """Prompt the user to change a memory entry from a previous day."""
+        selected_date = self._prompt_prev_date()
+
+        prev_mem = self.json.logs[selected_date][self.json.memory_kyname]
+        if not prev_mem:
+            prev_mem = "(No entry)"
+
+        print("\nUpdating:")
+        print(f"Date: {selected_date}")
+        print(f"Memory: ")
+        print(prev_mem)
+
+        new_mem = self._input_memory(
+            f"Enter new memory entry for {selected_date}: "
+        )
+
+        self.json.logs[selected_date][self.json.memory_kyname] = new_mem
+        self.json.update()
+        print("\nMemory entry updated and saved!")
+        sleep(1)
+
+    # ################################################################## #
+
+    def _print_ratings(self) -> None:
+        """Print all saved logs."""
         print("\nRatings from the last 30 days: ")
 
         # Convert dictionary items to a list of tuples
-        items_list = list(self.json.saved_ratings.items())
+        items_list = list(self.json.logs.items())
 
         # Get the last 30 items or all items if less than 30
         last_30_items = items_list[-30:]
@@ -228,21 +300,21 @@ class DayQualityTracker:
     # --------------------- HELPER METHODS --------------------- #
     # ########################################################## #
 
-    def _today_rated(self):
+    def _today_rated(self) -> bool:
         """Check if a rating has been provided for today."""
         today = datetime.today().strftime(self.date_format)
-        return today in self.json.saved_ratings
+        return today in self.json.saved_logs
 
-    def _check_missing_ratings(self):
+    def _check_missing_ratings(self) -> None:
         """Check if any previous days are missing ratings.
 
         User chooses to enter missing ratings or not. If they do,
         loop through each missing date and prompt rating.
         """
-        if not self.json.saved_ratings:
+        if not self.json.saved_logs:
             return
 
-        last_date_str = max(self.json.saved_ratings.keys())
+        last_date_str = max(self.json.saved_logs.keys())
         last_date = datetime.strptime(last_date_str, self.date_format).date()
         todays_date = datetime.now().date()
         days_since_last = (todays_date - last_date).days
@@ -254,7 +326,7 @@ class DayQualityTracker:
         # Else:
         print(f"\nYou haven't entered a rating since {last_date}.")
 
-        if input("Enter missing ratings now? [Y/N]: ").lower().strip() != 'y':
+        if input("Enter missing ratings now? [y/n]: ").lower().strip() != 'y':
             return
 
         # Get list of missed dates
@@ -272,10 +344,17 @@ class DayQualityTracker:
             )
             new_ratings[datetime.strftime(date, self.date_format)] = rating
 
-        self.json.saved_ratings.update(new_ratings)
+        self.json.saved_logs.update(new_ratings)
         self.json.update()
         print("Rating saved!")
         sleep(1)
+
+    def _update_logs(self, date: str, rating: float, memory: str) -> None:
+        self.json.logs[date][self.json.rating_kyname] = rating
+        self.json.logs[date][self.json.memory_kyname] = memory
+        self.json.update()
+
+    # ################################################################## #
 
     def _input_rating(self, prompt: str) -> float:
         """Get and validate user float input."""
@@ -297,3 +376,22 @@ class DayQualityTracker:
             sleep(1)
             continue
         return round(inp, self.rating_inp_dp)
+
+    @staticmethod
+    def _input_memory(prompt: str) -> str:
+        """Prompt user for today's memory entry."""
+        while True:
+            tdys_mem = input(
+                f"{prompt}\n\n"
+            ).strip()
+
+            if not tdys_mem:
+                if input(
+                        "\nAre you sure you want to enter an empty memory "
+                        "entry? (y/n): "
+                ).lower().strip() == 'y':
+                    return tdys_mem
+                continue
+            break
+
+        return tdys_mem
