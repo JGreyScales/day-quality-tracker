@@ -303,7 +303,7 @@ class DayQualityTracker:
     def _today_rated(self) -> bool:
         """Check if a rating has been provided for today."""
         today = datetime.today().strftime(self.date_format)
-        return today in self.json.saved_logs
+        return today in self.json.logs
 
     def _check_missing_ratings(self) -> None:
         """Check if any previous days are missing ratings.
@@ -311,10 +311,10 @@ class DayQualityTracker:
         User chooses to enter missing ratings or not. If they do,
         loop through each missing date and prompt rating.
         """
-        if not self.json.saved_logs:
+        if not self.json.logs:
             return
 
-        last_date_str = max(self.json.saved_logs.keys())
+        last_date_str = max(self.json.logs.keys())
         last_date = datetime.strptime(last_date_str, self.date_format).date()
         todays_date = datetime.now().date()
         days_since_last = (todays_date - last_date).days
@@ -344,7 +344,7 @@ class DayQualityTracker:
             )
             new_ratings[datetime.strftime(date, self.date_format)] = rating
 
-        self.json.saved_logs.update(new_ratings)
+        self.json.logs.update(new_ratings)
         self.json.update()
         print("Rating saved!")
         sleep(1)
