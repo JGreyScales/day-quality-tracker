@@ -24,7 +24,8 @@ class DQTJSON:
         self.mem_entry_key_name = 'memory'
 
         self._touch()
-        self.saved_ratings = self._load_json()
+
+        self.logs = self._load_json()
 
     def _touch(self) -> None:
         """Check if JSON file exists, create if not."""
@@ -37,7 +38,7 @@ class DQTJSON:
     def update(self):
         """Dump updated `saved_ratings` dict to JSON file."""
         with open(self.json_path, 'w') as json_file:
-            json.dump(self.saved_ratings, json_file, indent=4)
+            json.dump(self.logs, json_file, indent=4)
 
     def _load_json(self) -> dict[str, dict[str, float | str]]:
         """Load JSON file contents and return dict.
