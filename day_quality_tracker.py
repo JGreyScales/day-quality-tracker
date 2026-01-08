@@ -114,6 +114,11 @@ class DayQualityTracker:
             print("\nCome back later!")
 
     def _view_ratings_graph(self):
+        """Display current ratings graph"""
+        if not self.json.logs:
+            print("\nYou haven't entered any ratings yet!")
+            return
+
         self._check_missing_ratings()
 
         print("\nBuilding graph...")
