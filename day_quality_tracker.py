@@ -117,6 +117,7 @@ class DayQualityTracker:
         """Display current ratings graph"""
         if not self.json.logs:
             print("\nYou haven't entered any ratings yet!")
+            sleep(1)
             return
 
         self._check_missing_ratings()
