@@ -121,19 +121,16 @@ class DayQualityTracker:
                     while True:
                         print("\nSelect:")
                         print("1) [P]rint logs to standard output")
-                        print("2) Show logs in [B]rowser")
-                        print("3) [O]pen JSON file in default viewer/editor")
-                        print("4) [C]ancel -> Main menu")
+                        print("2) [O]pen JSON file in default viewer/editor")
+                        print("3) [C]ancel -> Main menu")
 
                         choice = input("> ").strip().lower()
                         match choice:
                             case '1' | 'p':
                                 self._print_ratings()
-                            case '2' | 'b':
-                                pass  # TODO: Add HTML display method
-                            case '3' | 'o':
+                            case '2' | 'o':
                                 self._open_json_file()
-                            case '4' | 'c':
+                            case '3' | 'c':
                                 break
 
                 case '5' | 'x':
