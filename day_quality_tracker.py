@@ -127,7 +127,7 @@ class DayQualityTracker:
                         choice = input("> ").strip().lower()
                         match choice:
                             case '1' | 'p':
-                                self._print_ratings()
+                                self._print_logs()
                             case '2' | 'o':
                                 self._open_json_file()
                             case '3' | 'c':
@@ -432,18 +432,37 @@ class DayQualityTracker:
 
     # ################################################################## #
 
-    def _print_ratings(self) -> None:  # TODO: Update this method
-        """Print all saved logs."""
-        print("\nRatings from the last 30 days: ")
+    def _print_logs(self) -> None:
+        """Print last 30 saved logs.
+
+        The user can choose whether to show the rest of the logs.
+        """
+        print("\nLogs from the last 30 days: \n")
 
         # Convert dictionary items to a list of tuples
         items_list = list(self.json.logs.items())
-
         # Get the last 30 items or all items if less than 30
         last_30_items = items_list[-30:]
 
-        for d, q in last_30_items:
-            print(f"{d}: {q}/{self.max_rating}")
+        self._loop_print_logs(last_30_items)
+
+        choice = input("\nShow the rest of the logs? (y/n): ").strip().lower()
+        if choice != 'y':
+            return
+
+        print()
+        items_until_last_30th = items_list[:-30]
+
+        self._loop_print_logs(items_until_last_30th)
+
+        input("\n[Press ENTER to return to main menu] ")
+
+    def _loop_print_logs(self, items: list) -> None:
+        for date, log in items:
+            print(f"Date: {date}")
+            print(f"Rating: {log[self.json.rating_kyname]}/{self.max_rating}")
+            print(f"Memory: "
+                  f"\n{log[self.json.memory_kyname]}")
 
     def _open_json_file(self) -> None:
         """Open the JSON file in the default system applicaiton."""
@@ -463,7 +482,7 @@ class DayQualityTracker:
 
         print(f"File opened in a new window!")
         print("Remember to save changes before closing the file.")
-        input("\n[Press ENTER to return to the main menu]")
+        input("\n[Press ENTER to return to main menu] ")
 
     # ########################################################## #
     # --------------------- HELPER METHODS --------------------- #
