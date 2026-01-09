@@ -1,3 +1,6 @@
+import sys
+import os
+import subprocess
 from time import sleep
 from datetime import datetime, timedelta
 
@@ -129,7 +132,7 @@ class DayQualityTracker:
                             case '2' | 'b':
                                 pass  # TODO: Add HTML display method
                             case '3' | 'o':
-                                pass  # TODO: Add open file method
+                                self._open_json_file()
                             case '4' | 'c':
                                 break
 
@@ -429,7 +432,7 @@ class DayQualityTracker:
 
     # ################################################################## #
 
-    def _print_ratings(self) -> None:
+    def _print_ratings(self) -> None:  # TODO: Update this method
         """Print all saved logs."""
         print("\nRatings from the last 30 days: ")
 
@@ -441,6 +444,26 @@ class DayQualityTracker:
 
         for d, q in last_30_items:
             print(f"{d}: {q}/{self.max_rating}")
+
+    def _open_json_file(self) -> None:
+        """Open the JSON file in the default system applicaiton."""
+        print("\nOpening JSON file...")
+
+        if sys.platform == "win32":
+            os.startfile(self.json.json_path)  # Windows
+        elif sys.platform == "darwin":
+            subprocess.call(["open", self.json.json_path])  # macOS
+        elif sys.platform.startswith("linux"):
+            subprocess.call(["xdg-open", self.json.json_path])  # Linux
+        else:
+            print("\nYou will have to open the file manually. "
+                  f"\nPath: {self.json.json_path}")
+            print("(Incompatible OS: unable to open the file with the program)")
+            return
+
+        print(f"File opened in a new window!")
+        print("Remember to save changes before closing the file.")
+        input("\n[Press ENTER to return to the main menu]")
 
     # ########################################################## #
     # --------------------- HELPER METHODS --------------------- #
