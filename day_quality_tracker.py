@@ -80,6 +80,8 @@ class DayQualityTracker:
                                 print("\nError: Only enter 1~3 "
                                       "or the given letters.")
                                 sleep(1)
+                                continue
+                        break
 
                 case '3' | 'p':
                     while True:
@@ -102,9 +104,9 @@ class DayQualityTracker:
                             choice = input("> ").strip().lower()
                             match choice:
                                 case '1' | 'r':
-                                    self._change_todays_rating()
+                                    self._change_previous_rating(selected_d)
                                 case '2' | 'm':
-                                    self._change_todays_memory()
+                                    self._change_previous_memory(selected_d)
                                 case '3' | 'd':
                                     break
                                 case '4' | 'c':
@@ -113,6 +115,8 @@ class DayQualityTracker:
                                     print("\nError: Only enter 1~4 "
                                           "or the given letters.")
                                     sleep(1)
+                                    continue
+                            break
 
                         if choice in ['4', 'c']:
                             break
@@ -135,6 +139,9 @@ class DayQualityTracker:
                             case _:
                                 print("\nError: Only enter 1~3 "
                                       "or the given letters.")
+                                sleep(1)
+                                continue
+                        break
 
                 case '5' | 'x':
                     print("\nBye!")
@@ -397,7 +404,7 @@ class DayQualityTracker:
         print("\nUpdating:")
         print(f"Date: {selected_date}")
         print(f"Rating: "
-              f"{self.json.logs[selected_date][self.json.rating_kyname]})"
+              f"{self.json.logs[selected_date][self.json.rating_kyname]}"
               f"/{self.max_rating}")
         new_rating = self._input_rating(
             f"Enter new rating for {selected_date} "
@@ -498,24 +505,16 @@ class DayQualityTracker:
                      rating: float | None = None,
                      memory: str | None = None) -> None:
         """Update saved logs in the JSON file with new values"""
-        # Only rating provided
-        if rating is not None and memory is None:
+        if rating is not None:
             self.json.logs[date][self.json.rating_kyname] = rating
 
-        # Only memory provided
-        elif memory is not None and rating is None:
+        if memory is not None:
             self.json.logs[date][self.json.memory_kyname] = memory
-
-        # Both rating and memory provided
-        elif rating is None and memory is None:
-            self.json.logs[date] = {
-                self.json.rating_kyname: rating,
-                self.json.memory_kyname: memory
-            }
-            self.json.update()
 
         else:
             raise ValueError("No new rating and/or memory provided")
+
+        self.json.update()
 
     # ################################################################## #
 
