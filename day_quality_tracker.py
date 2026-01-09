@@ -41,23 +41,80 @@ class DayQualityTracker:
 
         while True:
             print("\nMAIN MENU — choose what to do: ")
-            print("1) [V]iew ratings graph")
+            print("1) View ratings [G]raph")
             print("2) Edit [T]oday's log...")
             print("3) Edit [P]revious log...")
-            print("4) [S]how all logs...")
+            print("4) View [A]ll logs...")
             print("5) E[x]it")
 
             match input("> ").lower().strip():
-                case '1' | 'v':
+                case '1' | 'g':
                     self._view_ratings_graph()
 
-                case '2' | 'c':
-                    self._change_todays_rating()
+                case '2' | 't':
+                    print("\nToday's log:")
+                    today = datetime.today().strftime(self.date_format)
+                    print(f"Rating: "
+                          f"{self.json.logs[today][self.json.rating_kyname]}"
+                          f"/{self.max_rating}")
+                    print("Memory:")
+                    print(self.json.logs[today][self.json.memory_kyname])
 
-                case '3':
-                    self._change_previous_rating()
+                    while True:
+                        print("\nSelect:")
+                        print("1) Edit [R]ating")
+                        print("2) Edit [M]emory entry")
+                        print("3) [C]ancel -> Main menu")
 
-                case '4' | 'p':
+                        match input("> ").strip().lower():
+                            case '1' | 'r':
+                                self._change_todays_rating()
+                            case '2' | 'm':
+                                self._change_todays_memory()
+                            case '3' | 'c':
+                                break
+                            case _:
+                                print("\nError: Only enter 1~2 "
+                                      "or the given letters.")
+                                sleep(1)
+
+                case '3' | 'p':
+                    while True:
+                        selected_d = self._prompt_prev_date()
+                        print("\nSelected log:")
+                        print(f"Date: {selected_d}")
+                        print(f"Rating:"
+                              f"{self.json.logs[selected_d][self.json.rating_kyname]}"
+                              f"/{self.max_rating}")
+                        print("Memory:")
+                        print(self.json.logs[selected_d][self.json.memory_kyname])
+
+                        while True:
+                            print("\nSelect:")
+                            print("1) Edit [R]ating")
+                            print("2) Edit [M]emory entry")
+                            print("3) Reselect [D]ate")
+                            print("4) [C]ancel -> Main menu")
+
+                            choice = input("> ").strip().lower()
+                            match choice:
+                                case '1' | 'r':
+                                    self._change_todays_rating()
+                                case '2' | 'm':
+                                    self._change_todays_memory()
+                                case '3' | 'd':
+                                    break
+                                case '4' | 'c':
+                                    break
+                                case _:
+                                    print("\nError: Only enter 1~2 "
+                                          "or the given letters.")
+                                    sleep(1)
+
+                        if choice in ['4', 'c']:
+                            break
+
+                case '4' | 'a':
                     self._print_ratings()
 
                 case '5' | 'x':
@@ -316,10 +373,8 @@ class DayQualityTracker:
             break
         return selected_date
 
-    def _change_previous_rating(self) -> None:
+    def _change_previous_rating(self, selected_date: str) -> None:
         """Prompt the user to change a rating from a previous day."""
-        selected_date = self._prompt_prev_date()
-
         print("\nUpdating:")
         print(f"Date: {selected_date}")
         print(f"Rating: "
@@ -336,10 +391,8 @@ class DayQualityTracker:
         print("\nRating updated and saved!")
         sleep(1)
 
-    def _change_previous_memory(self) -> None:
+    def _change_previous_memory(self, selected_date: str) -> None:
         """Prompt the user to change a memory entry from a previous day."""
-        selected_date = self._prompt_prev_date()
-
         prev_mem = self.json.logs[selected_date][self.json.memory_kyname]
         if not prev_mem:
             prev_mem = "(No entry)"
