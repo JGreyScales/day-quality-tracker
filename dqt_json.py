@@ -15,10 +15,10 @@ class DQTJSON:
         self.date_format = self.dqt.date_format
 
         self.parent_dir = Path(__file__).resolve().parent
-        self.json_name = 'dq_logs.json'
-        self.json_name_pre5 = 'dq_ratings.json'
-        self.json_path = self.parent_dir / self.json_name
-        self.json_path_pre5 = self.parent_dir / self.json_name_pre5
+        self.filename = 'dq_logs.json'
+        self.filepath = self.parent_dir / self.filename
+        self.filename_pre5 = 'dq_ratings.json'
+        self.filepath_pre5 = self.parent_dir / self.filename_pre5
 
         self.rating_kyname = 'rating'
         self.memory_kyname = 'memory'
@@ -29,15 +29,15 @@ class DQTJSON:
 
     def _touch(self) -> None:
         """Check if JSON file exists, create if not."""
-        if not self.json_path.exists():
-            if self.json_path_pre5.exists():
-                self.json_path_pre5.rename(self.json_path)
+        if not self.filepath.exists():
+            if self.filepath_pre5.exists():
+                self.filepath_pre5.rename(self.filepath)
             else:
-                self.json_path.touch()
+                self.filepath.touch()
 
     def update(self):
         """Dump updated `saved_ratings` dict to JSON file."""
-        with open(self.json_path, 'w') as json_file:
+        with open(self.filepath, 'w') as json_file:
             json.dump(self.logs, json_file, indent=4)
 
     def _load_json(self) -> dict[str, dict[str, float | str]]:
@@ -48,12 +48,12 @@ class DQTJSON:
         entry. If date keys are not in increasing consecutive order, raise a
         ValueError.
         """
-        if not self.json_path.exists():
+        if not self.filepath.exists():
             return {}
-        if not self.json_path.read_text().strip():
+        if not self.filepath.read_text().strip():
             return {}
 
-        with open(self.json_path, 'r') as file:
+        with open(self.filepath, 'r') as file:
             contents = json.load(file)
 
         updated = False
@@ -112,7 +112,7 @@ class DQTJSON:
 
         # Sync JSON if any fixes were applied
         if updated:
-            with open(self.json_path, 'w') as file:
+            with open(self.filepath, 'w') as file:
                 json.dump(validated, file, indent=4)
 
         return validated

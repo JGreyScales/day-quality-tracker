@@ -450,14 +450,14 @@ class DayQualityTracker:
         print("\nOpening JSON file...")
 
         if sys.platform == "win32":
-            os.startfile(self.json.json_path)  # Windows
+            os.startfile(self.json.filepath)  # Windows
         elif sys.platform == "darwin":
-            subprocess.call(["open", self.json.json_path])  # macOS
+            subprocess.call(["open", self.json.filepath])  # macOS
         elif sys.platform.startswith("linux"):
-            subprocess.call(["xdg-open", self.json.json_path])  # Linux
+            subprocess.call(["xdg-open", self.json.filepath])  # Linux
         else:
             print("\nYou will have to open the file manually. "
-                  f"\nPath: {self.json.json_path}")
+                  f"\nPath: {self.json.filepath}")
             print("(Incompatible OS: unable to open the file with the program)")
             return
 
