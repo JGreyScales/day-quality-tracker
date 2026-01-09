@@ -77,7 +77,7 @@ class DayQualityTracker:
                             case '3' | 'c':
                                 break
                             case _:
-                                print("\nError: Only enter 1~2 "
+                                print("\nError: Only enter 1~3 "
                                       "or the given letters.")
                                 sleep(1)
 
@@ -110,7 +110,7 @@ class DayQualityTracker:
                                 case '4' | 'c':
                                     break
                                 case _:
-                                    print("\nError: Only enter 1~2 "
+                                    print("\nError: Only enter 1~4 "
                                           "or the given letters.")
                                     sleep(1)
 
@@ -132,6 +132,9 @@ class DayQualityTracker:
                                 self._open_json_file()
                             case '3' | 'c':
                                 break
+                            case _:
+                                print("\nError: Only enter 1~3 "
+                                      "or the given letters.")
 
                 case '5' | 'x':
                     print("\nBye!")
