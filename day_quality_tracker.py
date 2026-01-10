@@ -200,7 +200,6 @@ class DayQualityTracker:
                         missed_dates.append(curr_loop_date)
                         curr_loop_date += timedelta(days=1)
 
-                    new_ratings = {}
                     for date in missed_dates:
                         rating = self._input_rating(
                             f"Enter your rating for {date} "
@@ -213,13 +212,8 @@ class DayQualityTracker:
 
                         date_str = datetime.strftime(date, self.date_format)
 
-                        new_ratings[date_str] = {
-                            self.json.rating_kyname: rating,
-                            self.json.memory_kyname: memory
-                        }
+                        self.json.add(date_str, rating, memory)
 
-                    self.json.logs.update(new_ratings)
-                    self.json.update()
                     print("\nLog saved!")
                     sleep(1)
 
@@ -271,7 +265,7 @@ class DayQualityTracker:
 
             # Save data
             today = datetime.today().strftime(self.date_format)
-            self._update_logs(today, tdys_rating, tdys_memory)
+            self.json.add(today, tdys_rating, tdys_memory)
             print("\nLog saved!")
             sleep(1)
 
@@ -327,8 +321,7 @@ class DayQualityTracker:
 
             # Save data
             today = datetime.today().strftime(self.date_format)
-            self.json.logs[today][self.json.rating_kyname] = tdys_rating
-            self.json.update()
+            self.json.update(date=today, rating=tdys_rating)
             print("\nRating updated and saved!")
             sleep(1)
 
@@ -354,8 +347,7 @@ class DayQualityTracker:
 
             # Save data
             today = datetime.today().strftime(self.date_format)
-            self.json.logs[today][self.json.memory_kyname] = tdys_memory
-            self.json.update()
+            self.json.update(date=today, memory=tdys_memory)
             print("\nMemory entry updated and saved!")
             sleep(1)
 
@@ -419,8 +411,7 @@ class DayQualityTracker:
         )
 
         # Save data
-        self.json.logs[selected_date][self.json.rating_kyname] = new_rating
-        self.json.update()
+        self.json.update(date=selected_date, rating=new_rating)
         print("\nRating updated and saved!")
         sleep(1)
 
@@ -439,8 +430,7 @@ class DayQualityTracker:
             f"Enter new memory entry for {selected_date}: "
         )
 
-        self.json.logs[selected_date][self.json.memory_kyname] = new_mem
-        self.json.update()
+        self.json.update(date=selected_date, memory=new_mem)
         print("\nMemory entry updated and saved!")
         sleep(1)
 

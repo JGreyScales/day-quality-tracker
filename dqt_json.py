@@ -53,14 +53,17 @@ class DQTJSON:
         with open(self.filepath, 'w') as json_file:
             json.dump(self.logs, json_file, indent=4)
 
-    def extend(self,
-               date: str,
-               rating: float | None = None,
-               memory: str = '') -> None:
+    def add(self,
+            date: str,
+            rating: float | None = None,
+            memory: str = '') -> None:
         """Update logs with new log and dump to JSON file.
 
-        Attempted rewrite of previous items will raise a KeyError. Use extend()
-        instead to add a new log.
+        Attempted rewrite of previous items will raise a KeyError.
+        Use extend() instead to add a new log.
+
+        It is recommended to explicitly provide both rating and memory
+        arguments, even if it is equal to the default value.
         """
         if date in self.logs:
             raise KeyError(f"Log with date '{date}' already exists.")
