@@ -159,6 +159,8 @@ class DayQualityTracker:
     # -------------------------- MAIN METHODS -------------------------- #
     # ################################################################## #
 
+    # ########################### Upon Entry ########################### #
+
     def _handle_missing_logs(self) -> str | None:
         """Check if any previous days are missing ratings.
 
@@ -286,7 +288,7 @@ class DayQualityTracker:
             print(f"\nYou can only input data after {formatted_time}.")
             print("\nCome back later!")
 
-    # ################################################################## #
+    # ###################### 1) View Ratings Graph ###################### #
 
     def _view_ratings_graph(self) -> None:
         """Display current ratings graph."""
@@ -306,10 +308,10 @@ class DayQualityTracker:
 
         print("\nGraph closed.")
 
-    # ################################################################## #
+    # ####################### 2) Edit today's log ####################### #
 
     def _change_todays_rating(self) -> None:
-        """Prompt the user to enter a new rating for today."""
+        """Prompt the user to change today's rating."""
         if self._today_rated():
 
             today = datetime.today().strftime(self.date_format)
@@ -336,6 +338,7 @@ class DayQualityTracker:
             sleep(1)
 
     def _change_todays_memory(self) -> None:
+        """Prompt the user to change today's memory entry."""
         if self._today_rated():
 
             today = datetime.today().strftime(self.date_format)
@@ -361,7 +364,8 @@ class DayQualityTracker:
             print("\nYou haven't entered a log yet today!")
             sleep(1)
 
-    # ################################################################## #
+    # ###################### 3) Edit previous log ###################### #
+
     def _prompt_prev_date(self) -> str:
         """Prompt the user to enter a previous date."""
         while True:
@@ -441,7 +445,7 @@ class DayQualityTracker:
         print("\nMemory entry updated and saved!")
         sleep(1)
 
-    # ################################################################## #
+    # ######################## 4) View all logs ######################## #
 
     def _print_logs(self) -> None:
         """Print last 30 saved logs.
@@ -468,7 +472,10 @@ class DayQualityTracker:
 
         input("\n[Press ENTER to return to main menu] ")
 
-    def _loop_print_logs(self, items: list) -> None:
+    def _loop_print_logs(self,
+                         items: list[tuple[str, dict[str, float | str]]]
+                         ) -> None:
+        """Print all logs in the given list."""
         for date, log in items:
             print(f"Date: {date}")
             print(f"Rating: {log[self.json.rating_kyname]}/{self.max_rating}")
