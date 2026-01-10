@@ -108,7 +108,7 @@ class DQTJSON:
 
         updated = False
         prev_date = None
-        validated: dict[str, dict[str, float | str]] = {}
+        validated: dict[str, dict[str, float | None | str]] = {}
 
         for date, value in contents.items():
 
