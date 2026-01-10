@@ -46,5 +46,5 @@ Thumbs.db
 *.temp
 
 # Other
-dq_ratings.json
+dq_logs.json
 plan.md
