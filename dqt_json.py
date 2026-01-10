@@ -87,7 +87,7 @@ class DQTJSON:
             else:
                 self.filepath.touch()
 
-    def _load_json(self) -> dict[str, dict[str, float | str]]:
+    def _load_json(self) -> dict[str, dict[str, float | None | str]]:
         """Load JSON file contents and return dict.
 
         Validate dict before returning. If the dict is missing a rating item,
@@ -141,7 +141,8 @@ class DQTJSON:
                 if self.rating_kyname not in value:
                     raise KeyError(f"Missing rating for date {date}")
 
-                rating = float(value[self.rating_kyname])
+                raw_rating = value[self.rating_kyname]  # Handle null ratings
+                rating = None if raw_rating is None else float(raw_rating)
                 memory = value.get(self.memory_kyname, '')
 
                 # Auto-fix missing memory entry
