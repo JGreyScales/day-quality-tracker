@@ -98,8 +98,9 @@ class DayQualityTracker:
                             print("\nSelect:")
                             print("1) Edit [R]ating")
                             print("2) Edit [M]emory entry")
-                            print("3) Reselect [D]ate")
-                            print("4) [C]ancel -> Main menu")
+                            print("3) Edit [B]oth")
+                            print("4) Reselect [D]ate")
+                            print("5) [C]ancel -> Main menu")
 
                             choice = input("> ").strip().lower()
                             match choice:
@@ -107,18 +108,21 @@ class DayQualityTracker:
                                     self._change_previous_rating(selected_d)
                                 case '2' | 'm':
                                     self._change_previous_memory(selected_d)
-                                case '3' | 'd':
+                                case '3' | 'b':
+                                    self._change_previous_rating(selected_d)
+                                    self._change_previous_memory(selected_d)
+                                case '4' | 'd':
                                     break
-                                case '4' | 'c':
+                                case '5' | 'c':
                                     break
                                 case _:
-                                    print("\nError: Only enter 1~4 "
+                                    print("\nError: Only enter 1~5 "
                                           "or the given letters.")
                                     sleep(1)
                                     continue
                             break
 
-                        if choice in ['4', 'c']:
+                        if choice in ['5', 'c']:
                             break
 
                 case '4' | 'a':
