@@ -7,6 +7,8 @@ from datetime import datetime, timedelta
 from dqt_graph import DQTGraph
 from dqt_json import DQTJSON
 
+_UNSET = object()
+
 
 class DayQualityTracker:
     """Track and visualize day quality ratings in a graph."""
@@ -43,7 +45,8 @@ class DayQualityTracker:
                 self._input_todays_log()
 
         while True:
-            print("\nMAIN MENU — choose what to do: ")
+            print("\n*❖* —————————————————————————————— *❖*")
+            print("MAIN MENU — choose what to do: ")
             print("1) View ratings [G]raph")
             print("2) Edit [T]oday's log...")
             print("3) Edit [P]revious log...")
@@ -57,10 +60,11 @@ class DayQualityTracker:
                 case '2' | 't':
                     print("\nToday's log:")
                     today = datetime.today().strftime(self.date_format)
-                    print(f"Rating: "
-                          f"{self.json.get_rating(today)}/{self.max_rating}")
-                    print("Memory:")
-                    print(self.json.get_memory(today))
+                    self._print_log(
+                        date=today,
+                        rating=self.json.get_rating(today),
+                        memory=self.json.get_memory(today),
+                    )
 
                     while True:
                         print("\nSelect:")
@@ -86,12 +90,11 @@ class DayQualityTracker:
                     while True:
                         selected_d = self._prompt_prev_date()
                         print("\nSelected log:")
-                        print(f"Date: {selected_d}")
-                        print(f"Rating:"
-                              f"{self.json.get_rating(selected_d)}"
-                              f"/{self.max_rating}")
-                        print("Memory:")
-                        print(self.json.get_memory(selected_d))
+                        self._print_log(
+                            date=selected_d,
+                            rating=self.json.get_rating(selected_d),
+                            memory=self.json.get_memory(selected_d),
+                        )
 
                         while True:
                             print("\nSelect:")
@@ -134,7 +137,7 @@ class DayQualityTracker:
                         choice = input("> ").strip().lower()
                         match choice:
                             case '1' | 'p':
-                                self._print_logs()
+                                self._print_logs_to_stdout()
                             case '2' | 'o':
                                 self._open_json_file()
                             case '3' | 'c':
@@ -203,7 +206,8 @@ class DayQualityTracker:
                     for date in missed_dates:
                         rating = self._input_rating(
                             f"Enter your rating for {date} "
-                            f"({self.min_rating}~{self.max_rating}): ",
+                            f"({self.min_rating}~{self.max_rating}, "
+                            f"or 'null' to skip): ",
                         )
 
                         memory = self._input_memory(
@@ -308,10 +312,14 @@ class DayQualityTracker:
         if self._today_rated():
 
             today = datetime.today().strftime(self.date_format)
-            print(
-                f"Rating to change: ",
-                self.json.get_rating(today),
-            )
+
+            todays_rating = self.json.get_rating(today)
+            if todays_rating is None:
+                rating_to_show = "[No rating]"
+            else:
+                rating_to_show = f"{todays_rating}/{self.max_rating}"
+
+            print(f"Rating to change: {rating_to_show}")
             sleep(1)
 
             tdys_rating = self._input_rating(
@@ -336,7 +344,7 @@ class DayQualityTracker:
             today = datetime.today().strftime(self.date_format)
             prev_mem = self.json.get_memory(today)
             if not prev_mem:
-                prev_mem = "(No entry)"
+                prev_mem = "[Empty entry]"
             print(f"Memory entry to change: ")
             print(prev_mem)
             sleep(1)
@@ -401,10 +409,10 @@ class DayQualityTracker:
     def _change_previous_rating(self, selected_date: str) -> None:
         """Prompt the user to change a rating from a previous day."""
         print("\nUpdating:")
-        print(f"Date: {selected_date}")
-        print(f"Rating: "
-              f"{self.json.get_rating(selected_date)}"
-              f"/{self.max_rating}")
+        self._print_log(
+            date=selected_date,
+            rating=self.json.get_rating(selected_date)
+        )
         new_rating = self._input_rating(
             f"Enter new rating for {selected_date} "
             f"({self.min_rating}~{self.max_rating}): ",
@@ -417,59 +425,58 @@ class DayQualityTracker:
 
     def _change_previous_memory(self, selected_date: str) -> None:
         """Prompt the user to change a memory entry from a previous day."""
-        prev_mem = self.json.get_memory(selected_date)
-        if not prev_mem:
-            prev_mem = "(No entry)"
-
         print("\nUpdating:")
-        print(f"Date: {selected_date}")
-        print(f"Memory: ")
-        print(prev_mem)
+        self._print_log(
+            date=selected_date,
+            memory=self.json.get_memory(selected_date)
+        )
 
-        new_mem = self._input_memory(
+        new_memory = self._input_memory(
             f"Enter new memory entry for {selected_date}: "
         )
 
-        self.json.update(date=selected_date, memory=new_mem)
+        self.json.update(date=selected_date, memory=new_memory)
         print("\nMemory entry updated and saved!")
         sleep(1)
 
     # ######################## 4) View all logs ######################## #
 
-    def _print_logs(self) -> None:
+    def _print_logs_to_stdout(self) -> None:
         """Print last 30 saved logs.
 
         The user can choose whether to show the rest of the logs.
         """
-        print("\nLogs from the last 30 days: \n")
+        def loop_print(items: list):
+            print("\n* —————————————————————————————— *")
+            for date, log in items:
+                print()
+                self._print_log(
+                    date=date,
+                    rating=log[self.json.rating_kyname],
+                    memory=log[self.json.memory_kyname]
+                )
+            print("\n* —————————————————————————————— *")
+
+        print("\nLogs from the last 30 days, most recent first:")
 
         # Convert dictionary items to a list of tuples
         items_list = list(self.json.logs.items())
         # Get the last 30 items or all items if less than 30
         last_30_items = items_list[-30:]
+        # Reverse list to print most recent logs first
+        last_30_items.reverse()
 
-        self._loop_print_logs(last_30_items)
-
+        loop_print(last_30_items)
         choice = input("\nShow the rest of the logs? (y/n): ").strip().lower()
         if choice != 'y':
             return
 
-        print()
         items_until_last_30th = items_list[:-30]
+        items_until_last_30th.reverse()
 
-        self._loop_print_logs(items_until_last_30th)
+        loop_print(items_until_last_30th)
 
         input("\n[Press ENTER to return to main menu] ")
-
-    def _loop_print_logs(self,
-                         items: list[tuple[str, dict[str, float | str]]]
-                         ) -> None:
-        """Print all logs in the given list."""
-        for date, log in items:
-            print(f"Date: {date}")
-            print(f"Rating: {log[self.json.rating_kyname]}/{self.max_rating}")
-            print(f"Memory: "
-                  f"\n{log[self.json.memory_kyname]}")
 
     def _open_json_file(self) -> None:
         """Open the JSON file in the default system applicaiton."""
@@ -500,44 +507,76 @@ class DayQualityTracker:
         today = datetime.today().strftime(self.date_format)
         return today in self.json.logs
 
-    def _update_logs(self,
-                     date: str,
-                     rating: float | None = None,
-                     memory: str | None = None) -> None:
-        """Update saved logs in the JSON file with new values"""
-        if rating is not None:
-            self.json.logs[date][self.json.rating_kyname] = rating
+    # ################################################################## #
 
-        if memory is not None:
-            self.json.logs[date][self.json.memory_kyname] = memory
+    def _print_log(self,
+                   date: str = _UNSET,
+                   rating: float | None = _UNSET,
+                   memory: str = _UNSET) -> None:
+        """Print a formatted log, and represent 'empty' values with text.
 
-        else:
-            raise ValueError("No new rating and/or memory provided")
+        Null (None) ratings are printed as "[No rating]".
+        Empty memory entries (empty str) are printed as "[Empty entry]".
 
-        self.json.update()
+        If date is unfilled, it will not be printed.
+        If date == 'today', "Today's log:" will be printed at the start.
+        Else, f"Date: {date}" will be printed.
+        """
+
+        # ----- Date -----
+        if date is not _UNSET:
+            if date == 'today':
+                print("\nToday's log:")
+            else:
+                print(f"Date: {date}")
+
+        # ----- Rating -----
+        if rating is not _UNSET:
+            if rating is None:
+                print("Rating: [No rating]")
+            else:
+                print(f"Rating: {rating}/{self.max_rating}")
+
+        # ----- Memory -----
+        if memory is not _UNSET:
+            if memory:
+                print("Memory:")
+                print(memory)
+            else:
+                print("Memory: [Empty entry]")
 
     # ################################################################## #
 
-    def _input_rating(self, prompt: str) -> float:
+    def _input_rating(self, prompt: str) -> float | None:
         """Get and validate user float input."""
-        error_msg = (f"Please enter a valid number from "
-                     f"{self.min_rating} to {self.max_rating}.")
+        error_msg = (
+            f"Please enter a valid number from "
+            f"{self.min_rating} to {self.max_rating}."
+        )
+
         while True:
-            inp = input(f"\n{prompt}").strip()
+            raw = input(f"\n{prompt}").lower().strip()
+
+            if raw == 'null':
+                if input(
+                        "\nAre you sure you want to enter an empty (null) rating? (y/n): "
+                ).lower().strip() == 'y':
+                    return None
+                continue
+
             try:
-                inp = float(inp)
+                value = float(raw)
             except ValueError:
                 print(f"\nError: {error_msg}")
                 sleep(1)
                 continue
 
-            if self.min_rating <= inp <= self.max_rating:
-                break
+            if not (self.min_rating <= value <= self.max_rating):
+                print(f"\nError: {error_msg}")
+                sleep(1)
+                continue
 
-            print(f"\nError: {error_msg}")
-            sleep(1)
-            continue
-        return round(inp, self.rating_inp_dp)
+            return round(value, self.rating_inp_dp)
 
     @staticmethod
     def _input_memory(prompt: str) -> str:
