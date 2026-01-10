@@ -304,6 +304,7 @@ class DayQualityTracker:
         self.graph.show()
 
         print("\nGraph closed.")
+        print("Returning to main menu...")
 
     # ####################### 2) Edit today's log ####################### #
 
