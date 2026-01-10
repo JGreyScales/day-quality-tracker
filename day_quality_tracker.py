@@ -58,10 +58,9 @@ class DayQualityTracker:
                     print("\nToday's log:")
                     today = datetime.today().strftime(self.date_format)
                     print(f"Rating: "
-                          f"{self.json.logs[today][self.json.rating_kyname]}"
-                          f"/{self.max_rating}")
+                          f"{self.json.get_rating(today)}/{self.max_rating}")
                     print("Memory:")
-                    print(self.json.logs[today][self.json.memory_kyname])
+                    print(self.json.get_memory(today))
 
                     while True:
                         print("\nSelect:")
@@ -89,10 +88,10 @@ class DayQualityTracker:
                         print("\nSelected log:")
                         print(f"Date: {selected_d}")
                         print(f"Rating:"
-                              f"{self.json.logs[selected_d][self.json.rating_kyname]}"
+                              f"{self.json.get_rating(selected_d)}"
                               f"/{self.max_rating}")
                         print("Memory:")
-                        print(self.json.logs[selected_d][self.json.memory_kyname])
+                        print(self.json.get_memory(selected_d))
 
                         while True:
                             print("\nSelect:")
@@ -317,7 +316,7 @@ class DayQualityTracker:
             today = datetime.today().strftime(self.date_format)
             print(
                 f"Rating to change: ",
-                self.json.logs[today][self.json.rating_kyname],
+                self.json.get_rating(today),
             )
             sleep(1)
 
@@ -342,7 +341,7 @@ class DayQualityTracker:
         if self._today_rated():
 
             today = datetime.today().strftime(self.date_format)
-            prev_mem = self.json.logs[today][self.json.memory_kyname]
+            prev_mem = self.json.get_memory(today)
             if not prev_mem:
                 prev_mem = "(No entry)"
             print(f"Memory entry to change: ")
@@ -412,7 +411,7 @@ class DayQualityTracker:
         print("\nUpdating:")
         print(f"Date: {selected_date}")
         print(f"Rating: "
-              f"{self.json.logs[selected_date][self.json.rating_kyname]}"
+              f"{self.json.get_rating(selected_date)}"
               f"/{self.max_rating}")
         new_rating = self._input_rating(
             f"Enter new rating for {selected_date} "
@@ -427,7 +426,7 @@ class DayQualityTracker:
 
     def _change_previous_memory(self, selected_date: str) -> None:
         """Prompt the user to change a memory entry from a previous day."""
-        prev_mem = self.json.logs[selected_date][self.json.memory_kyname]
+        prev_mem = self.json.get_memory(selected_date)
         if not prev_mem:
             prev_mem = "(No entry)"
 

@@ -27,6 +27,17 @@ class DQTJSON:
 
         self.logs = self._load_json()
 
+    def update(self):
+        """Dump updated `saved_ratings` dict to JSON file."""
+        with open(self.filepath, 'w') as json_file:
+            json.dump(self.logs, json_file, indent=4)
+
+    def get_rating(self, date: str) -> float | None:
+        return self.logs[date][self.rating_kyname]
+
+    def get_memory(self, date: str) -> str:
+        return self.logs[date][self.memory_kyname]
+
     def _touch(self) -> None:
         """Check if JSON file exists, create if not."""
         if not self.filepath.exists():
@@ -34,11 +45,6 @@ class DQTJSON:
                 self.filepath_pre5.rename(self.filepath)
             else:
                 self.filepath.touch()
-
-    def update(self):
-        """Dump updated `saved_ratings` dict to JSON file."""
-        with open(self.filepath, 'w') as json_file:
-            json.dump(self.logs, json_file, indent=4)
 
     def _load_json(self) -> dict[str, dict[str, float | str]]:
         """Load JSON file contents and return dict.
