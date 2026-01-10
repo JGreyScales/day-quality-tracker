@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from day_quality_tracker import DayQualityTracker
 
+_UNSET = object()
+
 
 class DQTJSON:
     """A class to manage Day Quality Tracker JSON contents handling."""
@@ -27,8 +29,47 @@ class DQTJSON:
 
         self.logs = self._load_json()
 
-    def update(self):
-        """Dump updated `saved_ratings` dict to JSON file."""
+    def update(self,
+               date: str = None,
+               rating: float | None = _UNSET,
+               memory: str = _UNSET) -> None:
+        """Dump updated logs to JSON file.
+
+        Update with new rating and memory values if provided before dumping.
+        Attempted creation of new items will raise a KeyError. Use extend()
+        instead to add a new log.
+        """
+        if date is None:
+            if rating is not _UNSET or memory is not _UNSET:
+                raise ValueError("Missing date argument")
+            return
+        if date not in self.logs:
+            raise KeyError(f"Date '{date}' not found.")
+        if rating is not _UNSET:
+            self.logs[date][self.rating_kyname] = rating
+        if memory is not _UNSET:
+            self.logs[date][self.memory_kyname] = memory
+
+        with open(self.filepath, 'w') as json_file:
+            json.dump(self.logs, json_file, indent=4)
+
+    def extend(self,
+               date: str,
+               rating: float | None = None,
+               memory: str = '') -> None:
+        """Update logs with new log and dump to JSON file.
+
+        Attempted rewrite of previous items will raise a KeyError. Use extend()
+        instead to add a new log.
+        """
+        if date in self.logs:
+            raise KeyError(f"Log with date '{date}' already exists.")
+
+        self.logs[date] = {
+            self.rating_kyname: rating,
+            self.memory_kyname: memory
+        }
+
         with open(self.filepath, 'w') as json_file:
             json.dump(self.logs, json_file, indent=4)
 
