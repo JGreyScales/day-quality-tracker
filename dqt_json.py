@@ -22,6 +22,8 @@ class DQTJSON:
         self.filename_pre5 = 'dq_ratings.json'
         self.filepath_pre5 = self.parent_dir / self.filename_pre5
 
+        self.json_indent = 4
+
         self.rating_kyname = 'rating'
         self.memory_kyname = 'memory'
 
@@ -50,8 +52,7 @@ class DQTJSON:
         if memory is not _UNSET:
             self.logs[date][self.memory_kyname] = memory
 
-        with open(self.filepath, 'w') as json_file:
-            json.dump(self.logs, json_file, indent=4)
+        self._dump()
 
     def add(self,
             date: str,
@@ -73,8 +74,7 @@ class DQTJSON:
             self.memory_kyname: memory
         }
 
-        with open(self.filepath, 'w') as json_file:
-            json.dump(self.logs, json_file, indent=4)
+        self._dump()
 
     def get_rating(self, date: str) -> float | None:
         return self.logs[date][self.rating_kyname]
@@ -163,7 +163,10 @@ class DQTJSON:
 
         # Sync JSON if any fixes were applied
         if updated:
-            with open(self.filepath, 'w') as file:
-                json.dump(validated, file, indent=4)
+            self._dump()
 
         return validated
+
+    def _dump(self) -> None:
+        with open(self.filepath, 'w') as file:
+            json.dump(self.logs, file, indent=self.json_indent)
