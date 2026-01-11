@@ -46,7 +46,7 @@ class DayQualityTracker:
 
         while True:
             print("\n*❖* —————————————————————————————— *❖*")
-            print("MAIN MENU — choose what to do: ")
+            print("\nMAIN MENU — choose what to do: ")
             print("1) View ratings [G]raph")
             print("2) Edit [T]oday's log...")
             print("3) Edit [P]revious log...")
@@ -226,12 +226,20 @@ class DayQualityTracker:
                 case '2':
                     print("\nRestart the program later to enter your missing "
                           "logs!")
+                    print("(You can only enter today's log after entering the "
+                          "missed logs, unless you choose to skip them.)")
 
                     return choice
 
                 case '3':
                     print("\nYou will have to enter the missed logs later "
-                          "manually in `dq_logs.json`.")
+                          f"manually in `{self.json.filename}`, unless you "
+                          f"don't enter today's log yet.")
+                    print("You can open the file by selecting:")
+                    print("Main menu -> 4) View [A]ll logs "
+                          "-> 2) [O]pen JSON file in default viewer/editor")
+                    print("Make sure you save any changed before closing "
+                          "the file.")
 
                     return choice
 
@@ -246,6 +254,7 @@ class DayQualityTracker:
         Reject if the specified earliest time to collect data has not
         passed yet.
         """
+        print("\n*❖* —————————————————————————————— *❖*")
         if datetime.now().time().hour >= self.min_time:
             if (input("\nWould you like to enter today's log now? (y/n): ")
                     .strip().lower() != 'y'):
@@ -263,8 +272,8 @@ class DayQualityTracker:
                 tdys_memory = ''
             else:
                 tdys_memory = self._input_memory(
-                    f"Enter a memory entry; write a few sentences about your day."
-                    f"\nLeave this blank to skip: "
+                    f"Enter a memory entry; write a few sentences about your "
+                    f"day. \nLeave this blank to skip: "
                 )
 
             # Save data
@@ -282,8 +291,8 @@ class DayQualityTracker:
             else:
                 formatted_time = str(self.min_time)
 
-            print(f"\nYou can only input data after {formatted_time}.")
-            print("\nCome back later!")
+            print(f"\nYou can only input today's log after {formatted_time}.")
+            print("\nCome back later to enter today's log!")
 
     # ###################### 1) View Ratings Graph ###################### #
 
@@ -584,7 +593,7 @@ class DayQualityTracker:
         """Prompt user for today's memory entry."""
         while True:
             tdys_mem = input(
-                f"{prompt}\n\n"
+                f"\n{prompt}\n\n"
             ).strip()
 
             if not tdys_mem:

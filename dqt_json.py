@@ -19,8 +19,8 @@ class DQTJSON:
         self.parent_dir = Path(__file__).resolve().parent
         self.filename = 'dq_logs.json'
         self.filepath = self.parent_dir / self.filename
-        self.filename_pre5 = 'dq_ratings.json'
-        self.filepath_pre5 = self.parent_dir / self.filename_pre5
+        self._filename_pre5 = 'dq_ratings.json'
+        self._filepath_pre5 = self.parent_dir / self._filename_pre5
 
         self.json_indent = 4
 
@@ -85,8 +85,8 @@ class DQTJSON:
     def _touch(self) -> None:
         """Check if JSON file exists, create if not."""
         if not self.filepath.exists():
-            if self.filepath_pre5.exists():
-                self.filepath_pre5.rename(self.filepath)
+            if self._filepath_pre5.exists():
+                self._filepath_pre5.rename(self.filepath)
             else:
                 self.filepath.touch()
 
