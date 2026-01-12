@@ -477,16 +477,18 @@ class DayQualityTracker:
         last_30_items.reverse()
 
         loop_print(last_30_items)
-        choice = input("\nShow the rest of the logs? (y/n): ").strip().lower()
-        if choice != 'y':
-            return
-
-        items_until_last_30th = items_list[:-30]
-        items_until_last_30th.reverse()
-
-        loop_print(items_until_last_30th)
-
-        input("\n[Press ENTER to return to main menu] ")
+        
+        if len(items_list) > 30:
+            choice = input("\nShow the rest of the logs? (y/n): ").strip().lower()
+            if choice != 'y':
+                return
+    
+            items_until_last_30th = items_list[:-30]
+            items_until_last_30th.reverse()
+    
+            loop_print(items_until_last_30th)
+    
+            input("\n[Press ENTER to return to main menu] ")
 
     def _open_json_file(self) -> None:
         """Open the JSON file in the default system applicaiton."""
