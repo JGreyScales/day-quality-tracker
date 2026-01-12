@@ -7,8 +7,9 @@ try:
     import matplotlib.pyplot as plt
 except ModuleNotFoundError:
     print("\nA python package 'matplotlib' is required before running.")
-    if input("Install now? [Y/N]: ").lower() != 'y':
+    if input("Install now? (y/n): ").lower() != 'y':
         raise SystemExit()
+    check_call([sys.executable, '-m', 'pip', 'install', '--upgrade', 'pip'])
     check_call([sys.executable, '-m', 'pip', 'install', 'matplotlib'])
     print("\nInstallation complete!")
     print("Resuming program...\n")
