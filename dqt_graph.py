@@ -30,15 +30,18 @@ class DQTGraph:
         self.dqt_date_format = dqt.date_format
         self.min_rating = dqt.min_rating
         self.max_rating = dqt.max_rating
-        self.median_rating = dqt.neutral_rating
+        self.neutral_rating = dqt.neutral_rating
+        self.json: DQTJSON = dqt.json
+        self.logs = dqt.json.logs
+        self.dates = list(dqt.json.logs.keys())
+        self.ratings = [
+            log[self.json.rating_kyname] for log in self.logs.values()
+        ]
 
         # Graph settings
         self.graph_date_format = '%a %b %d'
 
         self.graph_style = 'ggplot'
-
-        self.line_width = 2
-        self.line_color = 'red'
 
         self.title = "Day Quality Ratings"
         self.title_fontsize = 20
@@ -50,87 +53,199 @@ class DQTGraph:
         self.ylabel_fontsize = 14
 
         self.tick_params_fontsize = 7
-        self.yticks_steps = 2
-
+        
+        self.autofmt_xdates = True
+        
+        self.year_labels_fontsize = 9
+        self.year_labels_fontweight = 'bold'
+        
+        self.line_label = "Ratings"
+        self.line_width = 2
+        self.line_color = None
+        self.line_style = '-'
+        
+        self.neutralline_label = 'Neutral rating (baseline)'
         self.neutralline_width = 1
         self.neutralline_color = 'black'
         self.neutralline_style = '--'
-        self.neutralline_label = ''
-
-        self.year_labels_fontsize = 9
-        self.year_labels_fontweight = 'bold'
-
-    def build(self):
-        """Initialize graph properties."""
-        # TODO:
-        #   - Show highest and lowest rating in graph as dots
-        #   - Show average rating as horizontal line
-        json: DQTJSON = self.dqt.json
         
+        self.averageline_label = 'Average rating'
+        self.averageline_width = 1
+        self.averageline_color = 'red'
+        self.averageline_style = '-.'
+        
+        self.highest_rating_label = 'Highest rating'
+        self.highest_rating_point_size = 20
+        self.highest_rating_point_color = 'green'
+        self.highest_rating_point_zorder = 5
+        
+        self.lowest_rating_label = 'Lowest rating'
+        self.lowest_rating_point_size = 20
+        self.lowest_rating_point_color = 'orange'
+        self.lowest_rating_point_zorder = 5
+        
+        self.legend_fontsize = 8
+        self.legend_loc = 'upper right'
+        self.legend_frameon = True
+
+    def build(self) -> None:
+        """Build the graph and initialize plt, fig, and ax properties."""
         # Close existing windows to prevent overlapping
         plt.close('all')
         
-        dates = list(json.logs.keys())
-        ratings = [log[json.rating_kyname] for log in json.logs.values()]
+        # Get JSON stuff
+        if not self.logs:
+            raise ValueError("No logs saved")
         
-        formatted_dates = [
+        # Make formated dates for displaying
+        formatted_dates: list[str] = [
             datetime.strptime(date, self.dqt_date_format)
             .strftime(self.graph_date_format)
-            for date in dates
+            for date in self.dates
         ]
         
-        # Initialize properties
         plt.style.use(self.graph_style)
         fig, ax = plt.subplots()
-        ax.plot(formatted_dates, ratings, linewidth=self.line_width)
         
-        # Set chart title and label axes
+        self._set_title(ax)
+        self._draw_xylabels(ax)
+        self._set_ticks(fig, ax)
+        
+        self._plot_ratings(ax, formatted_dates, self.ratings)
+        self._draw_neutral_rating_line(ax)
+        self._draw_average_rating_line(ax, self.ratings)
+        self._plot_highest_lowest_ratings(ax, formatted_dates, self.ratings)
+        
+        self._draw_year_labels(ax, self.dates)
+        
+        self._set_ylimits(ax)
+        
+        self._draw_legend(ax)
+        
+    @staticmethod
+    def show() -> None:
+        """Show the graph."""
+        plt.show()
+        
+    def _set_title(self, ax: plt.Axes) -> None:
+        """Set the title of the graph."""
         ax.set_title(
             self.title,
             fontsize=self.title_fontsize,
             pad=self.title_padding,
         )
+        
+    def _draw_xylabels(self, ax: plt.Axes) -> None:
+        """Draw x and y labels."""
         ax.set_xlabel(self.xlabel, fontsize=self.xlabel_fontsize)
         ax.set_ylabel(self.ylabel, fontsize=self.ylabel_fontsize)
         
-        # Set size of tick labels
+    def _set_ticks(self, fig: plt.Figure, ax: plt.Axes) -> None:
+        """Set tick label sizes, format dates, and set y-tic increments."""
         ax.tick_params(labelsize=self.tick_params_fontsize)
-        
-        fig.autofmt_xdate()
-        # TODO: Do something to prevent dates from becoming too clustered
-        #       by hiding some dates on set intervals
-        
-        # Set y-axis ticks to increment by ytick_steps
-        ax.set_yticks(range(0, self.max_rating + 1, self.yticks_steps))
-        
-        # Draw year labels on the top of the graph
+        if self.autofmt_xdates:
+            fig.autofmt_xdate()
+        ax.set_yticks(
+            range(self.min_rating, self.max_rating + 1)
+        )
+    
+    def _draw_year_labels(self, ax: plt.Axes, dates: list[str]) -> None:
         shown_years = set()
         for i, date_str in enumerate(dates):
             date = datetime.strptime(date_str, self.dqt_date_format)
             year = date.year
-        
+            
             if year not in shown_years:
+                x = i / (len(dates) - 1) if len(dates) > 1 else 0.5
                 ax.text(
-                    i,
-                    ax.get_ylim()[1],
+                    x,
+                    1,
                     str(year),
+                    transform=ax.transAxes,
                     ha='center',
                     va='bottom',
                     fontsize=self.year_labels_fontsize,
                     fontweight=self.year_labels_fontweight
                 )
                 shown_years.add(year)
-                
-        # Mark neutral rating line
-        plt.axhline(
+    
+    def _plot_ratings(self, ax: plt.Axes, fdates: list[str],
+                      ratings: list[float | None]) -> None:
+        ax.plot(
+            fdates,
+            ratings,
+            linewidth=self.line_width,
+            color=self.line_color,
+            label=self.line_label,
+        )
+        
+    def _draw_neutral_rating_line(self, ax: plt.Axes) -> None:
+        ax.axhline(
             y=self.dqt.neutral_rating,
             color=self.neutralline_color,
             linewidth=self.neutralline_width,
             linestyle=self.neutralline_style,
             label=self.neutralline_label,
         )
-
-    @staticmethod
-    def show():
-        """Show the graph."""
-        plt.show()
+        
+    def _draw_average_rating_line(self, ax: plt.Axes,
+                                  ratings: list[float | None],) -> None:
+        avg = self._average_rating(ratings)
+        if avg is None:
+            return
+        ax.axhline(
+            y=round(avg, self.dqt.rating_inp_dp),
+            color=self.averageline_color,
+            linewidth=self.averageline_width,
+            linestyle=self.averageline_style,
+            label=self.averageline_label,
+        )
+    
+    def _average_rating(self, ratings: list[float | None]) -> float | None:
+        clean = [r for r in ratings if r is not None]
+        if not clean:
+            return None
+        return round(sum(clean) / len(clean), self.dqt.rating_inp_dp)
+    
+    def _plot_highest_lowest_ratings(self,
+                                     ax: plt.Axes,
+                                     fdates: list[str],
+                                     ratings: list[float | None]) -> None:
+        indexed = [(i, r) for i, r in enumerate(ratings) if r is not None]
+        if not indexed:
+            return
+        
+        values = [r for _, r in indexed]
+        max_val = max(values)
+        min_val = min(values)
+        
+        max_indices = [i for i, r in indexed if r == max_val]
+        min_indices = [i for i, r in indexed if r == min_val]
+        
+        ax.scatter(
+            [fdates[i] for i in max_indices],
+            [max_val] * len(max_indices),
+            label=self.highest_rating_label,
+            s=self.highest_rating_point_size,
+            color=self.highest_rating_point_color,
+            zorder=self.highest_rating_point_zorder,
+        )
+        
+        ax.scatter(
+            [fdates[i] for i in min_indices],
+            [min_val] * len(min_indices),
+            label=self.lowest_rating_label,
+            s=self.lowest_rating_point_size,
+            color=self.lowest_rating_point_color,
+            zorder=self.lowest_rating_point_zorder,
+        )
+    
+    def _set_ylimits(self, ax: plt.Axes) -> None:
+        ax.set_ylim(self.min_rating, self.max_rating + 1)
+    
+    def _draw_legend(self, ax: plt.Axes) -> None:
+        ax.legend(
+            fontsize=self.legend_fontsize,
+            loc=self.legend_loc,
+            frameon=self.legend_frameon,
+        )
