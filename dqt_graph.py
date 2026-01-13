@@ -30,7 +30,7 @@ class DQTGraph:
         self.dqt_date_format = dqt.date_format
         self.min_rating = dqt.min_rating
         self.max_rating = dqt.max_rating
-        self.median_rating = dqt.median_rating
+        self.median_rating = dqt.neutral_rating
 
         # Graph settings
         self.graph_date_format = '%a %b %d'
@@ -52,10 +52,10 @@ class DQTGraph:
         self.tick_params_fontsize = 7
         self.yticks_steps = 2
 
-        self.medianline_width = 1
-        self.medianline_color = 'black'
-        self.medianline_style = '--'
-        self.medianline_label = ''
+        self.neutralline_width = 1
+        self.neutralline_color = 'black'
+        self.neutralline_style = '--'
+        self.neutralline_label = ''
 
         self.year_labels_fontsize = 9
         self.year_labels_fontweight = 'bold'
@@ -93,15 +93,6 @@ class DQTGraph:
         ax.set_xlabel(self.xlabel, fontsize=self.xlabel_fontsize)
         ax.set_ylabel(self.ylabel, fontsize=self.ylabel_fontsize)
         
-        # Mark median rating line
-        plt.axhline(
-            y=self.dqt.median_rating,
-            color=self.medianline_color,
-            linewidth=self.medianline_width,
-            linestyle=self.medianline_style,
-            label=self.medianline_label,
-        )
-        
         # Set size of tick labels
         ax.tick_params(labelsize=self.tick_params_fontsize)
         
@@ -129,6 +120,15 @@ class DQTGraph:
                     fontweight=self.year_labels_fontweight
                 )
                 shown_years.add(year)
+                
+        # Mark neutral rating line
+        plt.axhline(
+            y=self.dqt.neutral_rating,
+            color=self.neutralline_color,
+            linewidth=self.neutralline_width,
+            linestyle=self.neutralline_style,
+            label=self.neutralline_label,
+        )
 
     @staticmethod
     def show():

@@ -19,7 +19,7 @@ class DayQualityTracker:
         self.min_time = 20  # Earliest hour the of day to enter rating
         self.min_rating = 1  # 1 recommended
         self.max_rating = 20
-        self.median_rating = 10  # Rating for an average day
+        self.neutral_rating = 10  # Rating for an average day
         self.rating_inp_dp = 3
 
         self.date_format = '%Y-%m-%d'
@@ -263,7 +263,7 @@ class DayQualityTracker:
 
             tdys_rating = self._input_rating(
                 f"Rate your day from {self.min_rating} to {self.max_rating}, "
-                f"{self.median_rating} being an average day: "
+                f"{self.neutral_rating} being an average day: "
             )
 
             if (input("\nWould you like to enter a memory entry now? (y/n): ")
