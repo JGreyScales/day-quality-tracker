@@ -19,7 +19,7 @@ class DayQualityTracker:
         # Initialize settings
         self.min_time = 20  # Earliest hour the of day to enter rating
         self.min_rating = 1  # 1 recommended
-        self.max_rating = 20
+        self.max_rating = 20  # Even number recommended
         self.neutral_rating = 10  # Rating for an average day
         self.rating_inp_dp = 3
 
