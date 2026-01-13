@@ -3,6 +3,7 @@ import os
 import subprocess
 from time import sleep
 from datetime import datetime, timedelta
+from collections import defaultdict
 
 from dqt_graph import DQTGraph
 from dqt_json import DQTJSON
@@ -50,8 +51,9 @@ class DayQualityTracker:
             print("1) View ratings [G]raph")
             print("2) Edit [T]oday's log...")
             print("3) Edit [P]revious log...")
-            print("4) View [A]ll logs...")
-            print("5) E[x]it")
+            print("4) See [S]tats")
+            print("5) View [A]ll logs...")
+            print("6) E[x]it")
 
             match input("> ").lower().strip():
                 case '1' | 'g':
@@ -126,8 +128,12 @@ class DayQualityTracker:
 
                         if choice in ['5', 'c']:
                             break
+                            
+                case '4' | 's':
+                    self._show_stats()
+                    input("\n[Press ENTER to return to main menu]")
 
-                case '4' | 'a':
+                case '5' | 'a':
                     while True:
                         print("\nSelect:")
                         print("1) [P]rint logs to standard output")
@@ -149,12 +155,12 @@ class DayQualityTracker:
                                 continue
                         break
 
-                case '5' | 'x':
+                case '6' | 'x':
                     print("\nBye!")
                     raise SystemExit()
 
                 case _:
-                    print("\nError: Only enter 1~5 or the given letters.")
+                    print("\nError: Only enter 1~6 or the given letters.")
                     sleep(1)
 
     # ################################################################## #
@@ -448,8 +454,122 @@ class DayQualityTracker:
         self.json.update(date=selected_date, memory=new_memory)
         print("\nMemory entry updated and saved!")
         sleep(1)
+    
+    # ######################## 5) See stats ######################## #
+    
+    def _show_stats(self) -> None:
+        """Show day quality rating stats.
+        
+        Print:
+            - Days rated
+            - Average rating
+            - Highest rating
+            - Lowest rating
+            - Days of the week ranked from best to worst
+        """
+        print("\nDay Quality Rating Stats:")
+        print()
+        
+        rating_key = self.json.rating_kyname
+        logs = self.json.logs
+        
+        rated_items:  list[tuple[str, float]] = [
+            (date, log[rating_key])
+            for date, log in logs.items()
+            if log[rating_key] is not None
+        ]
+        
+        self._print_days_rated(logs, rated_items)
+        
+        if not rated_items:
+            print("Average rating: N/A")
+            print("Highest rating: N/A")
+            print("Lowest rating: N/A")
+            print("Best days of the week: N/A")
+            return
+        
+        ratings_only = [r for _, r in rated_items]
+        
+        self._print_average_rating(ratings_only)
+        self._print_highest_lowest_rating(ratings_only, rated_items)
+        self._print_days_of_the_week_ranked(rated_items)
+    
+    @staticmethod
+    def _print_days_rated(logs: dict[str, dict[str, float | None | str]],
+                          rated_items: list[tuple[str, float]]) -> None:
+        days_total = len(logs)
+        days_rated = len(rated_items)
+        
+        print(
+            f"Days rated: {days_rated} "
+            f"({days_total} including null ratings)"
+        )
+    
+    def _print_average_rating(self, ratings_only: list[float]) -> None:
+        """Print average rating for each day of the week."""
+        avg = round(
+            sum(ratings_only) / len(ratings_only),
+            self.rating_inp_dp
+        )
+        print(f"Average rating: {avg}")
+    
+    def _print_highest_lowest_rating(
+            self,
+            ratings_only: list[float],
+            rated_items: list[tuple[str, float]]) -> None:
+        highest = max(ratings_only)
+        lowest = min(ratings_only)
+        
+        highest_dates = [
+            date for date, rating in rated_items
+            if rating == highest
+        ]
+        
+        lowest_dates = [
+            date for date, rating in rated_items
+            if rating == lowest
+        ]
+        
+        print(
+            f"Highest rating: {highest} "
+            f"on {self._format_dates(highest_dates)}"
+        )
+        
+        print(
+            f"Lowest rating: {lowest} "
+            f"on {self._format_dates(lowest_dates)}"
+        )
+        
+    def _print_days_of_the_week_ranked(
+            self, rated_items: list[tuple[str, float]]) -> None:
+        """Print the days of the week in rank order of highest avg rating"""
+        weekday_scores: dict[str, list[float]] = defaultdict(list)
+        
+        for date_str, rating in rated_items:
+            date = datetime.strptime(date_str, self.date_format)
+            weekday = date.strftime("%A")
+            weekday_scores[weekday].append(rating)
+        
+        weekday_averages = {
+            day: sum(vals) / len(vals)
+            for day, vals in weekday_scores.items()
+        }
+        
+        ranked_days = sorted(
+            weekday_averages.items(),
+            key=lambda item: item[1],
+            reverse=True
+        )
+        
+        print("\nBest days of the week (highest to lowest average rating):")
+        for day, value in ranked_days:
+            print(f"\t{day}: {round(value, self.rating_inp_dp)}")
+    
+    @staticmethod
+    def _format_dates(dates: list[str]) -> str:
+        return ", ".join(dates)
 
-    # ######################## 4) View all logs ######################## #
+    # ######################## 5) View all logs ######################## #
 
     def _print_logs_to_stdout(self) -> None:
         """Print last 30 saved logs.
