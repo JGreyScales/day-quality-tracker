@@ -456,7 +456,7 @@ class DayQualityTracker:
 
         The user can choose whether to show the rest of the logs.
         """
-        def loop_print(items: list):
+        def _loop_print(items: list):
             print("\n* —————————————————————————————— *")
             for date, log in items:
                 print()
@@ -476,7 +476,7 @@ class DayQualityTracker:
         # Reverse list to print most recent logs first
         last_30_items.reverse()
 
-        loop_print(last_30_items)
+        _loop_print(last_30_items)
         
         if len(items_list) > 30:
             choice = input("\nShow the rest of the logs? (y/n): ").strip().lower()
@@ -486,7 +486,7 @@ class DayQualityTracker:
             items_until_last_30th = items_list[:-30]
             items_until_last_30th.reverse()
     
-            loop_print(items_until_last_30th)
+            _loop_print(items_until_last_30th)
     
             input("\n[Press ENTER to return to main menu] ")
 
