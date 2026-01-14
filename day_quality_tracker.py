@@ -1,3 +1,7 @@
+# TODO:
+#   - Prevent using text styles if stdout doesnt support ANSI
+#   - Add `_err()` method
+
 import sys
 import os
 import subprocess
@@ -7,6 +11,7 @@ from collections import defaultdict
 
 from dqt_graph import DQTGraph
 from dqt_json import DQTJSON
+from styletext import StyleText as Txt
 
 _UNSET = object()
 
@@ -36,7 +41,7 @@ class DayQualityTracker:
 
     def run(self) -> None:
         """Run Day Quality Tracker."""
-        print("\n*--- Day Quality Tracker! ---*")
+        print(Txt("\n*--- Day Quality Tracker! ---*").bold().yellow())
         sleep(1)
 
         choice = self._handle_missing_logs()
@@ -47,7 +52,11 @@ class DayQualityTracker:
 
         while True:
             print("\n*❖* —————————————————————————————— *❖*")
-            print("\nMAIN MENU — choose what to do: ")
+            print(
+                Txt(
+                    f"\n{Txt("MAIN MENU").blue()} — choose what to do: "
+                ).bold()
+            )
             print("1) View ratings [G]raph")
             print("2) Edit [T]oday's log...")
             print("3) Edit [P]revious log...")
@@ -60,7 +69,12 @@ class DayQualityTracker:
                     self._view_ratings_graph()
 
                 case '2' | 't':
-                    print("\nToday's log:")
+                    if not self._today_rated():
+                        print("\n You haven't entered today's log yet!")
+                        sleep(1)
+                        continue
+                    
+                    print(Txt("\nToday's log:").bold())
                     today = datetime.today().strftime(self.date_format)
                     self._print_log(
                         date=today,
@@ -69,7 +83,7 @@ class DayQualityTracker:
                     )
 
                     while True:
-                        print("\nSelect:")
+                        print(Txt("\nSelect:"))
                         print("1) Edit [R]ating")
                         print("2) Edit [M]emory entry")
                         print("3) [C]ancel -> Main menu")
@@ -82,8 +96,10 @@ class DayQualityTracker:
                             case '3' | 'c':
                                 break
                             case _:
-                                print("\nError: Only enter 1~3 "
-                                      "or the given letters.")
+                                print(
+                                    "\nError: Only enter 1~3 "
+                                    "or the given letters."
+                                )
                                 sleep(1)
                                 continue
                         break
@@ -91,7 +107,7 @@ class DayQualityTracker:
                 case '3' | 'p':
                     while True:
                         selected_d = self._prompt_prev_date()
-                        print("\nSelected log:")
+                        print(Txt("\nSelected log:").bold())
                         self._print_log(
                             date=selected_d,
                             rating=self.json.get_rating(selected_d),
@@ -99,7 +115,7 @@ class DayQualityTracker:
                         )
 
                         while True:
-                            print("\nSelect:")
+                            print(Txt("\nSelect:").bold())
                             print("1) Edit [R]ating")
                             print("2) Edit [M]emory entry")
                             print("3) Edit [B]oth")
@@ -120,8 +136,10 @@ class DayQualityTracker:
                                 case '5' | 'c':
                                     break
                                 case _:
-                                    print("\nError: Only enter 1~5 "
-                                          "or the given letters.")
+                                    print(
+                                        "\nError: Only enter 1~5 "
+                                        "or the given letters."
+                                    )
                                     sleep(1)
                                     continue
                             break
@@ -135,7 +153,7 @@ class DayQualityTracker:
 
                 case '5' | 'a':
                     while True:
-                        print("\nSelect:")
+                        print(Txt("\nSelect:").bold())
                         print("1) [P]rint logs to standard output")
                         print("2) [O]pen JSON file in default viewer/editor")
                         print("3) [C]ancel -> Main menu")
@@ -149,8 +167,10 @@ class DayQualityTracker:
                             case '3' | 'c':
                                 break
                             case _:
-                                print("\nError: Only enter 1~3 "
-                                      "or the given letters.")
+                                print(
+                                    "\nError: Only enter 1~3 "
+                                    "or the given letters."
+                                )
                                 sleep(1)
                                 continue
                         break
@@ -191,7 +211,7 @@ class DayQualityTracker:
         print(f"\nYou haven't logged data since {last_date} (last log).")
 
         while True:
-            print("\nChoose what to do:")
+            print(Txt("\nChoose what to do:").bold())
             print("1) Enter missing logs now")
             print("2) Enter missing logs later -> Main menu")
             print("3) Skip missing logs -> Enter today's log")
@@ -224,7 +244,7 @@ class DayQualityTracker:
 
                         self.json.add(date_str, rating, memory)
 
-                    print("\nLog saved!")
+                    print(Txt("\nLog saved!").green())
                     sleep(1)
 
                     return choice
@@ -285,7 +305,7 @@ class DayQualityTracker:
             # Save data
             today = datetime.today().strftime(self.date_format)
             self.json.add(today, tdys_rating, tdys_memory)
-            print("\nLog saved!")
+            print(Txt("\nLog saved!").green())
             sleep(1)
 
         else:
@@ -335,7 +355,7 @@ class DayQualityTracker:
             else:
                 rating_to_show = f"{todays_rating}/{self.max_rating}"
 
-            print(f"Rating to change: {rating_to_show}")
+            print(Txt(f"Rating to change: {rating_to_show}").bold())
             sleep(1)
 
             tdys_rating = self._input_rating(
@@ -346,7 +366,7 @@ class DayQualityTracker:
             # Save data
             today = datetime.today().strftime(self.date_format)
             self.json.update(date=today, rating=tdys_rating)
-            print("\nRating updated and saved!")
+            print(Txt("\nRating updated and saved!").green())
             sleep(1)
 
         else:
@@ -361,7 +381,7 @@ class DayQualityTracker:
             prev_mem = self.json.get_memory(today)
             if not prev_mem:
                 prev_mem = "[Empty entry]"
-            print(f"Memory entry to change: ")
+            print(Txt(f"Memory entry to change: ").bold)
             print(prev_mem)
             sleep(1)
 
@@ -372,7 +392,7 @@ class DayQualityTracker:
             # Save data
             today = datetime.today().strftime(self.date_format)
             self.json.update(date=today, memory=tdys_memory)
-            print("\nMemory entry updated and saved!")
+            print(Txt("\nMemory entry updated and saved!").green())
             sleep(1)
 
         else:
@@ -394,7 +414,7 @@ class DayQualityTracker:
                 today = datetime.today()
                 selected_date = today - timedelta(days=inp)
                 selected_date = selected_date.strftime(self.date_format)
-                print(f"Date selected: {selected_date}")
+                print(Txt(f"Date selected: {selected_date}").bold())
 
             # Else, validate date str
             else:
@@ -424,7 +444,7 @@ class DayQualityTracker:
 
     def _change_previous_rating(self, selected_date: str) -> None:
         """Prompt the user to change a rating from a previous day."""
-        print("\nUpdating:")
+        print(Txt("\nUpdating:").bold())
         self._print_log(
             date=selected_date,
             rating=self.json.get_rating(selected_date)
@@ -436,12 +456,12 @@ class DayQualityTracker:
 
         # Save data
         self.json.update(date=selected_date, rating=new_rating)
-        print("\nRating updated and saved!")
+        print(Txt("\nRating updated and saved!").green())
         sleep(1)
 
     def _change_previous_memory(self, selected_date: str) -> None:
         """Prompt the user to change a memory entry from a previous day."""
-        print("\nUpdating:")
+        print(Txt("\nUpdating:").bold())
         self._print_log(
             date=selected_date,
             memory=self.json.get_memory(selected_date)
@@ -452,7 +472,7 @@ class DayQualityTracker:
         )
 
         self.json.update(date=selected_date, memory=new_memory)
-        print("\nMemory entry updated and saved!")
+        print(Txt("\nMemory entry updated and saved!").green())
         sleep(1)
     
     # ######################## 5) See stats ######################## #
@@ -467,7 +487,7 @@ class DayQualityTracker:
             - Lowest rating
             - Days of the week ranked from best to worst
         """
-        print("\nDay Quality Rating Stats:")
+        print(Txt("\nDay Quality Rating Stats:").bold().cyan())
         print()
         
         rating_key = self.json.rating_kyname
@@ -501,7 +521,7 @@ class DayQualityTracker:
         days_rated = len(rated_items)
         
         print(
-            f"Days rated: {days_rated} "
+            f"{Txt("Days rated:").bold()} {days_rated} "
             f"({days_total} including null ratings)"
         )
     
@@ -511,7 +531,7 @@ class DayQualityTracker:
             sum(ratings_only) / len(ratings_only),
             self.rating_inp_dp
         )
-        print(f"Average rating: {avg}")
+        print(f"{Txt("Average rating:").bold()} {avg}")
     
     def _print_highest_lowest_rating(
             self,
@@ -531,12 +551,12 @@ class DayQualityTracker:
         ]
         
         print(
-            f"Highest rating: {highest} "
+            f"{Txt("Highest rating:").bold()} {highest} "
             f"on {self._format_dates(highest_dates)}"
         )
         
         print(
-            f"Lowest rating: {lowest} "
+            f"{Txt("Lowest rating:").bold()} {lowest} "
             f"on {self._format_dates(lowest_dates)}"
         )
         
@@ -561,7 +581,8 @@ class DayQualityTracker:
             reverse=True
         )
         
-        print("\nBest days of the week (highest to lowest average rating):")
+        print(f"\n{Txt("Best days of the week").bold()} "
+              "(highest to lowest average rating):")
         for day, value in ranked_days:
             print(f"\t{day}: {round(value, self.rating_inp_dp)}")
     
@@ -587,7 +608,11 @@ class DayQualityTracker:
                 )
             print("\n* —————————————————————————————— *")
 
-        print("\nLogs from the last 30 days, most recent first:")
+        print("\nLast 30 logs, most recent first:")
+        
+        if not self.json.logs:
+            print("\n[No logs found]")
+            return
 
         # Convert dictionary items to a list of tuples
         items_list = list(self.json.logs.items())
@@ -658,21 +683,21 @@ class DayQualityTracker:
         # ----- Date -----
         if date is not _UNSET:
             if date == 'today':
-                print("\nToday's log:")
+                print(Txt("\nToday's log:").bold().yellow())
             else:
-                print(f"Date: {date}")
+                print(Txt(f"Date: {date}").bold())
 
         # ----- Rating -----
         if rating is not _UNSET:
             if rating is None:
-                print("Rating: [No rating]")
+                print(f"{Txt("Rating:").bold} [No rating]")
             else:
-                print(f"Rating: {rating}/{self.max_rating}")
+                print(f"{Txt("Rating:").bold} {rating}/{self.max_rating}")
 
         # ----- Memory -----
         if memory is not _UNSET:
             if memory:
-                print("Memory:")
+                print(Txt("Memory:").bold)
                 print(memory)
             else:
                 print("Memory: [Empty entry]")
