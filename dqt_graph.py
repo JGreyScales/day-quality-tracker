@@ -150,6 +150,7 @@ class DQTGraph:
         )
     
     def _draw_year_labels(self, ax: plt.Axes, dates: list[str]) -> None:
+        """Draw year labels."""
         shown_years = set()
         for i, date_str in enumerate(dates):
             date = datetime.strptime(date_str, self.dqt_date_format)
@@ -171,6 +172,7 @@ class DQTGraph:
     
     def _plot_ratings(self, ax: plt.Axes, fdates: list[str],
                       ratings: list[float | None]) -> None:
+        """Plot rating values."""
         ax.plot(
             fdates,
             ratings,
@@ -180,6 +182,7 @@ class DQTGraph:
         )
         
     def _draw_neutral_rating_line(self, ax: plt.Axes) -> None:
+        """Draw horizontal neutral rating line."""
         ax.axhline(
             y=self.dqt.neutral_rating,
             color=self.neutralline_color,
@@ -190,6 +193,7 @@ class DQTGraph:
         
     def _draw_average_rating_line(self, ax: plt.Axes,
                                   ratings: list[float | None],) -> None:
+        """Draw horizontal average rating line."""
         avg = self._average_rating(ratings)
         if avg is None:
             return
@@ -202,6 +206,7 @@ class DQTGraph:
         )
     
     def _average_rating(self, ratings: list[float | None]) -> float | None:
+        """Return average rating."""
         clean = [r for r in ratings if r is not None]
         if not clean:
             return None
@@ -211,6 +216,7 @@ class DQTGraph:
                                      ax: plt.Axes,
                                      fdates: list[str],
                                      ratings: list[float | None]) -> None:
+        """Plot highest and lowest rating values as points."""
         indexed = [(i, r) for i, r in enumerate(ratings) if r is not None]
         if not indexed:
             return
@@ -241,9 +247,11 @@ class DQTGraph:
         )
     
     def _set_ylimits(self, ax: plt.Axes) -> None:
+        """Set y-limits."""
         ax.set_ylim(self.min_rating, self.max_rating + 1)
     
     def _draw_legend(self, ax: plt.Axes) -> None:
+        """Draw legend."""
         ax.legend(
             fontsize=self.legend_fontsize,
             loc=self.legend_loc,
