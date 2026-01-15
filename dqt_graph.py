@@ -32,11 +32,6 @@ class DQTGraph:
         self.max_rating = dqt.max_rating
         self.neutral_rating = dqt.neutral_rating
         self.json: DQTJSON = dqt.json
-        self.logs = dqt.json.logs
-        self.dates = list(dqt.json.logs.keys())
-        self.ratings = [
-            log[self.json.rating_kyname] for log in self.logs.values()
-        ]
 
         # Graph settings
         self.graph_date_format = '%a %b %d'
@@ -90,18 +85,28 @@ class DQTGraph:
 
     def build(self) -> None:
         """Build the graph and initialize plt, fig, and ax properties."""
+        logs = self.json.logs
+        if not logs:
+            raise ValueError("No logs saved")
+        
+        dates = list(logs.keys())
+        ratings = [
+            log[self.json.rating_kyname]
+            for log in logs.values()
+        ]
+        
         # Close existing windows to prevent overlapping
         plt.close('all')
         
         # Get JSON stuff
-        if not self.logs:
+        if not logs:
             raise ValueError("No logs saved")
         
         # Make formated dates for displaying
         formatted_dates: list[str] = [
             datetime.strptime(date, self.dqt_date_format)
             .strftime(self.graph_date_format)
-            for date in self.dates
+            for date in dates
         ]
         
         plt.style.use(self.graph_style)
@@ -111,12 +116,12 @@ class DQTGraph:
         self._draw_xylabels(ax)
         self._set_ticks(fig, ax)
         
-        self._plot_ratings(ax, formatted_dates, self.ratings)
+        self._plot_ratings(ax, formatted_dates, ratings)
         self._draw_neutral_rating_line(ax)
-        self._draw_average_rating_line(ax, self.ratings)
-        self._plot_highest_lowest_ratings(ax, formatted_dates, self.ratings)
+        self._draw_average_rating_line(ax, ratings)
+        self._plot_highest_lowest_ratings(ax, formatted_dates, ratings)
         
-        self._draw_year_labels(ax, self.dates)
+        self._draw_year_labels(ax, dates)
         
         self._set_ylimits(ax)
         
