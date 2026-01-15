@@ -1,6 +1,4 @@
 # TODO:
-#   - Move DQTGraph instance inside `_show_ratings_graph`
-#   - Prevent using text styles if stdout doesnt support ANSI
 #   - Add `_err()` method (copy from Sam)
 
 import sys

@@ -1,17 +1,26 @@
+import sys
+
+
 class StyleText:
     """A class to create basic styled text with ANSI escape codes."""
 
-    RESET = "\033[0m"
+    _ANSI_ENABLED = sys.stdout.isatty()
+
+    RESET = "\033[0m" if _ANSI_ENABLED else ""
 
     def __init__(self, text: object, prefix: str = "", reset: bool = True):
         self.text = str(text)
         self.prefix = prefix
         self.reset = reset
 
+    def _code(self, ansi: str) -> str:
+        """Return ANSI code or empty string depending on terminal support."""
+        return ansi if self._ANSI_ENABLED else ""
+
     def _add(self, code: str, reset: bool) -> "StyleText":
         return StyleText(
             self.text,
-            self.prefix + code,
+            self.prefix + self._code(code),
             reset=reset
         )
 
