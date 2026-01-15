@@ -1,21 +1,58 @@
+import os
 import sys
+
+
+def _detect_ansi_support() -> bool:
+    # 1) Explicit override
+    if 'DQT_COLOR' in os.environ:
+        return os.environ['DQT_COLOR'] == '1'
+
+    # 2) PyCharm console
+    if os.environ.get('PYCHARM_HOSTED') == '1':
+        return True
+
+    # 3) Real terminal
+    if sys.stdout.isatty():
+        return True
+
+    # 4) Dumb terminals explicitly disable ANSI
+    if os.environ.get('TERM') in (None, 'dumb'):
+        return False
+
+    # 5) Modern Windows terminals usually support ANSI
+    if os.name == 'nt':
+        return True
+
+    return False
 
 
 class StyleText:
     """A class to create basic styled text with ANSI escape codes."""
+    
+    ansi_enabled = _detect_ansi_support()
+    
+    @classmethod
+    def set_ansi(cls, enabled: bool | None) -> None:
+        """Enable or disable ANSI escape codes usage for text styling.
+        
+        If set to None, usage will be automatically set based on whether
+        stdout supports ANSI escape codes.
+        """
+        if enabled is None:
+            cls.ansi_enabled = _detect_ansi_support()
+        else:
+            cls.ansi_enabled = enabled
+    
+    RESET = '\033[0m' if ansi_enabled else ''
 
-    _ANSI_ENABLED = sys.stdout.isatty()
-
-    RESET = "\033[0m" if _ANSI_ENABLED else ""
-
-    def __init__(self, text: object, prefix: str = "", reset: bool = True):
+    def __init__(self, text: object, prefix: str = '', reset: bool = True):
         self.text = str(text)
         self.prefix = prefix
         self.reset = reset
 
     def _code(self, ansi: str) -> str:
         """Return ANSI code or empty string depending on terminal support."""
-        return ansi if self._ANSI_ENABLED else ""
+        return ansi if self.ansi_enabled else ""
 
     def _add(self, code: str, reset: bool) -> "StyleText":
         return StyleText(
@@ -26,38 +63,38 @@ class StyleText:
 
     # --- styles ---
     def bold(self, reset: bool = True) -> "StyleText":
-        return self._add("\033[1m", reset)
+        return self._add('\033[1m', reset)
 
     def dim(self, reset: bool = True) -> "StyleText":
-        return self._add("\033[2m", reset)
+        return self._add('\033[2m', reset)
 
     def italic(self, reset: bool = True) -> "StyleText":
-        return self._add("\033[3m", reset)
+        return self._add('\033[3m', reset)
 
     def underline(self, reset: bool = True) -> "StyleText":
-        return self._add("\033[4m", reset)
+        return self._add('\033[4m', reset)
 
     # --- colors ---
     def red(self, reset: bool = True) -> "StyleText":
-        return self._add("\033[31m", reset)
+        return self._add('\033[31m', reset)
 
     def green(self, reset: bool = True) -> "StyleText":
-        return self._add("\033[32m", reset)
+        return self._add('\033[32m', reset)
 
     def yellow(self, reset: bool = True) -> "StyleText":
-        return self._add("\033[33m", reset)
+        return self._add('\033[33m', reset)
 
     def blue(self, reset: bool = True) -> "StyleText":
-        return self._add("\033[34m", reset)
+        return self._add('\033[34m', reset)
 
     def magenta(self, reset: bool = True) -> "StyleText":
-        return self._add("\033[35m", reset)
+        return self._add('\033[35m', reset)
 
     def cyan(self, reset: bool = True) -> "StyleText":
-        return self._add("\033[36m", reset)
+        return self._add('\033[36m', reset)
 
     def white(self, reset: bool = True) -> "StyleText":
-        return self._add("\033[37m", reset)
+        return self._add('\033[37m', reset)
 
     def __str__(self) -> str:
         if self.reset:

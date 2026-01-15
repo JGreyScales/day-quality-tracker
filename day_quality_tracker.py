@@ -34,6 +34,9 @@ class DayQualityTracker:
         
         # Graph manager instance
         self.graph = DQTGraph(self)
+        
+        self.enable_ansi = None
+        Txt.set_ansi(self.enable_ansi)
     
     def run(self) -> None:
         """Run Day Quality Tracker."""
