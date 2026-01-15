@@ -1,6 +1,9 @@
 # TODO:
+#   - Show max rating when showing ratings in See Stats
+#   - Move DQTGraph instance inside `_show_ratings_graph`
+#   - Edit StyleText uses to use + (and define __add__ in class)
 #   - Prevent using text styles if stdout doesnt support ANSI
-#   - Add `_err()` method
+#   - Add `_err()` method (copy from Sam)
 
 import sys
 import os
@@ -521,7 +524,7 @@ class DayQualityTracker:
         days_rated = len(rated_items)
         
         print(
-            f"{Txt("Days rated:").bold()} {days_rated} "
+            f"{Txt("Days rated:").bold()} {Txt(days_rated).bold()} "
             f"({days_total} including null ratings)"
         )
     
@@ -531,7 +534,8 @@ class DayQualityTracker:
             sum(ratings_only) / len(ratings_only),
             self.rating_inp_dp
         )
-        print(f"{Txt("Average rating:").bold()} {avg}")
+        print(f"{Txt("Average rating:").bold()} "
+              f"{Txt(avg).bold()}/{self.max_rating}")
     
     def _print_highest_lowest_rating(
             self,
@@ -551,12 +555,14 @@ class DayQualityTracker:
         ]
         
         print(
-            f"{Txt("Highest rating:").bold()} {highest} "
+            f"{Txt("Highest rating:").bold()} "
+            f"{Txt(highest).bold()}/{self.max_rating} "
             f"on {self._format_dates(highest_dates)}"
         )
         
         print(
-            f"{Txt("Lowest rating:").bold()} {lowest} "
+            f"{Txt("Lowest rating:").bold()} "
+            f"{Txt(lowest).bold()}/{self.max_rating} "
             f"on {self._format_dates(lowest_dates)}"
         )
         
@@ -584,7 +590,9 @@ class DayQualityTracker:
         print(f"\n{Txt("Best days of the week").bold()} "
               "(highest to lowest average rating):")
         for day, value in ranked_days:
-            print(f"\t{day}: {round(value, self.rating_inp_dp)}")
+            print(f"\t{Txt(day).bold()}: "
+                  f"{Txt(round(value, self.rating_inp_dp)).bold()}"
+                  f"/{self.max_rating}")
     
     @staticmethod
     def _format_dates(dates: list[str]) -> str:
@@ -685,7 +693,7 @@ class DayQualityTracker:
             if date == 'today':
                 print(Txt("\nToday's log:").bold().yellow())
             else:
-                print(Txt(f"Date: {date}").bold())
+                print(Txt(f"Date:").bold() + date)
 
         # ----- Rating -----
         if rating is not _UNSET:

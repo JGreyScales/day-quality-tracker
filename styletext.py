@@ -3,8 +3,8 @@ class StyleText:
 
     RESET = "\033[0m"
 
-    def __init__(self, text: str, prefix: str = ""):
-        self.text = text
+    def __init__(self, text: object, prefix: str = ""):
+        self.text = str(text)
         self.prefix = prefix
 
     def _add(self, code: str) -> StyleText:
@@ -45,3 +45,18 @@ class StyleText:
 
     def __str__(self) -> str:
         return f"{self.prefix}{self.text}{self.RESET}"
+    
+    def __add__(self, other: str) -> "StyleText":
+        if not isinstance(other, str):
+            return NotImplemented
+        
+        combined = f"{self.prefix}{self.text}{self.RESET}{other}"
+        return StyleText(combined)
+    
+    def __radd__(self, other: str) -> "StyleText":
+        if not isinstance(other, str):
+            return NotImplemented
+        
+        combined = f"{other}{self.prefix}{self.text}{self.RESET}"
+        return StyleText(combined)
+
