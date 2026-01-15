@@ -1,7 +1,5 @@
 # TODO:
-#   - Show max rating when showing ratings in See Stats
 #   - Move DQTGraph instance inside `_show_ratings_graph`
-#   - Edit StyleText uses to use + (and define __add__ in class)
 #   - Prevent using text styles if stdout doesnt support ANSI
 #   - Add `_err()` method (copy from Sam)
 
@@ -56,9 +54,8 @@ class DayQualityTracker:
         while True:
             print("\n*❖* —————————————————————————————— *❖*")
             print(
-                Txt(
-                    f"\n{Txt("MAIN MENU").blue()} — choose what to do: "
-                ).bold()
+                Txt("MAIN MENU").blue().underline().bold(),
+                Txt("— choose what to do: ").bold()
             )
             print("1) View ratings [G]raph")
             print("2) Edit [T]oday's log...")
@@ -490,7 +487,7 @@ class DayQualityTracker:
             - Lowest rating
             - Days of the week ranked from best to worst
         """
-        print(Txt("\nDay Quality Rating Stats:").bold().cyan())
+        print(Txt("\nDay Quality Rating Stats:").bold().cyan().underline())
         print()
         
         rating_key = self.json.rating_kyname
