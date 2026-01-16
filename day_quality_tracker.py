@@ -718,7 +718,7 @@ class DayQualityTracker:
                 continue
             
             if not (self.min_rating <= value <= self.max_rating):
-                print(error_msg)
+                self._err(error_msg)
                 sleep(1)
                 continue
             
@@ -756,5 +756,4 @@ class DayQualityTracker:
         
     @staticmethod
     def _notify_log_saved(text: str = "Log saved!") -> None:
-        print(Txt(text).bold().green())
-        sleep(1)
+        print("\n" + Txt(text).bold().green())
