@@ -52,7 +52,7 @@ class DayQualityTracker:
         while True:
             print("\n*❖* —————————————————————————————— *❖*")
             print(
-                Txt("MAIN MENU").blue().underline().bold(),
+                Txt("\nMAIN MENU").blue().underline().bold(),
                 Txt("— choose what to do: ").bold()
             )
             print("1) View ratings [G]raph")
@@ -235,8 +235,7 @@ class DayQualityTracker:
                         
                         self.json.add(date_str, rating, memory)
                     
-                    print(Txt("\nLog saved!").green())
-                    sleep(1)
+                    self._notify_log_saved()
                     
                     return choice
                 
@@ -295,8 +294,7 @@ class DayQualityTracker:
             # Save data
             today = datetime.today().strftime(self.date_format)
             self.json.add(today, tdys_rating, tdys_memory)
-            print(Txt("\nLog saved!").green())
-            sleep(1)
+            self._notify_log_saved()
         
         else:
             # Format time in 12-hour or 24-hour clock
@@ -356,8 +354,7 @@ class DayQualityTracker:
             # Save data
             today = datetime.today().strftime(self.date_format)
             self.json.update(date=today, rating=tdys_rating)
-            print(Txt("\nRating updated and saved!").green())
-            sleep(1)
+            self._notify_log_saved("Rating updated and saved!")
         
         else:
             print("\nYou haven't entered a rating yet today!")
@@ -382,8 +379,7 @@ class DayQualityTracker:
             # Save data
             today = datetime.today().strftime(self.date_format)
             self.json.update(date=today, memory=tdys_memory)
-            print(Txt("\nMemory entry updated and saved!").green())
-            sleep(1)
+            self._notify_log_saved("Memory entry updated and saved!")
         
         else:
             print("\nYou haven't entered a log yet today!")
@@ -446,8 +442,7 @@ class DayQualityTracker:
         
         # Save data
         self.json.update(date=selected_date, rating=new_rating)
-        print(Txt("\nRating updated and saved!").green())
-        sleep(1)
+        self._notify_log_saved("Rating updated and saved!")
     
     def _change_previous_memory(self, selected_date: str) -> None:
         """Prompt the user to change a memory entry from a previous day."""
@@ -462,8 +457,7 @@ class DayQualityTracker:
         )
         
         self.json.update(date=selected_date, memory=new_memory)
-        print(Txt("\nMemory entry updated and saved!").green())
-        sleep(1)
+        self._notify_log_saved("Memory entry updated and saved!")
     
     # ######################## 5) See stats ######################## #
     
@@ -758,4 +752,9 @@ class DayQualityTracker:
         )
         for d in desc:
             print(d)
+        sleep(1)
+        
+    @staticmethod
+    def _notify_log_saved(text: str = "Log saved!") -> None:
+        print(Txt(text).bold().green())
         sleep(1)
