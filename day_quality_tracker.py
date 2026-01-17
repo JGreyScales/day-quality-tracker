@@ -1,6 +1,3 @@
-import sys
-import os
-import subprocess
 from time import sleep
 from datetime import datetime, timedelta
 from collections import defaultdict
@@ -156,9 +153,9 @@ class DayQualityTracker:
                         choice = input("> ").strip().lower()
                         match choice:
                             case '1' | 'p':
-                                self._print_logs_to_stdout()
+                                self.json.print_logs_to_stdout()
                             case '2' | 'o':
-                                self._open_json_file()
+                                self.json.open_json_file()
                             case '3' | 'c':
                                 break
                             case _:
@@ -558,72 +555,6 @@ class DayQualityTracker:
     @staticmethod
     def _format_dates(dates: list[str]) -> str:
         return ", ".join(dates)
-    
-    # ######################## 5) View all logs ######################## #
-    
-    def _print_logs_to_stdout(self) -> None:
-        """Print last 30 saved logs.
-
-        The user can choose whether to show the rest of the logs.
-        """
-        
-        def _loop_print(items: list):
-            print("\n* —————————————————————————————— *")
-            for date, log in items:
-                print()
-                self.json.print_log(
-                    date=date,
-                    rating=log[self.json.rating_kyname],
-                    memory=log[self.json.memory_kyname]
-                )
-            print("\n* —————————————————————————————— *")
-        
-        print("\nLast 30 logs, most recent first:")
-        
-        if not self.json.logs:
-            print("\n[No logs found]")
-            return
-        
-        # Convert dictionary items to a list of tuples
-        items_list = list(self.json.logs.items())
-        # Get the last 30 items or all items if less than 30
-        last_30_items = items_list[-30:]
-        # Reverse list to print most recent logs first
-        last_30_items.reverse()
-        
-        _loop_print(last_30_items)
-        
-        if len(items_list) > 30:
-            choice = input("\nShow the rest of the logs? (y/n): ").strip().lower()
-            if choice != 'y':
-                return
-            
-            items_until_last_30th = items_list[:-30]
-            items_until_last_30th.reverse()
-            
-            _loop_print(items_until_last_30th)
-            
-            input("\n[Press ENTER to return to main menu] ")
-    
-    def _open_json_file(self) -> None:
-        """Open the JSON file in the default system applicaiton."""
-        print("\nOpening JSON file...")
-        
-        if sys.platform == "win32":
-            os.startfile(self.json.filepath)  # Windows
-        elif sys.platform == "darwin":
-            subprocess.call(["open", self.json.filepath])  # macOS
-        elif sys.platform.startswith("linux"):
-            subprocess.call(["xdg-open", self.json.filepath])  # Linux
-        else:
-            print("\nYou will have to open the file manually. "
-                  f"\nPath: {self.json.filepath}")
-            print("(Incompatible OS: unable to open the file with the program)")
-            return
-        
-        print(f"File opened in a new window!")
-        print("Remember to save changes before closing the file.")
-        input("\n[Press ENTER to return to main menu] ")
     
     # ########################################################## #
     # --------------------- HELPER METHODS --------------------- #
