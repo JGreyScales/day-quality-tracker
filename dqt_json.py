@@ -79,9 +79,11 @@ class DQTJSON:
         self._dump()
 
     def get_rating(self, date: str) -> float | None:
+        """Return rating for given date."""
         return self.logs[date][self.rating_kyname]
 
     def get_memory(self, date: str) -> str:
+        """Return memory entry for given date."""
         return self.logs[date][self.memory_kyname]
     
     def print_log(self,
@@ -206,5 +208,6 @@ class DQTJSON:
         return validated
 
     def _dump(self) -> None:
+        """Dump JSON file contents."""
         with open(self.filepath, 'w') as file:
             json.dump(self.logs, file, indent=self.json_indent)
