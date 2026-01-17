@@ -46,7 +46,7 @@ class DayQualityTracker:
         choice = self._handle_missing_logs()
         
         if choice in ['1', '3', None]:
-            if not self._today_rated():
+            if not self.json.today_rated():
                 self._input_todays_log()
         
         while True:
@@ -67,7 +67,7 @@ class DayQualityTracker:
                     self.graph.view_ratings_graph()
                 
                 case '2' | 't':
-                    if not self._today_rated():
+                    if not self.json.today_rated():
                         print("\n You haven't entered today's log yet!")
                         sleep(1)
                         continue
@@ -312,7 +312,7 @@ class DayQualityTracker:
     
     def _change_todays_rating(self) -> None:
         """Prompt the user to change today's rating."""
-        if self._today_rated():
+        if self.json.today_rated():
             
             today = datetime.today().strftime(self.date_format)
             
@@ -341,7 +341,7 @@ class DayQualityTracker:
     
     def _change_todays_memory(self) -> None:
         """Prompt the user to change today's memory entry."""
-        if self._today_rated():
+        if self.json.today_rated():
             
             today = datetime.today().strftime(self.date_format)
             prev_mem = self.json.get_memory(today)
@@ -627,13 +627,6 @@ class DayQualityTracker:
     # ########################################################## #
     # --------------------- HELPER METHODS --------------------- #
     # ########################################################## #
-    
-    def _today_rated(self) -> bool:
-        """Check if a rating has been provided for today."""
-        today = datetime.today().strftime(self.date_format)
-        return today in self.json.logs
-    
-    # ################################################################## #
     
     def _input_rating(self, prompt: str) -> float | None:
         """Get and validate user float input."""

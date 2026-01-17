@@ -86,6 +86,11 @@ class DQTJSON:
         """Return memory entry for given date."""
         return self.logs[date][self.memory_kyname]
     
+    def today_rated(self) -> bool:
+        """Check if a rating has been provided for today."""
+        today = datetime.today().strftime(self.date_format)
+        return today in self.logs
+    
     def print_log(self,
                   date: str = _UNSET,
                   rating: float | None = _UNSET,
