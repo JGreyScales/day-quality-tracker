@@ -64,7 +64,7 @@ class DayQualityTracker:
             
             match input("> ").lower().strip():
                 case '1' | 'g':
-                    self._view_ratings_graph()
+                    self.graph.view_ratings_graph()
                 
                 case '2' | 't':
                     if not self._today_rated():
@@ -307,28 +307,7 @@ class DayQualityTracker:
             
             print(f"\nYou can only input today's log after {formatted_time}.")
             print("\nCome back later to enter today's log!")
-    
-    # ###################### 1) View Ratings Graph ###################### #
-    
-    def _view_ratings_graph(self) -> None:
-        """Display current ratings graph."""
-        if not self.json.logs:
-            print("\nYou haven't entered any ratings yet!")
-            sleep(1)
-            return
         
-        print("\nBuilding graph...")
-        
-        self.graph.build()
-        
-        print("\nDisplaying graph...")
-        print("Close the graph window to proceed.")
-        
-        self.graph.show()
-        
-        print("\nGraph closed.")
-        print("Returning to main menu...")
-    
     # ####################### 2) Edit today's log ####################### #
     
     def _change_todays_rating(self) -> None:

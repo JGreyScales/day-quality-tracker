@@ -1,4 +1,5 @@
 import sys
+from time import sleep
 from subprocess import check_call
 from datetime import datetime
 from typing import TYPE_CHECKING
@@ -82,6 +83,25 @@ class DQTGraph:
         self.legend_fontsize = 8
         self.legend_loc = 'upper right'
         self.legend_frameon = True
+    
+    def view_ratings_graph(self) -> None:
+        """Display current ratings graph."""
+        if not self.json.logs:
+            print("\nYou haven't entered any ratings yet!")
+            sleep(1)
+            return
+        
+        print("\nBuilding graph...")
+        
+        self.build()
+        
+        print("\nDisplaying graph...")
+        print("Close the graph window to proceed.")
+        
+        self.show()
+        
+        print("\nGraph closed.")
+        print("Returning to main menu...")
 
     def build(self) -> None:
         """Build the graph and initialize plt, fig, and ax properties."""
