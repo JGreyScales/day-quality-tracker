@@ -110,19 +110,19 @@ class DQTJSON:
             if date == 'today':
                 print(Txt("\nToday's log:").bold().yellow())
             else:
-                print(Txt(f"Date:").bold() + date)
+                print(Txt(f"Date: ").bold() + date)
         
         # ----- Rating -----
         if rating is not _UNSET:
             if rating is None:
-                print(f"{Txt("Rating:").bold} [No rating]")
+                print(f"{Txt("Rating:").bold()} [No rating]")
             else:
-                print(f"{Txt("Rating:").bold} {rating}/{self.dqt.max_rating}")
+                print(f"{Txt("Rating:").bold()} {rating}/{self.dqt.max_rating}")
         
         # ----- Memory -----
         if memory is not _UNSET:
             if memory:
-                print(Txt("Memory:").bold)
+                print(Txt("Memory:").bold())
                 print(memory)
             else:
                 print("Memory: [Empty entry]")
