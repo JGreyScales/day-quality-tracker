@@ -138,8 +138,9 @@ class DayQualityTracker:
                                     continue
                             break
                         
-                        if choice in ['5', 'c']:
-                            break
+                        if choice in ['4', 'd']:
+                            continue
+                        break
                 
                 case '4' | 's':
                     self._show_stats()
