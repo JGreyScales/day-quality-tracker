@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from dqt_json import DQTJSON
 
 
-class DQTGraph:
+class Graph:
     """A class to manage graph plotting for day_quality_tracker."""
 
     def __init__(self, dqt: DayQualityTracker):

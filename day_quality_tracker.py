@@ -2,7 +2,7 @@ from time import sleep
 from datetime import datetime, timedelta
 from collections import defaultdict
 
-from dqt_graph import DQTGraph
+from graph import Graph
 from dqt_json import DQTJSON
 from styletext import StyleText as Txt
 
@@ -13,7 +13,7 @@ class DayQualityTracker:
     """Track and visualize day quality ratings in a graph."""
     
     def __init__(self):
-        """Load saved data, initialize settings and DQTGraph instance."""
+        """Load saved data, initialize settings and Graph instance."""
         # Initialize settings
         self.min_time = 20  # Earliest hour the of day to enter rating
         self.min_rating = 1  # 1 recommended
@@ -30,7 +30,7 @@ class DayQualityTracker:
         self.json = DQTJSON(self)
         
         # Graph manager instance
-        self.graph = DQTGraph(self)
+        self.graph = Graph(self)
         
         self.enable_ansi = None
         Txt.set_ansi(self.enable_ansi)
