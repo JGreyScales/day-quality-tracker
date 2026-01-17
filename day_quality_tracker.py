@@ -74,7 +74,7 @@ class DayQualityTracker:
                     
                     print(Txt("\nToday's log:").bold())
                     today = datetime.today().strftime(self.date_format)
-                    self._print_log(
+                    self.json.print_log(
                         date=today,
                         rating=self.json.get_rating(today),
                         memory=self.json.get_memory(today),
@@ -104,7 +104,7 @@ class DayQualityTracker:
                     while True:
                         selected_d = self._prompt_prev_date()
                         print(Txt("\nSelected log:").bold())
-                        self._print_log(
+                        self.json.print_log(
                             date=selected_d,
                             rating=self.json.get_rating(selected_d),
                             memory=self.json.get_memory(selected_d),
@@ -431,7 +431,7 @@ class DayQualityTracker:
     def _change_previous_rating(self, selected_date: str) -> None:
         """Prompt the user to change a rating from a previous day."""
         print(Txt("\nUpdating:").bold())
-        self._print_log(
+        self.json.print_log(
             date=selected_date,
             rating=self.json.get_rating(selected_date)
         )
@@ -447,7 +447,7 @@ class DayQualityTracker:
     def _change_previous_memory(self, selected_date: str) -> None:
         """Prompt the user to change a memory entry from a previous day."""
         print(Txt("\nUpdating:").bold())
-        self._print_log(
+        self.json.print_log(
             date=selected_date,
             memory=self.json.get_memory(selected_date)
         )
@@ -591,7 +591,7 @@ class DayQualityTracker:
             print("\n* —————————————————————————————— *")
             for date, log in items:
                 print()
-                self._print_log(
+                self.json.print_log(
                     date=date,
                     rating=log[self.json.rating_kyname],
                     memory=log[self.json.memory_kyname]
@@ -653,44 +653,6 @@ class DayQualityTracker:
         """Check if a rating has been provided for today."""
         today = datetime.today().strftime(self.date_format)
         return today in self.json.logs
-    
-    # ################################################################## #
-    
-    def _print_log(self,
-                   date: str = _UNSET,
-                   rating: float | None = _UNSET,
-                   memory: str = _UNSET) -> None:
-        """Print a formatted log, and represent 'empty' values with text.
-
-        Null (None) ratings are printed as "[No rating]".
-        Empty memory entries (empty str) are printed as "[Empty entry]".
-
-        If date is unfilled, it will not be printed.
-        If date == 'today', "Today's log:" will be printed at the start.
-        Else, f"Date: {date}" will be printed.
-        """
-        
-        # ----- Date -----
-        if date is not _UNSET:
-            if date == 'today':
-                print(Txt("\nToday's log:").bold().yellow())
-            else:
-                print(Txt(f"Date:").bold() + date)
-        
-        # ----- Rating -----
-        if rating is not _UNSET:
-            if rating is None:
-                print(f"{Txt("Rating:").bold} [No rating]")
-            else:
-                print(f"{Txt("Rating:").bold} {rating}/{self.max_rating}")
-        
-        # ----- Memory -----
-        if memory is not _UNSET:
-            if memory:
-                print(Txt("Memory:").bold)
-                print(memory)
-            else:
-                print("Memory: [Empty entry]")
     
     # ################################################################## #
     

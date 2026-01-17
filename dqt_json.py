@@ -3,6 +3,8 @@ from pathlib import Path
 from datetime import datetime
 from typing import TYPE_CHECKING
 
+from styletext import StyleText as Txt
+
 if TYPE_CHECKING:
     from day_quality_tracker import DayQualityTracker
 
@@ -81,6 +83,42 @@ class DQTJSON:
 
     def get_memory(self, date: str) -> str:
         return self.logs[date][self.memory_kyname]
+    
+    def print_log(self,
+                  date: str = _UNSET,
+                  rating: float | None = _UNSET,
+                  memory: str = _UNSET) -> None:
+        """Print a formatted log, and represent 'empty' values with text.
+
+        Null (None) ratings are printed as "[No rating]".
+        Empty memory entries (empty str) are printed as "[Empty entry]".
+
+        If date is unfilled, it will not be printed.
+        If date == 'today', "Today's log:" will be printed at the start.
+        Else, f"Date: {date}" will be printed.
+        """
+        
+        # ----- Date -----
+        if date is not _UNSET:
+            if date == 'today':
+                print(Txt("\nToday's log:").bold().yellow())
+            else:
+                print(Txt(f"Date:").bold() + date)
+        
+        # ----- Rating -----
+        if rating is not _UNSET:
+            if rating is None:
+                print(f"{Txt("Rating:").bold} [No rating]")
+            else:
+                print(f"{Txt("Rating:").bold} {rating}/{self.dqt.max_rating}")
+        
+        # ----- Memory -----
+        if memory is not _UNSET:
+            if memory:
+                print(Txt("Memory:").bold)
+                print(memory)
+            else:
+                print("Memory: [Empty entry]")
 
     def _touch(self) -> None:
         """Check if JSON file exists, create if not."""
