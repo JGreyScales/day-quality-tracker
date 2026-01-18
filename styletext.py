@@ -100,16 +100,17 @@ class StyleText:
         if self.reset:
             return f"{self.prefix}{self.text}{self.RESET}"
         return f"{self.prefix}{self.text}"
-
+    
     def __add__(self, other: str) -> "StyleText":
         if not isinstance(other, str):
             return NotImplemented
-        return StyleText(
-            self.text + other,
-            self.prefix,
-            reset=self.reset
-        )
-
+        
+        if self.reset:
+            combined = f"{self.prefix}{self.text}{self.RESET}{other}"
+            return StyleText(combined, "", reset=False)
+        
+        return StyleText(self.text + other, self.prefix, reset=False)
+    
     def __radd__(self, other: str) -> "StyleText":
         if not isinstance(other, str):
             return NotImplemented
