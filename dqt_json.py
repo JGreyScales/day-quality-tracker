@@ -118,7 +118,7 @@ class DQTJSON:
         # ----- Rating -----
         if rating is not _UNSET:
             if rating is None:
-                print(f"{Txt("Rating:").bold()} [No rating]")
+                print(Txt("Rating: ").bold() + "-")
             else:
                 print(f"{Txt("Rating:").bold()} {rating}/{self.dqt.max_rating}")
         
@@ -128,7 +128,7 @@ class DQTJSON:
                 print(Txt("Memory:").bold())
                 print(memory)
             else:
-                print("Memory: [Empty entry]")
+                print(Txt("Memory: ").bold() + "-")
     
     def print_logs_to_stdout(self) -> None:
         """Print last 30 saved logs.
