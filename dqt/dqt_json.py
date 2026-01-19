@@ -16,6 +16,16 @@ _UNSET = object()
 
 class DQTJSON:
     """A class to manage Day Quality Tracker JSON contents handling."""
+    
+    _CONFIG_KEYS = {
+        "filedirname",
+        "filedirpath",
+        "filename",
+        "filepath",
+        "json_indent",
+        "rating_kyname",
+        "memory_kyname",
+    }
 
     def __init__(self, dqt: Tracker):
         self.dqt = dqt
@@ -193,6 +203,14 @@ class DQTJSON:
         print(f"File opened in a new window!")
         print("Remember to save changes before closing the file.")
         input("\n[Press ENTER to return to main menu] ")
+        
+    def configure(self, **kwargs) -> None:
+        for key, value in kwargs.items():
+            if key not in self._CONFIG_KEYS:
+                raise ValueError(
+                    f"Unknown configuration option: '{key}'"
+                )
+            setattr(self, key, value)
 
     def _touch(self) -> None:
         """Check if JSON file exists, create if not."""

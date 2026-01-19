@@ -14,6 +14,18 @@ _UNSET = object()
 class Tracker:
     """Track and visualize day quality ratings in a graph."""
     
+    _CONFIG_KEYS = {
+        "min_time",
+        "min_rating",
+        "max_rating",
+        "neutral_rating",
+        "rating_inp_dp",
+        "date_format",
+        "date_format_print",
+        "clock_format_12",
+        "enable_ansi",
+    }
+    
     def __init__(self):
         """Load saved data, initialize settings and Graph instance."""
         # Initialize settings
@@ -181,3 +193,11 @@ class Tracker:
                 
                 case _:
                     err("Only enter 1~6 or the given letters.")
+    
+    def configure(self, **kwargs) -> None:
+        for key, value in kwargs.items():
+            if key not in self._CONFIG_KEYS:
+                raise ValueError(
+                    f"Unknown configuration option: '{key}'"
+                )
+            setattr(self, key, value)

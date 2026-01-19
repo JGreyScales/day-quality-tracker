@@ -20,11 +20,53 @@ except ModuleNotFoundError:
 
 if TYPE_CHECKING:
     from tracker import Tracker
-    from dqt_json import DQTJSON
 
 
 class Graph:
     """A class to manage graph plotting for day_quality_tracker."""
+    
+    _CONFIG_KEYS = {
+        "graph_date_format",
+        "graph_style",
+        "title",
+        "title_fontsize",
+        "title_padding",
+        "xlabel",
+        "xlabel_fontsize",
+        "ylabel",
+        "ylabel_fontsize",
+        "tick_params_fontsize",
+        "autofmt_xdates",
+        "year_labels_fontsize",
+        "year_labels_fontweight",
+        "line_label",
+        "line_width",
+        "line_color",
+        "line_style",
+        "marker",
+        "marker_size",
+        "marker_face_color",
+        "marker_edge_width",
+        "neutralline_label",
+        "neautralline_width",
+        "neutralline_color",
+        "neutralline_style",
+        "averageline_label",
+        "averageline_width",
+        "averageline_color",
+        "averageline_style",
+        "highest_rating_label",
+        "highest_rating_point_size",
+        "highest_rating_point_color",
+        "highest_rating_point_zorder",
+        "lowest_rating_label",
+        "lowest_rating_point_size",
+        "lowest_rating_point_color",
+        "lowest_rating_point_zorder",
+        "legend_label",
+        "legend_loc",
+        "legend_frameon",
+    }
 
     def __init__(self, dqt: Tracker):
         """Get required DQT attributes and initialize graph settings."""
@@ -34,7 +76,7 @@ class Graph:
         self.min_rating = dqt.min_rating
         self.max_rating = dqt.max_rating
         self.neutral_rating = dqt.neutral_rating
-        self.json: DQTJSON = dqt.json
+        self.json = dqt.json
 
         # Graph settings
         self.graph_date_format = '%a %b %d'
@@ -152,6 +194,14 @@ class Graph:
     def show() -> None:
         """Show the graph."""
         plt.show()
+        
+    def configure(self, **kwargs) -> None:
+        for key, value in kwargs.items():
+            if key not in self._CONFIG_KEYS:
+                raise ValueError(
+                    f"Unknown configuration option: '{key}'"
+                )
+            setattr(self, key, value)
         
     def _fill_missing(self, dates: list[datetime]) \
             -> tuple[list[datetime], list[float | None]]:

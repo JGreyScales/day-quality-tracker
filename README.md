@@ -7,7 +7,7 @@ Matplotlib.pyplot module.
 
 Before using the program, ensure you have a Python interpreter installed on your system **(version 3.12+ recommended)**.
 
-1. To start the program, **run `day_quality_tracker.py`**, or
+To start the program, **run `main.py`**, or
    
    ```python
    from dqt.tracker import Tracker
@@ -15,13 +15,10 @@ Before using the program, ensure you have a Python interpreter installed on your
    dqt = Tracker()
    dqt.run()
    ```
-   
-2. A JSON file, **`dq_logs.json`, is automatically generated on first run**. This file is used to record the ratings
-   you enter
-3. Follow the instructions in the program.
-    1. Enter day quality ratings as either an integer or float (e.g., 12 or 5.2).
-    2. All ratings are automatically rounded to 3 decimal places (by default)
-    3. You can always change your ratings at any time.
+
+Every day, if you have not yet entered a rating, the program will prompt you to do so.
+The default earliest time you can enter a rating is 8 PM. You can change this by:
+
 
 ## License
 

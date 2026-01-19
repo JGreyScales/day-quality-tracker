@@ -7,7 +7,9 @@ if __name__ == '__main__':
     dqt = Tracker()
 
     # Customizations go here ↴
-    dqt.rating_inp_dp = 2
+    dqt.configure(
+    
+    )
     # ------------------------ #
 
     try:
