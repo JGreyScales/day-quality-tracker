@@ -6,7 +6,7 @@ from dqt.tracker import Tracker
 if __name__ == '__main__':
     dqt = Tracker()
 
-    # Customizations go here ↴
+    # Custom configurations go here ↴
     dqt.configure(
     
     )
