@@ -175,6 +175,7 @@ class DayQualityTracker:
                         break
                 
                 case '6' | 'x':
+                    print("\n*⎋* —————————————————————————————— *⎋*")
                     print("\nBye!")
                     raise SystemExit()
                 
