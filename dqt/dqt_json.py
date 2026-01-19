@@ -20,12 +20,14 @@ class DQTJSON:
     def __init__(self, dqt: Tracker):
         self.dqt = dqt
         self.date_format = self.dqt.date_format
-
-        self.parent_dir = Path(__file__).resolve().parent
-        self.filename = '../data/dq_logs.json'
-        self.filepath = self.parent_dir / self.filename
+        
+        self.filedirname = 'data'
+        self.filedirpath = (Path(__file__).resolve().parent.parent
+                            / self.filedirname)
+        self.filename = 'dq_logs.json'
+        self.filepath = self.filedirpath / self.filename
         self._filename_pre5 = 'dq_ratings.json'
-        self._filepath_pre5 = self.parent_dir / self._filename_pre5
+        self._filepath_pre5 = self.filedirpath / self._filename_pre5
 
         self.json_indent = 4
 
