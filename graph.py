@@ -60,6 +60,11 @@ class Graph:
         self.line_color = None
         self.line_style = '-'
         
+        self.marker = 'o'
+        self.marker_size = 4
+        self.marker_face_color = None
+        self.marker_edge_width = 0
+        
         self.neutralline_label = 'Neutral rating (baseline)'
         self.neutralline_width = 1
         self.neutralline_color = 'black'
@@ -202,7 +207,11 @@ class Graph:
             fdates,
             ratings,
             linewidth=self.line_width,
-            color=self.line_color,
+            linestyle=self.line_style,
+            marker=self.marker,
+            markersize=self.marker_size,
+            markerfacecolor=self.marker_face_color,
+            markeredgewidth=self.marker_edge_width,
             label=self.line_label,
         )
         
