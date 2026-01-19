@@ -136,6 +136,7 @@ class Stats:
     
     @staticmethod
     def _format_dates(dates: list[str]) -> str:
+        """Format dates as a string, separated by commas."""
         return ", ".join(dates)
 
     
