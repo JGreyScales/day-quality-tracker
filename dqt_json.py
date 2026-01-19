@@ -147,7 +147,7 @@ class DQTJSON:
                 )
             print("\n* —————————————————————————————— *")
         
-        print("\nLast 30 logs, most recent first:")
+        print("\nLast 30 logs, most recent last:")
         
         if not self.logs:
             print("\n[No logs found]")
@@ -157,8 +157,6 @@ class DQTJSON:
         items_list = list(self.logs.items())
         # Get the last 30 items or all items if less than 30
         last_30_items = items_list[-30:]
-        # Reverse list to print most recent logs first
-        last_30_items.reverse()
         
         _loop_print(last_30_items)
         
