@@ -6,8 +6,9 @@ from typing import TYPE_CHECKING
 
 try:
     import matplotlib.pyplot as plt
+    import matplotlib.dates as mdates
 except ModuleNotFoundError:
-    print("\nA python package 'matplotlib' is required before running.")
+    print("\nThe python package 'matplotlib' is required before running.")
     if input("Install now? (y/n): ").lower() != 'y':
         raise SystemExit()
     check_call([sys.executable, '-m', 'pip', 'install', '--upgrade', 'pip'])
@@ -15,6 +16,7 @@ except ModuleNotFoundError:
     print("\nInstallation complete!")
     print("Resuming program...\n")
     import matplotlib.pyplot as plt
+    import matplotlib.dates as mdates
 
 if TYPE_CHECKING:
     from day_quality_tracker import DayQualityTracker
@@ -114,7 +116,10 @@ class Graph:
         if not logs:
             raise ValueError("No logs saved")
         
-        dates = list(logs.keys())
+        dates = [
+            datetime.strptime(date, self.dqt_date_format)
+            for date in logs.keys()
+        ]
         ratings = [
             log[self.json.rating_kyname]
             for log in logs.values()
@@ -127,13 +132,6 @@ class Graph:
         if not logs:
             raise ValueError("No logs saved")
         
-        # Make formated dates for displaying
-        formatted_dates: list[str] = [
-            datetime.strptime(date, self.dqt_date_format)
-            .strftime(self.graph_date_format)
-            for date in dates
-        ]
-        
         plt.style.use(self.graph_style)
         fig, ax = plt.subplots()
         
@@ -141,10 +139,10 @@ class Graph:
         self._draw_xylabels(ax)
         self._set_ticks(fig, ax)
         
-        self._plot_ratings(ax, formatted_dates, ratings)
+        self._plot_ratings(ax, dates, ratings)
         self._draw_neutral_rating_line(ax)
         self._draw_average_rating_line(ax, ratings)
-        self._plot_highest_lowest_ratings(ax, formatted_dates, ratings)
+        self._plot_highest_lowest_ratings(ax, dates, ratings)
         
         self._draw_year_labels(ax, dates)
         
@@ -175,15 +173,16 @@ class Graph:
         ax.tick_params(labelsize=self.tick_params_fontsize)
         if self.autofmt_xdates:
             fig.autofmt_xdate()
+        ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+        ax.xaxis.set_major_formatter(mdates.DateFormatter(self.graph_date_format))
         ax.set_yticks(
             range(self.min_rating, self.max_rating + 1)
         )
     
-    def _draw_year_labels(self, ax: plt.Axes, dates: list[str]) -> None:
+    def _draw_year_labels(self, ax: plt.Axes, dates: list[datetime]) -> None:
         """Draw year labels."""
         shown_years = set()
-        for i, date_str in enumerate(dates):
-            date = datetime.strptime(date_str, self.dqt_date_format)
+        for i, date in enumerate(dates):
             year = date.year
             
             if year not in shown_years:
@@ -200,11 +199,11 @@ class Graph:
                 )
                 shown_years.add(year)
     
-    def _plot_ratings(self, ax: plt.Axes, fdates: list[str],
+    def _plot_ratings(self, ax: plt.Axes, dates: list[datetime],
                       ratings: list[float | None]) -> None:
         """Plot rating values."""
         ax.plot(
-            fdates,
+            dates,
             ratings,
             linewidth=self.line_width,
             linestyle=self.line_style,
@@ -214,7 +213,7 @@ class Graph:
             markeredgewidth=self.marker_edge_width,
             label=self.line_label,
         )
-        
+    
     def _draw_neutral_rating_line(self, ax: plt.Axes) -> None:
         """Draw horizontal neutral rating line."""
         ax.axhline(
@@ -248,7 +247,7 @@ class Graph:
     
     def _plot_highest_lowest_ratings(self,
                                      ax: plt.Axes,
-                                     fdates: list[str],
+                                     dates: list[datetime],
                                      ratings: list[float | None]) -> None:
         """Plot highest and lowest rating values as points."""
         indexed = [(i, r) for i, r in enumerate(ratings) if r is not None]
@@ -263,7 +262,7 @@ class Graph:
         min_indices = [i for i, r in indexed if r == min_val]
         
         ax.scatter(
-            [fdates[i] for i in max_indices],
+            [dates[i] for i in max_indices],
             [max_val] * len(max_indices),
             label=self.highest_rating_label,
             s=self.highest_rating_point_size,
@@ -272,7 +271,7 @@ class Graph:
         )
         
         ax.scatter(
-            [fdates[i] for i in min_indices],
+            [dates[i] for i in min_indices],
             [min_val] * len(min_indices),
             label=self.lowest_rating_label,
             s=self.lowest_rating_point_size,
