@@ -1,7 +1,7 @@
 import sys
 from time import sleep
 from subprocess import check_call
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
 try:
@@ -116,14 +116,12 @@ class Graph:
         if not logs:
             raise ValueError("No logs saved")
         
-        dates = [
-            datetime.strptime(date, self.dqt_date_format)
-            for date in logs.keys()
-        ]
-        ratings = [
-            log[self.json.rating_kyname]
-            for log in logs.values()
-        ]
+        dates, ratings = self._fill_missing(
+            sorted(
+                datetime.strptime(d, self.dqt_date_format)
+                for d in self.json.logs.keys()
+            )
+        )
         
         # Close existing windows to prevent overlapping
         plt.close('all')
@@ -155,6 +153,26 @@ class Graph:
         """Show the graph."""
         plt.show()
         
+    def _fill_missing(self, dates: list[datetime]) \
+            -> tuple[list[datetime], list[float | None]]:
+        """Fill in missing ratings with None."""
+        start = dates[0]
+        end = dates[-1]
+        
+        full_dates = []
+        full_ratings = []
+        
+        current = start
+        while current <= end:
+            key = current.strftime(self.dqt_date_format)
+            full_dates.append(current)
+            full_ratings.append(
+                self.json.logs.get(key, {}).get(self.json.rating_kyname)
+            )
+            current += timedelta(days=1)
+            
+        return full_dates, full_ratings
+    
     def _set_title(self, ax: plt.Axes) -> None:
         """Set the title of the graph."""
         ax.set_title(
