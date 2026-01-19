@@ -31,7 +31,7 @@ class Tracker:
         self.min_time = 20  # Earliest hour the of day to enter rating
         self.min_rating = 1  # 1 recommended
         self.max_rating = 20  # Even number recommended
-        self.neutral_rating = self.max_rating / 2  # Rating for an average day
+        self.neutral_rating = round(self.max_rating / 2)
         self.rating_inp_dp = 2
         
         self.date_format = '%Y-%m-%d'
