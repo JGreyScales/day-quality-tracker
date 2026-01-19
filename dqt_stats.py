@@ -124,6 +124,7 @@ class Stats:
         ranked_days = sorted(
             weekday_averages.items(),
             key=lambda item: item[1],
+            reverse=True
         )
         
         print(f"\n{Txt("Best days of the week").bold()} "
