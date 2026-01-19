@@ -5,13 +5,13 @@ from typing import TYPE_CHECKING
 from styletext import StyleText as Txt
 
 if TYPE_CHECKING:
-    from day_quality_tracker import DayQualityTracker
+    from tracker import Tracker
 
 
 class Stats:
     """A class to manage stats display."""
     
-    def __init__(self, dqt: DayQualityTracker):
+    def __init__(self, dqt: Tracker):
         """Initialize attributes."""
         self.dqt = dqt
         self.json = dqt.json

@@ -1,17 +1,17 @@
 from datetime import datetime
 from pstats import Stats
 
-from graph import Graph
-from dqt_json import DQTJSON
-from dqt_manager import Manager
-from dqt_stats import Stats
+from dqt.graph import Graph
+from dqt.dqt_json import DQTJSON
+from dqt.dqt_manager import Manager
+from dqt.dqt_stats import Stats
 from ui_utils import *
 from styletext import StyleText as Txt
 
 _UNSET = object()
 
 
-class DayQualityTracker:
+class Tracker:
     """Track and visualize day quality ratings in a graph."""
     
     def __init__(self):

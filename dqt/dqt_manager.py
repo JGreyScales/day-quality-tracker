@@ -5,13 +5,13 @@ from ui_utils import *
 from styletext import StyleText as Txt
 
 if TYPE_CHECKING:
-    from day_quality_tracker import DayQualityTracker
+    from tracker import Tracker
 
 
 class Manager:
     """A class to manage Day Quality Tracker JSON contents handling."""
     
-    def __init__(self, dqt: DayQualityTracker):
+    def __init__(self, dqt: Tracker):
         self.dqt = dqt
         self.json = dqt.json
         

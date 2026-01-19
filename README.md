@@ -1,4 +1,4 @@
-# Day Quality Tracker 4 <sub><sup>(v0.4.0)</sup></sub>
+# Day Quality Tracker 5 <sub><sup>(v0.5.0)</sup></sub>
 
 This is a simple Python CLI that helps you track your day quality ratings and visualize them on a graph using the 
 Matplotlib.pyplot module.
@@ -10,9 +10,9 @@ Before using the program, ensure you have a Python interpreter installed on your
 1. To start the program, **run `day_quality_tracker.py`**, or
    
    ```python
-   from day_quality_tracker import DayQualityTracker
+   from dqt.tracker import Tracker
    
-   dqt = DayQualityTracker()
+   dqt = Tracker()
    dqt.run()
    ```
    

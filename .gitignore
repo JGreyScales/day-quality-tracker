@@ -46,5 +46,5 @@ Thumbs.db
 *.temp
 
 # Other
-dq_logs.json
+data/dq_logs.json
 plan.md

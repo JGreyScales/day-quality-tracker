@@ -1,10 +1,10 @@
 import sys
 import traceback
 
-from day_quality_tracker import DayQualityTracker
+from dqt.tracker import Tracker
 
 if __name__ == '__main__':
-    dqt = DayQualityTracker()
+    dqt = Tracker()
 
     # Customizations go here ↴
     dqt.rating_inp_dp = 2

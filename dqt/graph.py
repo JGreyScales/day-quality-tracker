@@ -19,14 +19,14 @@ except ModuleNotFoundError:
     import matplotlib.dates as mdates
 
 if TYPE_CHECKING:
-    from day_quality_tracker import DayQualityTracker
+    from tracker import Tracker
     from dqt_json import DQTJSON
 
 
 class Graph:
     """A class to manage graph plotting for day_quality_tracker."""
 
-    def __init__(self, dqt: DayQualityTracker):
+    def __init__(self, dqt: Tracker):
         """Get required DQT attributes and initialize graph settings."""
         # DayQualityTracker attributes
         self.dqt = dqt

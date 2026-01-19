@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from styletext import StyleText as Txt
 
 if TYPE_CHECKING:
-    from day_quality_tracker import DayQualityTracker
+    from tracker import Tracker
 
 _UNSET = object()
 
@@ -17,12 +17,12 @@ _UNSET = object()
 class DQTJSON:
     """A class to manage Day Quality Tracker JSON contents handling."""
 
-    def __init__(self, dqt: DayQualityTracker):
+    def __init__(self, dqt: Tracker):
         self.dqt = dqt
         self.date_format = self.dqt.date_format
 
         self.parent_dir = Path(__file__).resolve().parent
-        self.filename = 'dq_logs.json'
+        self.filename = '../data/dq_logs.json'
         self.filepath = self.parent_dir / self.filename
         self._filename_pre5 = 'dq_ratings.json'
         self._filepath_pre5 = self.parent_dir / self._filename_pre5
