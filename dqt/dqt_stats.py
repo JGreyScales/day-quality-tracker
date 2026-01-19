@@ -2,7 +2,7 @@ from datetime import datetime
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
-from styletext import StyleText as Txt
+from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
     from tracker import Tracker

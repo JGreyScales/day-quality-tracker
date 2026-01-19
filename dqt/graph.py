@@ -19,7 +19,7 @@ except ModuleNotFoundError:
     import matplotlib.dates as mdates
 
 if TYPE_CHECKING:
-    from tracker import Tracker
+    from dqt.tracker import Tracker
 
 
 class Graph:

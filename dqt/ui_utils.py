@@ -1,6 +1,6 @@
 from time import sleep
 
-from styletext import StyleText as Txt
+from dqt.styletext import StyleText as Txt
 
 
 def err(message: str, *desc: str) -> None:

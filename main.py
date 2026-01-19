@@ -10,7 +10,6 @@ if __name__ == '__main__':
     dqt.configure(
     
     )
-    # ------------------------ #
 
     try:
         dqt.run()

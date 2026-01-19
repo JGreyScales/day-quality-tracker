@@ -5,8 +5,7 @@ from dqt.graph import Graph
 from dqt.dqt_json import DQTJSON
 from dqt.dqt_manager import Manager
 from dqt.dqt_stats import Stats
-from ui_utils import *
-from styletext import StyleText as Txt
+from dqt.ui_utils import *
 
 _UNSET = object()
 
@@ -195,6 +194,7 @@ class Tracker:
                     err("Only enter 1~6 or the given letters.")
     
     def configure(self, **kwargs) -> None:
+        """Configure intance variables."""
         for key, value in kwargs.items():
             if key not in self._CONFIG_KEYS:
                 raise ValueError(

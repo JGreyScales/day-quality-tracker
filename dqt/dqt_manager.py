@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
-from ui_utils import *
-from styletext import StyleText as Txt
+from dqt.ui_utils import *
+from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
     from tracker import Tracker
