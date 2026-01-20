@@ -50,7 +50,6 @@ class Tracker:
     def run(self) -> None:
         """Run Day Quality Tracker."""
         print(Txt("\n*--- Day Quality Tracker! ---*").bold().yellow())
-        sleep(1)
         
         choice = self.manager.handle_missing_logs()
         

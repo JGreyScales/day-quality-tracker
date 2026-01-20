@@ -30,8 +30,7 @@ class Stats:
             - Lowest rating
             - Days of the week ranked from best to worst
         """
-        print(Txt("\nDay Quality Rating Stats:").bold().cyan().underline())
-        print()
+        print(Txt("\nDay Quality Rating Stats:\n").bold().cyan().underline())
         
         rating_key = self.json.rating_kyname
         logs = self.json.logs
@@ -76,7 +75,7 @@ class Stats:
             self.rating_inp_dp
         )
         print(f"{Txt("Average rating:").bold()} "
-              f"{Txt(avg).bold()}/{self.max_rating}")
+              f"{Txt(f"{avg:g}").bold()}/{self.max_rating}")
     
     def _print_highest_lowest_rating(
             self,
@@ -101,13 +100,13 @@ class Stats:
         
         print(
             f"{Txt("Highest rating:").bold()} "
-            f"{Txt(highest).bold()}/{self.max_rating} "
+            f"{Txt(f"{highest:g}").bold()}/{self.max_rating} "
             f"on {self._format_dates(highest_dates)}"
         )
         
         print(
             f"{Txt("Lowest rating:").bold()} "
-            f"{Txt(lowest).bold()}/{self.max_rating} "
+            f"{Txt(f"{lowest:g}").bold()}/{self.max_rating} "
             f"on {self._format_dates(lowest_dates)}"
         )
     
@@ -135,8 +134,9 @@ class Stats:
         print(f"\n{Txt("Best days of the week").bold()} "
               "(highest to lowest average rating):")
         for day, value in ranked_days:
+            cleaned_avg = f"{round(value, self.rating_inp_dp):g}"
             print(f"\t{Txt(day).bold()}: "
-                  f"{Txt(round(value, self.rating_inp_dp)).bold()}"
+                  f"{Txt(cleaned_avg).bold()}"
                   f"/{self.max_rating}")
     
     @staticmethod

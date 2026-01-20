@@ -133,7 +133,10 @@ class DQTJSON:
             if rating is None:
                 print(Txt("Rating: ").bold() + "-")
             else:
-                print(f"{Txt("Rating:").bold()} {rating}/{self.dqt.max_rating}")
+                print(
+                    f"{Txt("Rating:").bold()}",
+                    f"{rating:g}/{self.dqt.max_rating}"
+                )
         
         # ----- Memory -----
         if memory is not _UNSET:

@@ -125,9 +125,12 @@ class Manager:
                 f"{self.neutral_rating} being an average day: "
             )
             
-            if (input("\nWould you like to enter a memory entry now? (y/n): ")
+            if (input("\nWould you like to enter a memory entry? (y/n): ")
                     .strip().lower() != 'y'):
-                print("\n'Edit today's log' to enter your memory entry later!")
+                print(
+                    "\nTo enter your memory entry later: "
+                    "Main menu -> Edit today's/previous log -> Edit memory"
+                )
                 tdys_memory = ''
             else:
                 tdys_memory = self._input_memory(
@@ -164,10 +167,9 @@ class Manager:
             if todays_rating is None:
                 rating_to_show = "[No rating]"
             else:
-                rating_to_show = f"{todays_rating}/{self.max_rating}"
+                rating_to_show = f"{todays_rating:g}/{self.max_rating}"
             
             print(Txt(f"Rating to change: {rating_to_show}").bold())
-            sleep(1)
             
             tdys_rating = self._input_rating(
                 "Enter new rating for today "
@@ -180,8 +182,7 @@ class Manager:
             notify_log_saved("Rating updated and saved!")
         
         else:
-            print("\nYou haven't entered a rating yet today!")
-            sleep(1)
+            err("\nYou haven't entered a rating yet today!")
     
     def change_todays_memory(self) -> None:
         """Prompt the user to change today's memory entry."""
@@ -193,7 +194,6 @@ class Manager:
                 prev_mem = "[Empty entry]"
             print(Txt(f"Memory entry to change: ").bold)
             print(prev_mem)
-            sleep(1)
             
             tdys_memory = self._input_memory(
                 "Enter new memory entry for today: "
@@ -205,8 +205,7 @@ class Manager:
             notify_log_saved("Memory entry updated and saved!")
         
         else:
-            print("\nYou haven't entered a log yet today!")
-            sleep(1)
+            err("\nYou haven't entered a log yet today!")
         
     def prompt_prev_date(self) -> str:
         """Prompt the user to enter a previous date."""
