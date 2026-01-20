@@ -10,6 +10,12 @@ if __name__ == '__main__':
     dqt.configure(
     
     )
+    dqt.json.configure(
+    
+    )
+    dqt.graph.configure(
+    
+    )
 
     try:
         dqt.run()
