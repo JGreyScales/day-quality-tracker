@@ -88,6 +88,10 @@ If you choose to skip the missed logs, you will have to enter them later manuall
 before entering today's log). This is because the program determines if you've missed a log by checking the last log 
 recorded.
 
+### Custom Configurations
+
+To add custom configurations, pass any valid keyword argument into the provided empty `configure()` calls in `main.py`.
+
 ## License
 
 This project is licensed under the MIT License.
