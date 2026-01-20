@@ -3,6 +3,7 @@ import sys
 
 
 def _detect_ansi_support() -> bool:
+    """Determine if ANSI escape codes in stdout are supported."""
     # 1) Explicit override
     if 'DQT_COLOR' in os.environ:
         return os.environ['DQT_COLOR'] == '1'

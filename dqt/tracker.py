@@ -194,7 +194,7 @@ class Tracker:
                     err("Only enter 1~6 or the given letters.")
     
     def configure(self, **kwargs) -> None:
-        """Configure intance variables."""
+        """Update configuration options via keyword arguments."""
         for key, value in kwargs.items():
             if key not in self._CONFIG_KEYS:
                 raise ValueError(

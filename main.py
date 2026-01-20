@@ -1,3 +1,5 @@
+"""RUN THIS MODULE TO START DAY QUALITY TRACKER."""
+
 import sys
 import traceback
 

@@ -28,6 +28,7 @@ class DQTJSON:
     }
 
     def __init__(self, dqt: Tracker):
+        """Initialize attributes."""
         self.dqt = dqt
         self.date_format = self.dqt.date_format
         
@@ -205,6 +206,7 @@ class DQTJSON:
         input("\n[Press ENTER to return to main menu] ")
         
     def configure(self, **kwargs) -> None:
+        """Update configuration options via keyword arguments."""
         for key, value in kwargs.items():
             if key not in self._CONFIG_KEYS:
                 raise ValueError(

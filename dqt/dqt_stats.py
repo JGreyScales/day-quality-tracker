@@ -60,6 +60,7 @@ class Stats:
     @staticmethod
     def _print_days_rated(logs: dict[str, dict[str, float | None | str]],
                           rated_items: list[tuple[str, float]]) -> None:
+        """Print the number of days rated."""
         days_total = len(logs)
         days_rated = len(rated_items)
         
@@ -81,6 +82,10 @@ class Stats:
             self,
             ratings_only: list[float],
             rated_items: list[tuple[str, float]]) -> None:
+        """Print highest and lowest ratings, and the date for each.
+        
+        Prints the dates of ALL days that share the highest/lowest rating.
+        """
         highest = max(ratings_only)
         lowest = min(ratings_only)
         
