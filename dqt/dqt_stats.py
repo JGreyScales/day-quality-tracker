@@ -133,9 +133,11 @@ class Stats:
         
         print(f"\n{Txt("Best days of the week").bold()} "
               "(highest to lowest average rating):")
+        counter = 0
         for day, value in ranked_days:
+            counter += 1
             cleaned_avg = f"{round(value, self.rating_inp_dp):g}"
-            print(f"\t{Txt(day).bold()}: "
+            print(f"  #{counter} {Txt(day).bold()}: "
                   f"{Txt(cleaned_avg).bold()}"
                   f"/{self.max_rating}")
     
