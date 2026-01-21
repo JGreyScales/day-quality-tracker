@@ -1,5 +1,4 @@
 import sys
-from time import sleep
 from subprocess import check_call
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
@@ -17,6 +16,8 @@ except ModuleNotFoundError:
     print("Resuming program...\n")
     import matplotlib.pyplot as plt
     import matplotlib.dates as mdates
+    
+from dqt.ui_utils import *
 
 if TYPE_CHECKING:
     from dqt.tracker import Tracker
@@ -26,8 +27,8 @@ class Graph:
     """A class to manage graph plotting for day_quality_tracker."""
     
     _CONFIG_KEYS = {
-        "graph_date_format",
         "graph_style",
+        "graph_show_block",
         "title",
         "title_fontsize",
         "title_padding",
@@ -36,6 +37,7 @@ class Graph:
         "ylabel",
         "ylabel_fontsize",
         "tick_params_fontsize",
+        "graph_date_format",
         "autofmt_xdates",
         "year_labels_fontsize",
         "year_labels_fontweight",
@@ -137,23 +139,18 @@ class Graph:
     def view_ratings_graph(self) -> None:
         """Display current ratings graph."""
         if not self.json.logs:
-            print("\nYou haven't entered any ratings yet!")
-            sleep(1)
+            err("You haven't entered any ratings yet!")
             return
         
         print("\nBuilding graph...")
         
-        self.build()
+        self._build()
         
         print("\nDisplaying graph...")
-        print("Close the graph window to proceed.")
         
-        self.show()
+        self._show()
         
-        print("\nGraph closed.")
-        print("Returning to main menu...")
-
-    def build(self) -> None:
+    def _build(self) -> None:
         """Build the graph and initialize plt, fig, and ax properties."""
         logs = self.json.logs
         if not logs:
@@ -191,8 +188,7 @@ class Graph:
         
         self._draw_legend(ax)
         
-    @staticmethod
-    def show() -> None:
+    def _show(self) -> None:
         """Show the graph."""
         plt.show(block=self.graph_show_block)
         plt.pause(0.1)
@@ -206,9 +202,7 @@ class Graph:
         """Update configuration options via keyword arguments."""
         for key, value in kwargs.items():
             if key not in self._CONFIG_KEYS:
-                raise ValueError(
-                    f"Unknown configuration option: '{key}'"
-                )
+                raise ValueError(f"Unknown configuration option: '{key}'")
             setattr(self, key, value)
         
     def _fill_missing(self, dates: list[datetime]) \

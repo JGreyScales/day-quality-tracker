@@ -201,7 +201,5 @@ class Tracker:
         """Update configuration options via keyword arguments."""
         for key, value in kwargs.items():
             if key not in self._CONFIG_KEYS:
-                raise ValueError(
-                    f"Unknown configuration option: '{key}'"
-                )
+                raise ValueError(f"Unknown configuration option: '{key}'")
             setattr(self, key, value)
