@@ -180,9 +180,7 @@ class Tracker:
                             case '3' | 'c':
                                 break
                             case _:
-                                err(
-                                    "Only enter 1~3 or the given letters."
-                                )
+                                err("Only enter 1~3 or the given letters.")
                                 continue
                         break
                 
