@@ -73,6 +73,11 @@ class Tracker:
             match input("> ").lower().strip():
                 case '1' | 'g':
                     self.graph.view_ratings_graph()
+                    if not self.graph.graph_show_block:
+                        input("\n[Press ENTER to return to main menu]")
+                        self.graph.close()
+                    else:
+                        print("\nGraph closed.")
                 
                 case '2' | 't':
                     if not self.json.today_rated():

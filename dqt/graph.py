@@ -79,8 +79,8 @@ class Graph:
         self.json = dqt.json
 
         # Graph settings
-        self.graph_date_format = '%a %b %d'
-
+        self.graph_show_block = True
+        
         self.graph_style = 'ggplot'
 
         self.title = "Day Quality Ratings"
@@ -94,6 +94,7 @@ class Graph:
 
         self.tick_params_fontsize = 7
         
+        self.graph_date_format = '%a %b %d'
         self.autofmt_xdates = True
         
         self.year_labels_fontsize = 9
@@ -193,7 +194,13 @@ class Graph:
     @staticmethod
     def show() -> None:
         """Show the graph."""
-        plt.show()
+        plt.show(block=self.graph_show_block)
+        plt.pause(0.1)
+    
+    @staticmethod
+    def close() -> None:
+        """Close the graph."""
+        plt.close('all')
         
     def configure(self, **kwargs) -> None:
         """Update configuration options via keyword arguments."""
