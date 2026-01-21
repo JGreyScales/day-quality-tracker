@@ -13,6 +13,8 @@ _UNSET = object()
 class Tracker:
     """Track and visualize day quality ratings in a graph."""
     
+    VERSION = '0.5.0'
+    
     _CONFIG_KEYS = {
         "min_time",
         "min_rating",
@@ -50,6 +52,7 @@ class Tracker:
     def run(self) -> None:
         """Run Day Quality Tracker."""
         print(Txt("\n*--- Day Quality Tracker! ---*").bold().yellow())
+        print(Txt(f"       (Version {self.VERSION})").dim())
         
         choice = self.manager.handle_missing_logs()
         
