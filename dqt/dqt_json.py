@@ -186,8 +186,6 @@ class DQTJSON:
             
             _loop_print(items_until_last_30th)
             
-            input("\n[Press ENTER to return to main menu] ")
-    
     def open_json_file(self) -> None:
         """Open the JSON file in the default system applicaiton."""
         print("\nOpening JSON file...")
@@ -206,7 +204,6 @@ class DQTJSON:
         
         print(f"File opened in a new window!")
         print("Remember to save changes before closing the file.")
-        input("\n[Press ENTER to return to main menu] ")
         
     def configure(self, **kwargs) -> None:
         """Update configuration options via keyword arguments."""

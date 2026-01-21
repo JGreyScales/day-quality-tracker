@@ -173,8 +173,10 @@ class Tracker:
                         match choice:
                             case '1' | 'p':
                                 self.json.print_logs_to_stdout()
+                                input("\n[Press ENTER to return to main menu]")
                             case '2' | 'o':
                                 self.json.open_json_file()
+                                input("\n[Press ENTER to return to main menu]")
                             case '3' | 'c':
                                 break
                             case _:
