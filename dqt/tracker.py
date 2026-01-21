@@ -13,7 +13,8 @@ _UNSET = object()
 class Tracker:
     """Track and visualize day quality ratings in a graph."""
     
-    VERSION = '0.5.0'
+    VERSION = 5
+    SEMVER = '0.5.0'
     
     _CONFIG_KEYS = {
         "min_time",
@@ -51,8 +52,12 @@ class Tracker:
     
     def run(self) -> None:
         """Run Day Quality Tracker."""
-        print(Txt("\n*--- Day Quality Tracker! ---*").bold().yellow())
-        print(Txt(f"       (Version {self.VERSION})").dim())
+        print(
+            Txt(
+                f"\n*--- Day Quality Tracker {self.VERSION}! ---*"
+            ).bold().yellow()
+        )
+        print(Txt(f"        (Version {self.SEMVER})").dim())
         
         choice = self.manager.handle_missing_logs()
         
@@ -84,8 +89,7 @@ class Tracker:
                 
                 case '2' | 't':
                     if not self.json.today_rated():
-                        print("\n You haven't entered today's log yet!")
-                        sleep(1)
+                        err("You haven't entered today's log yet!")
                         continue
                     
                     print(Txt("\nToday's log:").bold())
