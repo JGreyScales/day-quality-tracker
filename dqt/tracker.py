@@ -83,7 +83,7 @@ class Tracker:
                 case '1' | 'g':
                     self.graph.view_ratings_graph()
                     if not self.graph.graph_show_block:
-                        input("\n[Press ENTER to return to main menu]")
+                        cont_on_enter()
                         self.graph.close()
                     else:
                         print("\nGraph closed.")
@@ -173,7 +173,7 @@ class Tracker:
                 
                 case '4' | 's':
                     self.stats.show_stats()
-                    input("\n[Press ENTER to return to main menu]")
+                    cont_on_enter()
                 
                 case '5' | 'a':
                     while True:
@@ -186,10 +186,10 @@ class Tracker:
                         match choice:
                             case '1' | 'p':
                                 self.json.print_logs_to_stdout()
-                                input("\n[Press ENTER to return to main menu]")
+                                cont_on_enter()
                             case '2' | 'o':
                                 self.json.open_json_file()
-                                input("\n[Press ENTER to return to main menu]")
+                                cont_on_enter()
                             case '3' | 'c':
                                 break
                             case _:
