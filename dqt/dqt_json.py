@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from tracker import Tracker
 
 _UNSET = object()
+_today = datetime.today()
 
 
 class DQTJSON:
@@ -104,7 +105,7 @@ class DQTJSON:
     
     def today_rated(self) -> bool:
         """Check if a rating has been provided for today."""
-        today = datetime.today().strftime(self.date_format)
+        today = _today.strftime(self.date_format)
         return today in self.logs
     
     def print_log(self,

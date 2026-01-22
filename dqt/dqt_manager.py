@@ -6,6 +6,8 @@ from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
     from tracker import Tracker
+    
+_today = datetime.today()
 
 
 class Manager:
@@ -36,8 +38,7 @@ class Manager:
         
         last_date_str = max(self.dqt.json.logs.keys())
         last_date = datetime.strptime(last_date_str, self.date_format).date()
-        todays_date = datetime.now().date()
-        days_since_last = (todays_date - last_date).days
+        days_since_last = (_today.date() - last_date).days
         
         if days_since_last <= 1:
             return None
@@ -139,7 +140,7 @@ class Manager:
                 )
             
             # Save data
-            today = datetime.today().strftime(self.date_format)
+            today = _today.strftime(self.date_format)
             self.json.add(today, tdys_rating, tdys_memory)
             notify_log_saved()
         
@@ -161,7 +162,7 @@ class Manager:
         """Prompt the user to change today's rating."""
         if self.json.today_rated():
             
-            today = datetime.today().strftime(self.date_format)
+            today = _today.strftime(self.date_format)
             
             todays_rating = self.json.get_rating(today)
             if todays_rating is None:
@@ -177,7 +178,6 @@ class Manager:
             )
             
             # Save data
-            today = datetime.today().strftime(self.date_format)
             self.json.update(date=today, rating=tdys_rating)
             notify_log_saved("Rating updated and saved!")
         
@@ -188,7 +188,7 @@ class Manager:
         """Prompt the user to change today's memory entry."""
         if self.json.today_rated():
             
-            today = datetime.today().strftime(self.date_format)
+            today = _today.strftime(self.date_format)
             prev_mem = self.json.get_memory(today)
             if not prev_mem:
                 prev_mem = "[Empty entry]"
@@ -200,7 +200,6 @@ class Manager:
             )
             
             # Save data
-            today = datetime.today().strftime(self.date_format)
             self.json.update(date=today, memory=tdys_memory)
             notify_log_saved("Memory entry updated and saved!")
         
@@ -217,8 +216,7 @@ class Manager:
             # If number of days ago specified, get date
             if inp.isdigit():
                 inp = int(inp)
-                today = datetime.today()
-                selected_date = today - timedelta(days=inp)
+                selected_date = _today - timedelta(days=inp)
                 selected_date = selected_date.strftime(self.date_format)
                 print(Txt(f"Date selected: {selected_date}").bold())
             

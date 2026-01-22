@@ -8,6 +8,7 @@ from dqt.dqt_stats import Stats
 from dqt.ui_utils import *
 
 _UNSET = object()
+_today = datetime.today()
 
 
 class Tracker:
@@ -93,7 +94,7 @@ class Tracker:
                         continue
                     
                     print(Txt("\nToday's log:").bold())
-                    today = datetime.today().strftime(self.date_format)
+                    today = _today.strftime(self.date_format)
                     self.json.print_log(
                         date=today,
                         rating=self.json.get_rating(today),
