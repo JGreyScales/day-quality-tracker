@@ -123,7 +123,8 @@ class Manager:
             
             tdys_rating = self._input_rating(
                 f"Rate your day from {self.min_rating} to {self.max_rating}, "
-                f"{self.neutral_rating} being an average day: "
+                f"{self.neutral_rating} being an average day "
+                f"\n(enter 'null' to skip): "
             )
             
             if (input("\nWould you like to enter a memory entry? (y/n): ")
