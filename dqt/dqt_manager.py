@@ -156,56 +156,44 @@ class Manager:
             
             print(f"\nYou can only input today's log after {formatted_time}.")
             print("\nCome back later to enter today's log!")
-    
-    # ####################### 2) Edit today's log ####################### #
-    
+        
     def change_todays_rating(self) -> None:
         """Prompt the user to change today's rating."""
-        if self.json.today_rated():
-            
-            today = _today.strftime(self.date_format)
-            
-            todays_rating = self.json.get_rating(today)
-            if todays_rating is None:
-                rating_to_show = "[No rating]"
-            else:
-                rating_to_show = f"{todays_rating:g}/{self.max_rating}"
-            
-            print(Txt(f"Rating to change: {rating_to_show}").bold())
-            
-            tdys_rating = self._input_rating(
-                "Enter new rating for today "
-                f"({self.min_rating}~{self.max_rating}): "
-            )
-            
-            # Save data
-            self.json.update(date=today, rating=tdys_rating)
-            notify_log_saved("Rating updated and saved!")
+        today = _today.strftime(self.date_format)
         
+        todays_rating = self.json.get_rating(today)
+        if todays_rating is None:
+            rating_to_show = "[No rating]"
         else:
-            err("\nYou haven't entered a rating yet today!")
-    
+            rating_to_show = f"{todays_rating:g}/{self.max_rating}"
+        
+        print(Txt(f"Rating to change: {rating_to_show}").bold())
+        
+        tdys_rating = self._input_rating(
+            "Enter new rating for today "
+            f"({self.min_rating}~{self.max_rating}): "
+        )
+        
+        # Save data
+        self.json.update(date=today, rating=tdys_rating)
+        notify_log_saved("Rating updated and saved!")
+        
     def change_todays_memory(self) -> None:
         """Prompt the user to change today's memory entry."""
-        if self.json.today_rated():
-            
-            today = _today.strftime(self.date_format)
-            prev_mem = self.json.get_memory(today)
-            if not prev_mem:
-                prev_mem = "[Empty entry]"
-            print(Txt(f"Memory entry to change: ").bold())
-            print(prev_mem)
-            
-            tdys_memory = self._input_memory(
-                "Enter new memory entry for today: "
-            )
-            
-            # Save data
-            self.json.update(date=today, memory=tdys_memory)
-            notify_log_saved("Memory entry updated and saved!")
+        today = _today.strftime(self.date_format)
+        prev_mem = self.json.get_memory(today)
+        if not prev_mem:
+            prev_mem = "[Empty entry]"
+        print(Txt(f"Memory entry to change: ").bold())
+        print(prev_mem)
         
-        else:
-            err("\nYou haven't entered a log yet today!")
+        tdys_memory = self._input_memory(
+            "Enter new memory entry for today: "
+        )
+        
+        # Save data
+        self.json.update(date=today, memory=tdys_memory)
+        notify_log_saved("Memory entry updated and saved!")
         
     def prompt_prev_date(self) -> str:
         """Prompt the user to enter a previous date."""
