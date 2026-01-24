@@ -7,6 +7,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from dqt.styletext import StyleText as Txt
+from dqt.ui_utils import cont_on_enter
 
 if TYPE_CHECKING:
     from tracker import Tracker
@@ -186,6 +187,8 @@ class DQTJSON:
             items_until_last_30th.reverse()
             
             _loop_print(items_until_last_30th)
+        
+        cont_on_enter()
             
     def open_json_file(self) -> None:
         """Open the JSON file in the default system applicaiton."""

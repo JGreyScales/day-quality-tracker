@@ -186,7 +186,6 @@ class Tracker:
                         match choice:
                             case '1' | 'p':
                                 self.json.print_logs_to_stdout()
-                                cont_on_enter()
                             case '2' | 'o':
                                 self.json.open_json_file()
                                 cont_on_enter()
