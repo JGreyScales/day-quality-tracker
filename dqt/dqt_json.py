@@ -115,7 +115,8 @@ class DQTJSON:
     def print_log(self,
                   date: str = _UNSET,
                   rating: float | None = _UNSET,
-                  memory: str = _UNSET) -> None:
+                  memory: str = _UNSET,
+                  linewrap_memory: bool = False) -> None:
         """Print a formatted log, and represent 'empty' values with text.
 
         Null (None) ratings are printed as "[No rating]".
@@ -147,7 +148,15 @@ class DQTJSON:
         if memory is not _UNSET:
             if memory:
                 print(Txt("Memory:").bold())
-                print(textwrap.fill(memory, self.memory_print_linewrap_maxcol))
+                if linewrap_memory:
+                    print(
+                        textwrap.fill(
+                            memory,
+                            self.memory_print_linewrap_maxcol
+                        )
+                    )
+                else:
+                    print(memory)
             else:
                 print(Txt("Memory: ").bold() + "-")
     
@@ -164,7 +173,8 @@ class DQTJSON:
                 self.print_log(
                     date=date,
                     rating=log[self.rating_kyname],
-                    memory=log[self.memory_kyname]
+                    memory=log[self.memory_kyname],
+                    linewrap_memory=True,
                 )
             print("\n* —————————————————————————————— *")
         
