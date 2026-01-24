@@ -2,6 +2,7 @@ import json
 import sys
 import os
 import subprocess
+import textwrap
 from pathlib import Path
 from datetime import datetime
 from typing import TYPE_CHECKING
@@ -42,11 +43,13 @@ class DQTJSON:
         self._filename_pre5 = 'dq_ratings.json'
         self._filepath_pre5 = self.filedirpath / self._filename_pre5
 
-        self.json_indent = 4
-
         self.rating_kyname = 'rating'
         self.memory_kyname = 'memory'
 
+        self.json_indent = 4
+        
+        self.memory_print_linewrap_maxcol = 60
+        
         self._touch()
 
         self.logs = self._load_json()
@@ -144,7 +147,7 @@ class DQTJSON:
         if memory is not _UNSET:
             if memory:
                 print(Txt("Memory:").bold())
-                print(memory)
+                print(textwrap.fill(memory, self.memory_print_linewrap_maxcol))
             else:
                 print(Txt("Memory: ").bold() + "-")
     
