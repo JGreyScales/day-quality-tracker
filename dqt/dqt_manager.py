@@ -226,7 +226,7 @@ class Manager:
                     datetime.strptime(inp, self.date_format)
                 except ValueError:
                     err("Enter wither a valid date in the "
-                        f"format {self.date_format_print} or a positive"
+                        f"format {self.date_format_print} or a positive "
                         "interger.")
                     continue
                 selected_date = inp
