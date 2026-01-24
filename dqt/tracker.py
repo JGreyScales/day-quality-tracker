@@ -105,18 +105,22 @@ class Tracker:
                         print(Txt("\nSelect:"))
                         print("1) Edit [R]ating")
                         print("2) Edit [M]emory entry")
-                        print("3) [C]ancel -> Main menu")
+                        print("3) Edit [B]oth")
+                        print("4) [C]ancel -> Main menu")
                         
                         match input("> ").strip().lower():
                             case '1' | 'r':
                                 self.manager.change_todays_rating()
                             case '2' | 'm':
                                 self.manager.change_todays_memory()
-                            case '3' | 'c':
+                            case '3' | 'b':
+                                self.manager.change_todays_rating()
+                                self.manager.change_todays_memory()
+                            case '4' | 'c':
                                 break
                             case _:
                                 err(
-                                    "Only enter 1~3 or the given letters."
+                                    "Only enter 1~4 or the given letters."
                                 )
                                 continue
                         break
