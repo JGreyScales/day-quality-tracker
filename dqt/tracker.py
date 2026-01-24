@@ -111,7 +111,7 @@ class Tracker:
                             case '1' | 'r':
                                 self.manager.change_todays_rating()
                             case '2' | 'm':
-                                self.manager.change_todays_rating()
+                                self.manager.change_todays_memory()
                             case '3' | 'c':
                                 break
                             case _:

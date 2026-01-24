@@ -192,7 +192,7 @@ class Manager:
             prev_mem = self.json.get_memory(today)
             if not prev_mem:
                 prev_mem = "[Empty entry]"
-            print(Txt(f"Memory entry to change: ").bold)
+            print(Txt(f"Memory entry to change: ").bold())
             print(prev_mem)
             
             tdys_memory = self._input_memory(
