@@ -159,39 +159,22 @@ class Manager:
         
     def change_todays_rating(self) -> None:
         """Prompt the user to change today's rating."""
-        today = _today.strftime(self.date_format)
-        
-        todays_rating = self.json.get_rating(today)
-        if todays_rating is None:
-            rating_to_show = "[No rating]"
-        else:
-            rating_to_show = f"{todays_rating:g}/{self.max_rating}"
-        
-        print(Txt(f"Rating to change: {rating_to_show}").bold())
-        
         tdys_rating = self._input_rating(
             "Enter new rating for today "
             f"({self.min_rating}~{self.max_rating}): "
         )
-        
         # Save data
+        today = _today.strftime(self.date_format)
         self.json.update(date=today, rating=tdys_rating)
         notify_log_saved("Rating updated and saved!")
         
     def change_todays_memory(self) -> None:
         """Prompt the user to change today's memory entry."""
-        today = _today.strftime(self.date_format)
-        prev_mem = self.json.get_memory(today)
-        if not prev_mem:
-            prev_mem = "[Empty entry]"
-        print(Txt(f"Memory entry to change: ").bold())
-        print(prev_mem)
-        
         tdys_memory = self._input_memory(
             "Enter new memory entry for today: "
         )
-        
         # Save data
+        today = _today.strftime(self.date_format)
         self.json.update(date=today, memory=tdys_memory)
         notify_log_saved("Memory entry updated and saved!")
         
@@ -237,11 +220,6 @@ class Manager:
     
     def change_previous_rating(self, selected_date: str) -> None:
         """Prompt the user to change a rating from a previous day."""
-        print(Txt("\nUpdating:").bold())
-        self.json.print_log(
-            date=selected_date,
-            rating=self.json.get_rating(selected_date)
-        )
         new_rating = self._input_rating(
             f"Enter new rating for {selected_date} "
             f"({self.min_rating}~{self.max_rating}): ",
@@ -253,12 +231,6 @@ class Manager:
     
     def change_previous_memory(self, selected_date: str) -> None:
         """Prompt the user to change a memory entry from a previous day."""
-        print(Txt("\nUpdating:").bold())
-        self.json.print_log(
-            date=selected_date,
-            memory=self.json.get_memory(selected_date)
-        )
-        
         new_memory = self._input_memory(
             f"Enter new memory entry for {selected_date}: "
         )
