@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
-from dqt.ui_utils import *
+from dqt.ui_utils import err, notify_log_saved
 from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:

@@ -17,7 +17,8 @@ except ModuleNotFoundError:
     import matplotlib.pyplot as plt
     import matplotlib.dates as mdates
     
-from dqt.ui_utils import *
+from dqt.ui_utils import err
+
 
 if TYPE_CHECKING:
     from dqt.tracker import Tracker

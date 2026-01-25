@@ -1,11 +1,11 @@
 from datetime import datetime
-from pstats import Stats
 
 from dqt.graph import Graph
 from dqt.dqt_json import DQTJSON
 from dqt.dqt_manager import Manager
 from dqt.dqt_stats import Stats
-from dqt.ui_utils import *
+from dqt.ui_utils import err, cont_on_enter
+from dqt.styletext import StyleText as Txt
 
 _UNSET = object()
 _today = datetime.today()
