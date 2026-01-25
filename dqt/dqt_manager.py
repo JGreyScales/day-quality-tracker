@@ -263,7 +263,6 @@ class Manager:
             
             if not (self.min_rating <= value <= self.max_rating):
                 err(error_msg)
-                sleep(1)
                 continue
             
             return round(value, self.rating_inp_dp)
