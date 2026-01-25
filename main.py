@@ -1,4 +1,4 @@
-"""RUN THIS MODULE TO START DAY QUALITY TRACKER."""
+"""Run this module to start Day Quality Tracker."""
 
 import sys
 import traceback
