@@ -53,12 +53,13 @@ class Tracker:
     
     def run(self) -> None:
         """Run Day Quality Tracker."""
+        title = f"*--- Day Quality Tracker {self.VERSION}! ---*"
         print(
             Txt(
-                f"\n*--- Day Quality Tracker {self.VERSION}! ---*"
+                f"\n{title}"
             ).bold().yellow()
         )
-        print(Txt(f"        (Version {self.SEMVER})").dim())
+        print(Txt(f"{"Version " + self.SEMVER:^{len(title)}}").dim())
         
         choice = self.manager.handle_missing_logs()
         
