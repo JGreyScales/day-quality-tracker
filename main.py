@@ -4,6 +4,7 @@ import sys
 import traceback
 
 from dqt.tracker import Tracker
+from dqt.styletext import StyleText as Txt
 
 if __name__ == '__main__':
     dqt = Tracker()
@@ -26,10 +27,10 @@ if __name__ == '__main__':
         print("\nUser interrupted the program.")
         print("\nSaving changes...")
         dqt.json.update()
-        print("Success!")
+        print(Txt("Success!").bold().green())
         sys.exit()
     except Exception:
         print("\n*!* —————————————————————————————— *!*")
-        print("\n❌ \033[1m\033[31mError!\033[0m")
+        print(Txt("\n❌Error!").bold().red())
         print(traceback.format_exc())
         sys.exit(1)
