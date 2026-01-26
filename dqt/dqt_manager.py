@@ -159,24 +159,11 @@ class Manager:
         
     def change_todays_rating(self) -> None:
         """Prompt the user to change today's rating."""
-        tdys_rating = self._input_rating(
-            "Enter new rating for today "
-            f"({self.min_rating}~{self.max_rating}): "
-        )
-        # Save data
-        today = _today.strftime(self.date_format)
-        self.json.update(date=today, rating=tdys_rating)
-        notify_log_saved("Rating updated and saved!")
+        self._change_data('today', self.json.rating_kyname)
         
     def change_todays_memory(self) -> None:
         """Prompt the user to change today's memory entry."""
-        tdys_memory = self._input_memory(
-            "Enter new memory entry for today: "
-        )
-        # Save data
-        today = _today.strftime(self.date_format)
-        self.json.update(date=today, memory=tdys_memory)
-        notify_log_saved("Memory entry updated and saved!")
+        self._change_data('today', self.json.memory_kyname)
         
     def prompt_prev_date(self) -> str:
         """Prompt the user to enter a previous date."""
@@ -220,23 +207,45 @@ class Manager:
     
     def change_previous_rating(self, selected_date: str) -> None:
         """Prompt the user to change a rating from a previous day."""
-        new_rating = self._input_rating(
-            f"Enter new rating for {selected_date} "
-            f"({self.min_rating}~{self.max_rating}): ",
-        )
-        
-        # Save data
-        self.json.update(date=selected_date, rating=new_rating)
-        notify_log_saved("Rating updated and saved!")
+        self._change_data(selected_date, self.json.rating_kyname)
     
     def change_previous_memory(self, selected_date: str) -> None:
         """Prompt the user to change a memory entry from a previous day."""
-        new_memory = self._input_memory(
-            f"Enter new memory entry for {selected_date}: "
-        )
+        self._change_data(selected_date, self.json.memory_kyname)
         
-        self.json.update(date=selected_date, memory=new_memory)
-        notify_log_saved("Memory entry updated and saved!")
+    def _change_data(self, selected_date: str, changing: str) -> None:
+        """Change data for the selected date and update JSON.
+        
+        If the specified date is the string 'today', today's date (or rather,
+        the date specified in the global varibale `_today`, which is evaluated
+        at the start of runtime) will be used.
+        
+        Parameter `changing` must be either the rating or memory key name
+        specified in DQTJSON (raises a ValueError otherwise).
+        """
+        if changing not in [self.json.rating_kyname, self.json.memory_kyname]:
+            raise ValueError(
+                f"Parameter 'changing' must be '{self.json.rating_kyname}' "
+                f"or '{self.json.memory_kyname}'"
+            )
+        if selected_date == 'today':
+            selected_date = _today.strftime(self.date_format)
+            
+        # Changing rating
+        if changing == self.json.rating_kyname:
+            new_rating = self._input_rating(
+                f"Enter new rating for {selected_date} "
+                f"({self.min_rating}~{self.max_rating}): ",
+            )
+            self.json.update(date=selected_date, rating=new_rating)
+            notify_log_saved("Rating updated and saved!")
+        # Changing memory entry
+        else:
+            new_memory = self._input_memory(
+                f"Enter new memory entry for {selected_date} "
+            )
+            self.json.update(date=selected_date, memory=new_memory)
+            notify_log_saved("Memory entry updated and saved!")
     
     def _input_rating(self, prompt: str) -> float | None:
         """Get and validate user float input."""
