@@ -217,7 +217,10 @@ class DQTJSON:
         print("Remember to save changes before closing the file.")
         
     def configure(self, **kwargs) -> None:
-        """Update configuration options via keyword arguments."""
+        """Update configuration options via keyword arguments.
+        
+        Must be called before `run()`.
+        """
         for key, value in kwargs.items():
             if key not in self._CONFIG_KEYS:
                 raise ValueError(f"Unknown configuration option: '{key}'")

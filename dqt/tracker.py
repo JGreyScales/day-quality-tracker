@@ -210,7 +210,10 @@ class Tracker:
                     err("Only enter 1~6 or the given letters.")
     
     def configure(self, **kwargs) -> None:
-        """Update configuration options via keyword arguments."""
+        """Update configuration options via keyword arguments.
+        
+        Must be called before `run()`.
+        """
         for key, value in kwargs.items():
             if key not in self._CONFIG_KEYS:
                 raise ValueError(f"Unknown configuration option: '{key}'")
