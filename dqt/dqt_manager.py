@@ -192,7 +192,7 @@ class Manager:
                 except ValueError:
                     err("Enter wither a valid date in the "
                         f"format {self.date_format_print} or a positive "
-                        "interger.")
+                        "integer.")
                     continue
                 selected_date = inp
             
@@ -223,7 +223,7 @@ class Manager:
         """Change data for the selected date and update JSON.
         
         If the specified date is the string 'today', today's date (or rather,
-        the date specified in the global varibale `_today`, which is evaluated
+        the date specified in the global variable `_today`, which is evaluated
         at the start of runtime) will be used.
         
         Parameter `changing` must be either the rating or memory key name

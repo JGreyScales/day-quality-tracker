@@ -204,7 +204,7 @@ class DQTJSON:
         cont_on_enter()
             
     def open_json_file(self) -> None:
-        """Open the JSON file in the default system applicaiton."""
+        """Open the JSON file in the default system application."""
         print("\nOpening JSON file...")
         
         if sys.platform == "win32":

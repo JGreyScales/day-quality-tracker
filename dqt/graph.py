@@ -51,7 +51,7 @@ class Graph:
         'marker_face_color',
         'marker_edge_width',
         'neutralline_label',
-        'neautralline_width',
+        'neutralline_width',
         'neutralline_color',
         'neutralline_style',
         'averageline_label',
