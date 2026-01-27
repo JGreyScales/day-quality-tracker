@@ -1,3 +1,4 @@
+import textwrap
 from time import sleep
 
 from dqt.styletext import StyleText as Txt
@@ -23,4 +24,9 @@ def notify_log_saved(text: str = "Log saved!") -> None:
 def cont_on_enter(msg: str = "\n[Press ENTER to return to main menu]") -> None:
     """Pause the program until the user presses Enter."""
     input(msg)
+
+
+def print_wrapped(text: str, maxcol: int):
+    """Print line-wrapped text with a maximum of `maxcol` chars per line."""
+    print(textwrap.fill(text, maxcol))
     

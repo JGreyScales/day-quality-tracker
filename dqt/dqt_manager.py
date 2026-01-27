@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
-from dqt.ui_utils import err, notify_log_saved
+from dqt.ui_utils import err, notify_log_saved, print_wrapped
 from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
     from tracker import Tracker
-    
+
 _today = datetime.today()
 
 
@@ -14,6 +14,7 @@ class Manager:
     """A class to manage Day Quality Tracker JSON contents handling."""
     
     _CONFIG_KEYS = {
+        'linewrap_maxcol',
         'memory_edit_placeholder',
     }
     
@@ -30,6 +31,7 @@ class Manager:
         self.min_time = self.dqt.min_time
         self.clock_format_12 = self.dqt.clock_format_12
         
+        self.linewrap_maxcol = 70
         self.memory_edit_placeholder = '{}'
     
     def handle_missing_logs(self) -> str | None:
@@ -91,22 +93,28 @@ class Manager:
                     return choice
                 
                 case '2':
-                    print("\nRestart the program later to enter your missing "
-                          "logs!")
-                    print("(You can only enter today's log after entering the "
-                          "missed logs, unless you choose to skip them.)")
+                    print_wrapped(
+                        "\nRestart the program later to enter your missing "
+                        "logs! (You can only enter today's log after "
+                        "entering the missed logs, unless you choose to skip "
+                        "them.)",
+                        self.linewrap_maxcol
+                    )
                     
                     return choice
                 
                 case '3':
-                    print("\nYou will have to enter the missed logs later "
-                          f"manually in `{self.json.filename}`, unless you "
-                          f"don't enter today's log yet.")
-                    print("You can open the file by selecting:")
-                    print("Main menu -> 4) View [A]ll logs "
-                          "-> 2) [O]pen JSON file in default viewer/editor")
-                    print("Make sure you save any changed before closing "
-                          "the file.")
+                    print_wrapped(
+                        "\nYou will have to enter the missed logs later "
+                        f"manually in `{self.json.filename}`, unless you "
+                        "don't enter today's log yet."
+                        "\nYou can open the file by selecting:"
+                        "\nMain menu -> 4) View [A]ll logs "
+                        "-> 2) [O]pen JSON file in default viewer/editor"
+                        "\nMake sure you save any changed before closing "
+                        "the file.",
+                        self.linewrap_maxcol
+                    )
                     
                     return choice
                 
@@ -137,7 +145,7 @@ class Manager:
                     .strip().lower() != 'y'):
                 print(
                     "\nTo enter your memory entry later: "
-                    "Main menu -> Edit today's/previous log -> Edit memory"
+                    "\nMain menu -> Edit today's/previous log -> Edit memory"
                 )
                 tdys_memory = ''
             else:
@@ -162,15 +170,15 @@ class Manager:
             
             print(f"\nYou can only input today's log after {formatted_time}.")
             print("\nCome back later to enter today's log!")
-        
+    
     def change_todays_rating(self) -> None:
         """Prompt the user to change today's rating."""
         self._change_data('today', self.json.rating_kyname)
-        
+    
     def change_todays_memory(self) -> None:
         """Prompt the user to change today's memory entry."""
         self._change_data('today', self.json.memory_kyname)
-        
+    
     def prompt_prev_date(self) -> str:
         """Prompt the user to enter a previous date."""
         while True:
@@ -218,7 +226,7 @@ class Manager:
     def change_previous_memory(self, selected_date: str) -> None:
         """Prompt the user to change a memory entry from a previous day."""
         self._change_data(selected_date, self.json.memory_kyname)
-        
+    
     def _change_data(self, selected_date: str, changing: str) -> None:
         """Change data for the selected date and update JSON.
         
@@ -236,7 +244,7 @@ class Manager:
             )
         if selected_date == 'today':
             selected_date = _today.strftime(self.date_format)
-            
+        
         # Changing rating
         if changing == self.json.rating_kyname:
             new_rating = self._input_rating(
@@ -252,11 +260,11 @@ class Manager:
                 "\n\nTo insert your original memory entry into your edit, "
                 "use curly brackets ({}). For example:"
                 "\n  * To append to the end of your original entry, input: "
-                "{} This is a new sentence."
+                "\n{} This is a new sentence."
                 "\n  * To append to the start of your original entry, input: "
-                "This is a new sentence. {}"
+                "\nThis is a new sentence. {}"
                 "\n  * To append around your original entry, input: "
-                "This is a new sentence. {} This is another new sentence."
+                "\nThis is a new sentence. {} This is another new sentence."
                 "\n(the program replaces the first occurrence of "
                 f"'{self.memory_edit_placeholder}' in out input with your "
                 "original entry)"
@@ -331,4 +339,3 @@ class Manager:
             break
         
         return tdys_mem
-    

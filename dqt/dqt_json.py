@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from dqt.styletext import StyleText as Txt
-from dqt.ui_utils import cont_on_enter
+from dqt.ui_utils import cont_on_enter, print_wrapped
 
 if TYPE_CHECKING:
     from tracker import Tracker
@@ -25,9 +25,10 @@ class DQTJSON:
         'filedirpath',
         'filename',
         'filepath',
-        'json_indent',
         'rating_kyname',
         'memory_kyname',
+        'json_indent',
+        'memory_linewrap_maxcol',
     }
 
     def __init__(self, dqt: Tracker):
@@ -48,7 +49,7 @@ class DQTJSON:
 
         self.json_indent = 4
         
-        self.memory_print_linewrap_maxcol = 60
+        self.memory_linewrap_maxcol = 60
         
         self._touch()
 
@@ -149,12 +150,7 @@ class DQTJSON:
             if memory:
                 print(Txt("Memory:").bold())
                 if linewrap_memory:
-                    print(
-                        textwrap.fill(
-                            memory,
-                            self.memory_print_linewrap_maxcol
-                        )
-                    )
+                    print_wrapped(memory, self.memory_linewrap_maxcol)
                 else:
                     print(memory)
             else:
