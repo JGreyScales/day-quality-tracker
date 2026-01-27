@@ -193,7 +193,6 @@ class DQTJSON:
                 return
             
             items_until_last_30th = items_list[:-30]
-            items_until_last_30th.reverse()
             
             _loop_print(items_until_last_30th)
         
