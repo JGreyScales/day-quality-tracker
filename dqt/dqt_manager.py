@@ -288,9 +288,9 @@ class Manager:
         """Replace the first instance of the placeholder with the original."""
         if self.memory_edit_placeholder in mem_input:
             print("\n(Original memory entry has been inserted into your edit)")
-        mem_input = mem_input.replace(
-            self.memory_edit_placeholder, original_mem, 1
-        )
+            return mem_input.replace(
+                self.memory_edit_placeholder, original_mem, 1
+            )
         return mem_input
     
     def configure(self, **kwargs) -> None:
