@@ -13,6 +13,10 @@ _today = datetime.today()
 class Manager:
     """A class to manage Day Quality Tracker JSON contents handling."""
     
+    _CONFIG_KEYS = {
+        'memory_edit_placeholder',
+    }
+    
     def __init__(self, dqt: Tracker):
         self.dqt = dqt
         self.json = dqt.json
@@ -25,6 +29,8 @@ class Manager:
         self.rating_inp_dp = self.dqt.rating_inp_dp
         self.min_time = self.dqt.min_time
         self.clock_format_12 = self.dqt.clock_format_12
+        
+        self.memory_edit_placeholder = '{}'
     
     def handle_missing_logs(self) -> str | None:
         """Check if any previous days are missing ratings.
@@ -242,10 +248,41 @@ class Manager:
         # Changing memory entry
         else:
             new_memory = self._input_memory(
-                f"Enter new memory entry for {selected_date} "
+                f"Enter new memory entry for {selected_date}."
+                "\n\nTo insert your original memory entry into your edit, "
+                "use curly brackets ({}). For example:"
+                "\n  * To append to the end of your original entry, input: "
+                "{} This is a new sentence."
+                "\n  * To append to the start of your original entry, input: "
+                "This is a new sentence. {}"
+                "\n  * To append around your original entry, input: "
+                "This is a new sentence. {} This is another new sentence."
+                "\n(the program replaces the first occurrence of "
+                f"'{self.memory_edit_placeholder}' in out input with your "
+                "original entry)"
             )
+            original_mem = (
+                self.json.logs[selected_date][self.json.memory_kyname]
+            )
+            new_memory = self._resolve_memory_edit(new_memory, original_mem)
             self.json.update(date=selected_date, memory=new_memory)
             notify_log_saved("Memory entry updated and saved!")
+    
+    def _resolve_memory_edit(self, mem_input: str, original_mem: str) -> str:
+        """Replace the first instance of the placeholder with the original."""
+        if self.memory_edit_placeholder in mem_input:
+            print("\n(Original memory entry has been inserted into your edit)")
+        mem_input = mem_input.replace(
+            self.memory_edit_placeholder, original_mem, 1
+        )
+        return mem_input
+    
+    def configure(self, **kwargs) -> None:
+        """Update configuration options via keyword arguments."""
+        for key, value in kwargs.items():
+            if key not in self._CONFIG_KEYS:
+                raise ValueError(f"Unknown configuration option: '{key}'")
+            setattr(self, key, value)
     
     def _input_rating(self, prompt: str) -> float | None:
         """Get and validate user float input."""
