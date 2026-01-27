@@ -257,7 +257,7 @@ class Manager:
         while True:
             raw = input(f"\n{prompt}").lower().strip()
             
-            if raw == 'null':
+            if raw in ['null', '-']:
                 if input(
                         "\nAre you sure you want to enter an empty (null) rating? (y/n): "
                 ).lower().strip() == 'y':
