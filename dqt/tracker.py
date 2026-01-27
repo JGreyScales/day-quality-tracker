@@ -18,15 +18,15 @@ class Tracker:
     SEMVER = '0.5.0'
     
     _CONFIG_KEYS = {
-        "min_time",
-        "min_rating",
-        "max_rating",
-        "neutral_rating",
-        "rating_inp_dp",
-        "date_format",
-        "date_format_print",
-        "clock_format_12",
-        "enable_ansi",
+        'min_time',
+        'min_rating',
+        'max_rating',
+        'neutral_rating',
+        'rating_inp_dp',
+        'date_format',
+        'date_format_print',
+        'clock_format_12',
+        'enable_ansi',
     }
     
     def __init__(self):

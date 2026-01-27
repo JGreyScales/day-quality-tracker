@@ -21,13 +21,13 @@ class DQTJSON:
     """A class to manage Day Quality Tracker JSON contents handling."""
     
     _CONFIG_KEYS = {
-        "filedirname",
-        "filedirpath",
-        "filename",
-        "filepath",
-        "json_indent",
-        "rating_kyname",
-        "memory_kyname",
+        'filedirname',
+        'filedirpath',
+        'filename',
+        'filepath',
+        'json_indent',
+        'rating_kyname',
+        'memory_kyname',
     }
 
     def __init__(self, dqt: Tracker):
