@@ -1,3 +1,4 @@
+from textwrap import dedent
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
@@ -255,20 +256,27 @@ class Manager:
             notify_log_saved("Rating updated and saved!")
         # Changing memory entry
         else:
-            new_memory = self._input_memory(
-                f"Enter new memory entry for {selected_date}."
-                "\n\nTo insert your original memory entry into your edit, "
-                "use curly brackets ({}). For example:"
-                "\n  * To append to the end of your original entry, input: "
-                "\n{} This is a new sentence."
-                "\n  * To append to the start of your original entry, input: "
-                "\nThis is a new sentence. {}"
-                "\n  * To append around your original entry, input: "
-                "\nThis is a new sentence. {} This is another new sentence."
-                "\n(the program replaces the first occurrence of "
-                f"'{self.memory_edit_placeholder}' in out input with your "
-                "original entry)"
-            )
+            tmp = self.memory_edit_placeholder
+            #  ^ Cuz the variable attribute name is way too long
+            new_memory = self._input_memory(dedent(f"""
+                Enter new memory entry for {selected_date}.
+                
+                You can sopy and paste from your original entry above.
+                
+                To insert your original memory entry into your edit,
+                use curly brackets ({tmp}).
+
+                For example:
+                  * To append to the end of your original entry, input:
+                      → {tmp} This is a new sentence.
+                  * To append to the start of your original entry, input:
+                      → This is a new sentence. {tmp}
+                  * To append around your original entry, input:
+                      → This is a new sentence. {tmp} This is another sentence.
+
+                (The program replaces the first occurrence of '{tmp}' in your
+                input with your original entry)
+            """))
             original_mem = (
                 self.json.logs[selected_date][self.json.memory_kyname]
             )
@@ -326,7 +334,7 @@ class Manager:
         """Prompt user for today's memory entry."""
         while True:
             tdys_mem = input(
-                f"\n{prompt}\n\n"
+                f"\n{prompt}\n\n->: "
             ).strip()
             
             if not tdys_mem:
