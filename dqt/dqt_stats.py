@@ -24,7 +24,7 @@ class Stats:
         """Show day quality rating stats.
 
         Print:
-            - Days rated
+            - Number of days rated
             - Average rating
             - Highest rating
             - Lowest rating
@@ -44,10 +44,10 @@ class Stats:
         self._print_days_rated(logs, rated_items)
         
         if not rated_items:
-            print("Average rating: N/A")
-            print("Highest rating: N/A")
-            print("Lowest rating: N/A")
-            print("Best days of the week: N/A")
+            print("Average rating: -")
+            print("Highest rating: -")
+            print("Lowest rating: -")
+            print("Best days of the week: -")
             return
         
         ratings_only = [r for _, r in rated_items]
@@ -80,7 +80,8 @@ class Stats:
     def _print_highest_lowest_rating(
             self,
             ratings_only: list[float],
-            rated_items: list[tuple[str, float]]) -> None:
+            rated_items: list[tuple[str, float]]
+    ) -> None:
         """Print highest and lowest ratings, and the date for each.
         
         Prints the dates of ALL days that share the highest/lowest rating.
@@ -92,7 +93,6 @@ class Stats:
             date for date, rating in rated_items
             if rating == highest
         ]
-        
         lowest_dates = [
             date for date, rating in rated_items
             if rating == lowest
@@ -103,7 +103,6 @@ class Stats:
             f"{Txt(f"{highest:g}").bold()}/{self.max_rating} "
             f"on {self._format_dates(highest_dates)}"
         )
-        
         print(
             f"{Txt("Lowest rating:").bold()} "
             f"{Txt(f"{lowest:g}").bold()}/{self.max_rating} "
@@ -111,7 +110,8 @@ class Stats:
         )
     
     def _print_days_of_the_week_ranked(
-            self, rated_items: list[tuple[str, float]]) -> None:
+            self, rated_items: list[tuple[str, float]]
+    ) -> None:
         """Print the days of the week in rank order of highest avg rating"""
         weekday_scores: dict[str, list[float]] = defaultdict(list)
         
