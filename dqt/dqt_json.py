@@ -233,30 +233,47 @@ class DQTJSON:
                 self._filepath_pre5.rename(self.filepath)
             else:
                 self.filepath.touch()
-
+    
     def _load_json(self) -> dict[str, dict[str, float | None | str]]:
-        """Load JSON file contents and return dict.
+        """Load, validate, and normalize JSON log data."""
+        contents = self._load_raw_json()
+        if not contents:
+            return {}
+        
+        return self._validate_and_normalize_logs(contents)
+    
+    def _load_raw_json(self) -> dict:
+        """Load raw JSON contents from disk.
 
-        Validate dict before returning. If the dict is missing a rating item,
-        raise a KeyError. If a memory entry item is missing, add default memory
-        entry. If date keys are not in increasing consecutive order, raise a
-        ValueError.
+        Returns an empty dict if the file does not exist or is empty.
         """
         if not self.filepath.exists():
             return {}
-        if not self.filepath.read_text().strip():
+        
+        text = self.filepath.read_text().strip()
+        if not text:
             return {}
-
+        
         with open(self.filepath, 'r') as file:
-            contents = json.load(file)
+            return json.load(file)
+    
+    def _validate_and_normalize_logs(
+            self,
+            contents: dict
+    ) -> dict[str, dict[str, float | None | str]]:
+        """Validate and normalize raw log data.
 
-        updated = False
+        - Ensures dates are strictly increasing
+        - Upgrades pre-DQT-5 format to current format
+        - Ensures rating exists
+        - Auto-fills missing memory entries
+        """
         prev_date = None
         validated: dict[str, dict[str, float | None | str]] = {}
 
         for date, value in contents.items():
 
-            # Validate date keys
+            # ---------- Validate date order ----------
             if prev_date is not None:
                 prev_d = datetime.strptime(prev_date, self.date_format)
                 d = datetime.strptime(date, self.date_format)
@@ -272,29 +289,21 @@ class DQTJSON:
 
             prev_date = date
 
-            # ---------- pre-DQT-5 format ----------
+            # ---------- Pre-DQT-5 format ----------
             # { "YYYY-MM-DD": rating }
             if isinstance(value, (int, float)):
                 validated[date] = {
                     self.rating_kyname: float(value),
-                    self.memory_kyname: ""  # Default to empty mem-entry
+                    self.memory_kyname: ''  # Default to empty mem-entry
                 }
-                updated = True
                 continue
 
             # ---------- ≥ DQT-5 format ----------
             # { "YYYY-MM-DD": { "rating": rating, "memory": memory entry } }
             if isinstance(value, dict):
-                if self.rating_kyname not in value:
-                    raise KeyError(f"Missing rating for date {date}")
-
-                raw_rating = value[self.rating_kyname]  # Handle null ratings
+                raw_rating = value.get(self.rating_kyname, None)  # Handle null ratings
                 rating = None if raw_rating is None else float(raw_rating)
                 memory = value.get(self.memory_kyname, '')
-
-                # Auto-fix missing memory entry
-                if self.memory_kyname not in value:
-                    updated = True
 
                 validated[date] = {
                     self.rating_kyname: rating,
@@ -302,12 +311,8 @@ class DQTJSON:
                 }
                 continue
 
-            # ---------- invalid format ----------
+            # ---------- Invalid format ----------
             raise ValueError(f"Invalid log format for date {date}")
-
-        # Sync JSON if any fixes were applied
-        if updated:
-            self._dump()
 
         return validated
 
