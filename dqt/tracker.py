@@ -43,7 +43,17 @@ class Tracker:
         # Format printed time using 12-hour clock if True
         self.clock_format_12 = True
         
-        self.json = DQTJSON(self)
+        try:
+            self.json = DQTJSON(self)
+        except ValueError as e:
+            err(
+                f"Something's wrong with '{self.json.filename}'...",
+                f"\"{e}.\"",
+                "Please correct the file before starting the program.",
+                pause=False
+            )
+            raise SystemExit()
+            
         self.graph = Graph(self)
         self.manager = Manager(self)
         self.stats = Stats(self)
