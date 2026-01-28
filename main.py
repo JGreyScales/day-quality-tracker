@@ -16,10 +16,11 @@ if __name__ == '__main__':
                   f"working directory.")
             sys.exit(1)
         
-        try:
-            dqt = Tracker()
+        dqt = Tracker()
         
-            # Custom configurations go here ↴
+        try:
+            
+            # Custom configurations go here ↴  ——————————————————— #
             dqt.configure(
             
             )
@@ -32,13 +33,14 @@ if __name__ == '__main__':
             dqt.graph.configure(
             
             )
+            # ———————————————————————————————————————————————————— #
         
         except ValueError as e:
             print("\n*!* —————————————————————————————— *!*")
             print(Txt("\n❌Error!").bold().red())
             print(e)
-            print("Ensure that you have passed valid configuration keys into the "
-                  "`configure()` methods in main.py.")
+            print("Ensure that you have passed valid configuration keys into "
+                  "the `configure()` calls in main.py.")
             sys.exit(1)
             
         try:
