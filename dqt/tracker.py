@@ -45,6 +45,7 @@ class Tracker:
         
         try:
             self.json = DQTJSON(self)
+            self.json.load_json()
         except ValueError as e:
             err(
                 f"Something's wrong with '{self.json.filename}'...",
@@ -53,7 +54,7 @@ class Tracker:
                 pause=False
             )
             raise SystemExit()
-            
+        
         self.graph = Graph(self)
         self.manager = Manager(self)
         self.stats = Stats(self)

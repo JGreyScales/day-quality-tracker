@@ -1,6 +1,7 @@
 import json
 import sys
 import os
+import shutil
 import subprocess
 from pathlib import Path
 from datetime import datetime
@@ -29,31 +30,39 @@ class DQTJSON:
         'json_indent',
         'memory_linewrap_maxcol',
     }
-
+    
     def __init__(self, dqt: Tracker):
         """Initialize attributes."""
         self.dqt = dqt
         self.date_format = self.dqt.date_format
         
         self.filedirname = 'data'
-        self.filedirpath = (Path(__file__).resolve().parent.parent
-                            / self.filedirname)
+        self.rootdir = Path(__file__).resolve().parent.parent
+        self.filedirpath = self.rootdir / self.filedirname
         self.filename = 'dq_logs.json'
         self.filepath = self.filedirpath / self.filename
         self._filename_pre5 = 'dq_ratings.json'
-        self._filepath_pre5 = self.filedirpath / self._filename_pre5
-
+        self._filepath_pre5 = self.rootdir / self._filename_pre5
+        
         self.rating_kyname = 'rating'
         self.memory_kyname = 'memory'
-
+        
         self.json_indent = 4
         
         self.memory_linewrap_maxcol = 60
         
         self._touch()
-
-        self.logs = self._load_json()
-
+        
+        self.logs = None
+    
+    def load_json(self) -> None:
+        """Load, validate, and normalize JSON log data."""
+        contents = self._load_raw_json()
+        if not contents:
+            self.logs = {}
+        
+        self.logs = self._validate_and_normalize_logs(contents)
+    
     def update(self,
                date: str = None,
                rating: float | None = _UNSET,
@@ -62,7 +71,7 @@ class DQTJSON:
 
         Update with new rating and memory values if provided before dumping.
         Attempted creation of new items will raise a KeyError. Use extend()
-        instead to add a new log.
+        instead to add a new log. # TODO: FIX DOCS
         """
         if date is None:
             if rating is not _UNSET or memory is not _UNSET:
@@ -74,9 +83,9 @@ class DQTJSON:
             self.logs[date][self.rating_kyname] = rating
         if memory is not _UNSET:
             self.logs[date][self.memory_kyname] = memory
-
+        
         self._dump()
-
+    
     def add(self,
             date: str,
             rating: float | None = None,
@@ -91,18 +100,18 @@ class DQTJSON:
         """
         if date in self.logs:
             raise KeyError(f"Log with date '{date}' already exists.")
-
+        
         self.logs[date] = {
             self.rating_kyname: rating,
             self.memory_kyname: memory
         }
-
+        
         self._dump()
-
+    
     def get_rating(self, date: str) -> float | None:
         """Return rating for given date."""
         return self.logs[date][self.rating_kyname]
-
+    
     def get_memory(self, date: str) -> str:
         """Return memory entry for given date."""
         return self.logs[date][self.memory_kyname]
@@ -196,7 +205,7 @@ class DQTJSON:
             _loop_print(items_until_last_30th)
         
         cont_on_enter()
-            
+    
     def open_json_file(self) -> None:
         """Open the JSON file in the default system application."""
         print("\nOpening JSON file...")
@@ -215,32 +224,34 @@ class DQTJSON:
         
         print(f"File opened in a new window!")
         print("Remember to save changes before closing the file.")
-        
+    
     def configure(self, **kwargs) -> None:
         """Update configuration options via keyword arguments.
-        
+
         Must be called before `run()`.
         """
         for key, value in kwargs.items():
             if key not in self._CONFIG_KEYS:
                 raise ValueError(f"Unknown configuration option: '{key}'")
             setattr(self, key, value)
-
+    
     def _touch(self) -> None:
         """Check if JSON file exists, create if not."""
+        if not self.filedirpath.exists():
+            print(f"\nCreating `{self.filedirname}` directory...")
+            self.filedirpath.mkdir()
+            print("Success!")
         if not self.filepath.exists():
             if self._filepath_pre5.exists():
-                self._filepath_pre5.rename(self.filepath)
+                print(f"\nRenaming pre-DQT-5 JSON file...")
+                self._filepath_pre5.rename(self.filename)
+                print("Moving file...")
+                shutil.move(self.filename, self.filedirpath)
+                print("Success!")
             else:
+                print(f"\nCreating `{self.filename}`...")
                 self.filepath.touch()
-    
-    def _load_json(self) -> dict[str, dict[str, float | None | str]]:
-        """Load, validate, and normalize JSON log data."""
-        contents = self._load_raw_json()
-        if not contents:
-            return {}
-        
-        return self._validate_and_normalize_logs(contents)
+                print("Success!")
     
     def _load_raw_json(self) -> dict:
         """Load raw JSON contents from disk.
@@ -268,11 +279,13 @@ class DQTJSON:
         - Ensures rating exists
         - Auto-fills missing memory entries
         """
+        updated = False
+        
         prev_date = None
         validated: dict[str, dict[str, float | None | str]] = {}
-
+        
         for date, value in contents.items():
-
+            
             # ---------- Validate date order ----------
             if prev_date is not None:
                 prev_d = datetime.strptime(prev_date, self.date_format)
@@ -286,9 +299,9 @@ class DQTJSON:
                     raise ValueError(
                         f"Date {prev_date} is repeated"
                     )
-
+            
             prev_date = date
-
+            
             # ---------- Pre-DQT-5 format ----------
             # { "YYYY-MM-DD": rating }
             if isinstance(value, (int, float)):
@@ -296,26 +309,32 @@ class DQTJSON:
                     self.rating_kyname: float(value),
                     self.memory_kyname: ''  # Default to empty mem-entry
                 }
+                updated = True
                 continue
-
+            
             # ---------- ≥ DQT-5 format ----------
             # { "YYYY-MM-DD": { "rating": rating, "memory": memory entry } }
             if isinstance(value, dict):
                 raw_rating = value.get(self.rating_kyname, None)  # Handle null ratings
                 rating = None if raw_rating is None else float(raw_rating)
                 memory = value.get(self.memory_kyname, '')
-
+                
                 validated[date] = {
                     self.rating_kyname: rating,
                     self.memory_kyname: memory
                 }
+                
+                updated = True
                 continue
-
+            
             # ---------- Invalid format ----------
             raise ValueError(f"Invalid log format for date {date}")
-
+        
+        if updated:
+            self._dump()
+        
         return validated
-
+    
     def _dump(self) -> None:
         """Dump JSON file contents."""
         with open(self.filepath, 'w') as file:
