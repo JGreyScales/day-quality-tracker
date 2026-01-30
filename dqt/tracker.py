@@ -58,7 +58,7 @@ class Tracker:
         self.manager = Manager(self)
         self.stats = Stats(self)
         
-        self.enable_ansi = None
+        self.enable_ansi = False
         Txt.set_ansi(self.enable_ansi)
     
     def run(self) -> None:
