@@ -15,7 +15,7 @@ class Tracker:
     """Track and visualize day quality ratings in a graph."""
     
     VERSION = 5
-    SEMVER = '0.5.0'
+    SEMVER = '0.5.0-alpha'
     
     _CONFIG_KEYS = {
         'min_time',

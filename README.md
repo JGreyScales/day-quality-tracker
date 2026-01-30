@@ -1,4 +1,4 @@
-# Day Quality Tracker 5 <sub><sup>(v0.5.0)</sup></sub>
+# Day Quality Tracker 5 <sub><sup>(v0.5.0-alpha)</sup></sub>
 
 This is a simple Python CLI that helps you track your day quality ratings and visualize them on a graph using the 
 Matplotlib.pyplot module.
