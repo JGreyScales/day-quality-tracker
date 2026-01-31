@@ -230,7 +230,7 @@ class Graph:
         ax.set_ylabel(self.ylabel, fontsize=self.ylabel_fontsize)
         
     def _set_ticks(self, fig: plt.Figure, ax: plt.Axes) -> None:
-        """Set tick label sizes, format dates, and set y-tic increments."""
+        """Set tick label sizes, format dates, and set y-tick increments."""
         ax.tick_params(labelsize=self.tick_params_fontsize)
         if self.autofmt_xdates:
             fig.autofmt_xdate()
