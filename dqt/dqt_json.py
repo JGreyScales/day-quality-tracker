@@ -53,15 +53,7 @@ class DQTJSON:
         
         self._touch()
         
-        self.logs = None
-    
-    def load_json(self) -> None:
-        """Load, validate, and normalize JSON log data."""
-        contents = self._load_raw_json()
-        if not contents:
-            self.logs = {}
-        
-        self.logs = self._validate_and_normalize_logs(contents)
+        self.logs = self._load_json()
     
     def update(self,
                date: str = None,
@@ -234,6 +226,13 @@ class DQTJSON:
             if key not in self._CONFIG_KEYS:
                 raise ValueError(f"Unknown configuration option: '{key}'")
             setattr(self, key, value)
+    
+    def _load_json(self) -> dict:
+        """Load, validate, and normalize JSON log data."""
+        contents = self._load_raw_json()
+        if not contents:
+            return {}
+        return self._validate_and_normalize_logs(contents)
     
     def _touch(self) -> None:
         """Check if JSON file exists, create if not."""
