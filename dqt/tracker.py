@@ -23,9 +23,11 @@ class Tracker:
         'max_rating',
         'neutral_rating',
         'rating_inp_dp',
+        'linewrap_maxcol',
         'date_format',
         'date_format_print',
         'clock_format_12',
+        'memory_edit_placeholder',
         'enable_ansi',
     }
     
@@ -37,11 +39,14 @@ class Tracker:
         self.max_rating = 20  # Even number recommended
         self.neutral_rating = round(self.max_rating / 2)
         self.rating_inp_dp = 2
+        self.linewrap_maxcol = 70
         
         self.date_format = '%Y-%m-%d'
         self.date_format_print = "YYYY-MM-DD"
         # Format printed time using 12-hour clock if True
         self.clock_format_12 = True
+        
+        self.memory_edit_placeholder = '{}'
         
         try:
             self.json = DQTJSON(self)

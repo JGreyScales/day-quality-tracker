@@ -14,11 +14,6 @@ _today = datetime.today()
 class Manager:
     """A class to manage Day Quality Tracker JSON contents handling."""
     
-    _CONFIG_KEYS = {
-        'linewrap_maxcol',
-        'memory_edit_placeholder',
-    }
-    
     def __init__(self, dqt: Tracker):
         self.dqt = dqt
         self.json = dqt.json
@@ -31,9 +26,8 @@ class Manager:
         self.rating_inp_dp = self.dqt.rating_inp_dp
         self.min_time = self.dqt.min_time
         self.clock_format_12 = self.dqt.clock_format_12
-        
-        self.linewrap_maxcol = 70
-        self.memory_edit_placeholder = '{}'
+        self.linewrap_maxcol = self.dqt.linewrap_maxcol
+        self.memory_edit_placeholder = self.dqt.memory_edit_placeholder
     
     def handle_missing_logs(self) -> str | None:
         """Check if any previous days are missing ratings.
@@ -292,16 +286,6 @@ class Manager:
                 self.memory_edit_placeholder, original_mem, 1
             )
         return mem_input
-    
-    def configure(self, **kwargs) -> None:
-        """Update configuration options via keyword arguments.
-        
-        Must be called before `run()`.
-        """
-        for key, value in kwargs.items():
-            if key not in self._CONFIG_KEYS:
-                raise ValueError(f"Unknown configuration option: '{key}'")
-            setattr(self, key, value)
     
     def _input_rating(self, prompt: str) -> float | None:
         """Get and validate user float input."""

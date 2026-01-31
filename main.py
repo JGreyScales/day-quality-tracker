@@ -24,9 +24,6 @@ if __name__ == '__main__':
             dqt.configure(
             
             )
-            dqt.manager.configure(
-            
-            )
             dqt.json.configure(
             
             )
