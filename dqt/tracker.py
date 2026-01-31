@@ -59,10 +59,11 @@ class Tracker:
         self.stats = Stats(self)
         
         self.enable_ansi = False
-        Txt.set_ansi(self.enable_ansi)
     
     def run(self) -> None:
         """Run Day Quality Tracker."""
+        Txt.set_ansi(self.enable_ansi)
+        
         title = f"*--- Day Quality Tracker {self.VERSION}! ---*"
         print(
             Txt(
