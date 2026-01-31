@@ -330,11 +330,20 @@ class DQTJSON:
             raise ValueError(f"Invalid log format for date {date}")
         
         if updated:
-            self._dump()
+            self._dump(validated)
         
         return validated
     
-    def _dump(self) -> None:
-        """Dump JSON file contents."""
+    def _dump(self,
+              logs: dict[str, dict[str, float | None | str]] = None) -> None:
+        """Dump JSON file contents.
+
+        If logs=None (default), dump from `logs` attribute.
+        If a logs dict is provided, the dict will be dumped instead.
+        """
         with open(self.filepath, 'w') as file:
-            json.dump(self.logs, file, indent=self.json_indent)
+            json.dump(
+                self.logs if logs is None else logs,
+                file,
+                indent=self.json_indent
+            )
