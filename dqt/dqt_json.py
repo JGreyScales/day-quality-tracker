@@ -70,8 +70,8 @@ class DQTJSON:
         """Dump updated logs to JSON file.
 
         Update with new rating and memory values if provided before dumping.
-        Attempted creation of new items will raise a KeyError. Use extend()
-        instead to add a new log. # TODO: FIX DOCS
+        Attempted creation of new items will raise a KeyError. Use `add()`
+        instead to add a new log.
         """
         if date is None:
             if rating is not _UNSET or memory is not _UNSET:
@@ -93,7 +93,7 @@ class DQTJSON:
         """Update logs with new log and dump to JSON file.
 
         Attempted rewrite of previous items will raise a KeyError.
-        Use extend() instead to add a new log.
+        Use `update()` instead to add a new log.
 
         It is recommended to explicitly provide both rating and memory
         arguments, even if it is equal to the default value.
