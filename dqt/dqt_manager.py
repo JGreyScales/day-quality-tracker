@@ -255,7 +255,7 @@ class Manager:
             new_memory = self._input_memory(dedent(f"""
                 Enter new memory entry for {selected_date}.
                 
-                You can sopy and paste from your original entry above.
+                You can copy and paste from your original entry above.
                 
                 To insert your original memory entry into your edit,
                 use curly brackets ({tmp}).
