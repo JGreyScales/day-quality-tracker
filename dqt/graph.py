@@ -154,7 +154,6 @@ class Graph:
         # Close existing windows to prevent overlapping
         plt.close('all')
         
-        # Get JSON stuff
         if not logs:
             raise ValueError("No logs saved")
         
