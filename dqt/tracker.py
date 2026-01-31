@@ -141,6 +141,9 @@ class Tracker:
                         break
                 
                 case '3' | 'p':
+                    if not self.json.logs:
+                        err("You haven't entered any logs yet!")
+                        continue
                     while True:
                         selected_d = self.manager.prompt_prev_date()
                         print(Txt("\nSelected log:").bold())
