@@ -93,6 +93,9 @@ class Tracker:
             
             match input("> ").lower().strip():
                 case '1' | 'g':
+                    if not self.json.logs:
+                        err("You haven't entered any ratings yet!")
+                        continue
                     self.graph.view_ratings_graph()
                     if not self.graph.graph_show_block:
                         cont_on_enter()

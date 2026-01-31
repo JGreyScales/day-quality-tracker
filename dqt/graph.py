@@ -16,8 +16,6 @@ except ModuleNotFoundError:
     print("Resuming program...\n")
     import matplotlib.pyplot as plt
     import matplotlib.dates as mdates
-    
-from dqt.ui_utils import err
 
 
 if TYPE_CHECKING:
@@ -139,16 +137,9 @@ class Graph:
     
     def view_ratings_graph(self) -> None:
         """Display current ratings graph."""
-        if not self.json.logs:
-            err("You haven't entered any ratings yet!")
-            return
-        
         print("\nBuilding graph...")
-        
         self._build()
-        
         print("\nDisplaying graph...")
-        
         self._show()
         
     def _build(self) -> None:
