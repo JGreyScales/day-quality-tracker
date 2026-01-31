@@ -73,10 +73,6 @@ class Graph:
         """Get required DQT attributes and initialize graph settings."""
         # DayQualityTracker attributes
         self.dqt = dqt
-        self.dqt_date_format = dqt.date_format
-        self.min_rating = dqt.min_rating
-        self.max_rating = dqt.max_rating
-        self.neutral_rating = dqt.neutral_rating
         self.json = dqt.json
 
         # Graph settings
@@ -150,7 +146,7 @@ class Graph:
         
         dates, ratings = self._fill_missing(
             sorted(
-                datetime.strptime(d, self.dqt_date_format)
+                datetime.strptime(d, self.dqt.date_format)
                 for d in self.json.logs.keys()
             )
         )
@@ -211,7 +207,7 @@ class Graph:
         
         current = start
         while current <= end:
-            key = current.strftime(self.dqt_date_format)
+            key = current.strftime(self.dqt.date_format)
             full_dates.append(current)
             full_ratings.append(
                 self.json.logs.get(key, {}).get(self.json.rating_kyname)
@@ -241,7 +237,7 @@ class Graph:
         ax.xaxis.set_major_locator(mdates.AutoDateLocator())
         ax.xaxis.set_major_formatter(mdates.DateFormatter(self.graph_date_format))
         ax.set_yticks(
-            range(self.min_rating, self.max_rating + 1)
+            range(self.dqt.min_rating, self.dqt.max_rating + 1)
         )
     
     def _draw_year_labels(self, ax: plt.Axes, dates: list[datetime]) -> None:
@@ -346,7 +342,7 @@ class Graph:
     
     def _set_ylimits(self, ax: plt.Axes) -> None:
         """Set y-limits."""
-        ax.set_ylim(self.min_rating, self.max_rating + 1)
+        ax.set_ylim(self.dqt.min_rating, self.dqt.max_rating + 1)
     
     def _draw_legend(self, ax: plt.Axes) -> None:
         """Draw legend."""

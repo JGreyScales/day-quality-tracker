@@ -17,17 +17,6 @@ class Manager:
     def __init__(self, dqt: Tracker):
         self.dqt = dqt
         self.json = dqt.json
-        
-        self.date_format = self.dqt.date_format
-        self.date_format_print = self.dqt.date_format_print
-        self.min_rating = self.dqt.min_rating
-        self.max_rating = self.dqt.max_rating
-        self.neutral_rating = self.dqt.neutral_rating
-        self.rating_inp_dp = self.dqt.rating_inp_dp
-        self.min_time = self.dqt.min_time
-        self.clock_format_12 = self.dqt.clock_format_12
-        self.linewrap_maxcol = self.dqt.linewrap_maxcol
-        self.memory_edit_placeholder = self.dqt.memory_edit_placeholder
     
     def handle_missing_logs(self) -> str | None:
         """Check if any previous days are missing ratings.
@@ -40,7 +29,9 @@ class Manager:
             return None
         
         last_date_str = max(self.dqt.json.logs.keys())
-        last_date = datetime.strptime(last_date_str, self.date_format).date()
+        last_date = datetime.strptime(
+            last_date_str, self.dqt.date_format
+        ).date()
         days_since_last = (_today.date() - last_date).days
         
         if days_since_last <= 1:
@@ -71,7 +62,7 @@ class Manager:
                     for date in missed_dates:
                         rating = self._input_rating(
                             f"Enter your rating for {date} "
-                            f"({self.min_rating}~{self.max_rating}, "
+                            f"({self.dqt.min_rating}~{self.dqt.max_rating}, "
                             f"or 'null' to skip): ",
                         )
                         
@@ -79,7 +70,7 @@ class Manager:
                             "Enter a memory entry (leave blank to skip): "
                         )
                         
-                        date_str = datetime.strftime(date, self.date_format)
+                        date_str = datetime.strftime(date, self.dqt.date_format)
                         
                         self.json.add(date_str, rating, memory)
                     
@@ -93,7 +84,7 @@ class Manager:
                         "logs! (You can only enter today's log after "
                         "entering the missed logs, unless you choose to skip "
                         "them.)",
-                        self.linewrap_maxcol
+                        self.dqt.linewrap_maxcol
                     )
                     
                     return choice
@@ -108,7 +99,7 @@ class Manager:
                         "-> 2) [O]pen JSON file in default viewer/editor"
                         "\nMake sure you save any changed before closing "
                         "the file.",
-                        self.linewrap_maxcol
+                        self.dqt.linewrap_maxcol
                     )
                     
                     return choice
@@ -124,15 +115,16 @@ class Manager:
         passed yet.
         """
         print("\n*❖* —————————————————————————————— *❖*")
-        if datetime.now().time().hour >= self.min_time:
+        if datetime.now().time().hour >= self.dqt.min_time:
             if (input("\nWould you like to enter today's log now? (y/n): ")
                     .strip().lower() != 'y'):
                 print("\nRerun the program later to enter your log!")
                 return
             
             tdys_rating = self._input_rating(
-                f"Rate your day from {self.min_rating} to {self.max_rating}, "
-                f"{self.neutral_rating} being an average day "
+                f"Rate your day from {self.dqt.min_rating} to "
+                f"{self.dqt.max_rating}, {self.dqt.neutral_rating} being an "
+                f"average day "
                 f"\n(enter 'null' to skip): "
             )
             
@@ -150,18 +142,20 @@ class Manager:
                 )
             
             # Save data
-            today = _today.strftime(self.date_format)
+            today = _today.strftime(self.dqt.date_format)
             self.json.add(today, tdys_rating, tdys_memory)
             notify_log_saved()
         
         else:
             # Format time in 12-hour or 24-hour clock
-            if self.clock_format_12:
-                hour = self.min_time % 12 if self.min_time % 12 != 0 else 12
-                suffix = 'AM' if self.min_time < 12 else 'PM'
+            if self.dqt.clock_format_12:
+                hour = self.dqt.min_time % 12 \
+                    if self.dqt.min_time % 12 != 0 \
+                    else 12
+                suffix = 'AM' if self.dqt.min_time < 12 else 'PM'
                 formatted_time = f"{hour} {suffix}"
             else:
-                formatted_time = str(self.min_time)
+                formatted_time = str(self.dqt.min_time)
             
             print(f"\nYou can only input today's log after {formatted_time}.")
             print("\nCome back later to enter today's log!")
@@ -178,23 +172,23 @@ class Manager:
         """Prompt the user to enter a previous date."""
         while True:
             inp = input("\nEnter the number of days ago or exact date "
-                        f"('{self.date_format_print}'): ").strip()
+                        f"('{self.dqt.date_format_print}'): ").strip()
             selected_date = None
             
             # If number of days ago specified, get date
             if inp.isdigit():
                 inp = int(inp)
                 selected_date = _today - timedelta(days=inp)
-                selected_date = selected_date.strftime(self.date_format)
+                selected_date = selected_date.strftime(self.dqt.date_format)
                 print(Txt(f"Date selected: {selected_date}").bold())
             
             # Else, validate date str
             else:
                 try:
-                    datetime.strptime(inp, self.date_format)
+                    datetime.strptime(inp, self.dqt.date_format)
                 except ValueError:
                     err("Enter wither a valid date in the "
-                        f"format {self.date_format_print} or a positive "
+                        f"format {self.dqt.date_format_print} or a positive "
                         "integer.")
                     continue
                 selected_date = inp
@@ -238,19 +232,19 @@ class Manager:
                 f"or '{self.json.memory_kyname}'"
             )
         if selected_date == 'today':
-            selected_date = _today.strftime(self.date_format)
+            selected_date = _today.strftime(self.dqt.date_format)
         
         # Changing rating
         if changing == self.json.rating_kyname:
             new_rating = self._input_rating(
                 f"Enter new rating for {selected_date} "
-                f"({self.min_rating}~{self.max_rating}): ",
+                f"({self.dqt.min_rating}~{self.dqt.max_rating}): ",
             )
             self.json.update(date=selected_date, rating=new_rating)
             notify_log_saved("Rating updated and saved!")
         # Changing memory entry
         else:
-            tmp = self.memory_edit_placeholder
+            tmp = self.dqt.memory_edit_placeholder
             #  ^ Cuz the variable attribute name is way too long
             new_memory = self._input_memory(dedent(f"""
                 Enter new memory entry for {selected_date}.
@@ -280,10 +274,10 @@ class Manager:
     
     def _resolve_memory_edit(self, mem_input: str, original_mem: str) -> str:
         """Replace the first instance of the placeholder with the original."""
-        if self.memory_edit_placeholder in mem_input:
+        if self.dqt.memory_edit_placeholder in mem_input:
             print("\n(Original memory entry has been inserted into your edit)")
             return mem_input.replace(
-                self.memory_edit_placeholder, original_mem, 1
+                self.dqt.memory_edit_placeholder, original_mem, 1
             )
         return mem_input
     
@@ -291,7 +285,7 @@ class Manager:
         """Get and validate user float input."""
         error_msg = (
             f"Please enter a valid number from "
-            f"{self.min_rating} to {self.max_rating}."
+            f"{self.dqt.min_rating} to {self.dqt.max_rating}."
         )
         
         while True:
@@ -310,11 +304,11 @@ class Manager:
                 err(error_msg)
                 continue
             
-            if not (self.min_rating <= value <= self.max_rating):
+            if not (self.dqt.min_rating <= value <= self.dqt.max_rating):
                 err(error_msg)
                 continue
             
-            return round(value, self.rating_inp_dp)
+            return round(value, self.dqt.rating_inp_dp)
     
     @staticmethod
     def _input_memory(prompt: str) -> str:

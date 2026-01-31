@@ -34,7 +34,6 @@ class DQTJSON:
     def __init__(self, dqt: Tracker):
         """Initialize attributes."""
         self.dqt = dqt
-        self.date_format = self.dqt.date_format
         
         self.filedirname = 'data'
         self.rootdir = Path(__file__).resolve().parent.parent
@@ -110,7 +109,7 @@ class DQTJSON:
     
     def today_rated(self) -> bool:
         """Check if a rating has been provided for today."""
-        today = _today.strftime(self.date_format)
+        today = _today.strftime(self.dqt.date_format)
         return today in self.logs
     
     def print_log(self,
@@ -287,8 +286,8 @@ class DQTJSON:
             
             # ---------- Validate date order ----------
             if prev_date is not None:
-                prev_d = datetime.strptime(prev_date, self.date_format)
-                d = datetime.strptime(date, self.date_format)
+                prev_d = datetime.strptime(prev_date, self.dqt.date_format)
+                d = datetime.strptime(date, self.dqt.date_format)
                 diff = (d - prev_d).days
                 if diff < 0:
                     raise ValueError(

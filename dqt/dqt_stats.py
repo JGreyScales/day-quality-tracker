@@ -16,10 +16,6 @@ class Stats:
         self.dqt = dqt
         self.json = dqt.json
         
-        self.date_format = self.dqt.date_format
-        self.max_rating = self.dqt.max_rating
-        self.rating_inp_dp = self.dqt.rating_inp_dp
-    
     def show_stats(self) -> None:
         """Show day quality rating stats.
 
@@ -72,10 +68,10 @@ class Stats:
         """Print average rating for each day of the week."""
         avg = round(
             sum(ratings_only) / len(ratings_only),
-            self.rating_inp_dp
+            self.dqt.rating_inp_dp
         )
         print(f"{Txt("Average rating:").bold()} "
-              f"{Txt(f"{avg:g}").bold()}/{self.max_rating}")
+              f"{Txt(f"{avg:g}").bold()}/{self.dqt.max_rating}")
     
     def _print_highest_lowest_rating(
             self,
@@ -100,12 +96,12 @@ class Stats:
         
         print(
             f"{Txt("Highest rating:").bold()} "
-            f"{Txt(f"{highest:g}").bold()}/{self.max_rating} "
+            f"{Txt(f"{highest:g}").bold()}/{self.dqt.max_rating} "
             f"on {self._format_dates(highest_dates)}"
         )
         print(
             f"{Txt("Lowest rating:").bold()} "
-            f"{Txt(f"{lowest:g}").bold()}/{self.max_rating} "
+            f"{Txt(f"{lowest:g}").bold()}/{self.dqt.max_rating} "
             f"on {self._format_dates(lowest_dates)}"
         )
     
@@ -116,7 +112,7 @@ class Stats:
         weekday_scores: dict[str, list[float]] = defaultdict(list)
         
         for date_str, rating in rated_items:
-            date = datetime.strptime(date_str, self.date_format)
+            date = datetime.strptime(date_str, self.dqt.date_format)
             weekday = date.strftime("%A")
             weekday_scores[weekday].append(rating)
         
@@ -136,10 +132,10 @@ class Stats:
         counter = 0
         for day, value in ranked_days:
             counter += 1
-            cleaned_avg = f"{round(value, self.rating_inp_dp):g}"
+            cleaned_avg = f"{round(value, self.dqt.rating_inp_dp):g}"
             print(f"  #{counter} {Txt(day).bold()}: "
                   f"{Txt(cleaned_avg).bold()}"
-                  f"/{self.max_rating}")
+                  f"/{self.dqt.max_rating}")
     
     @staticmethod
     def _format_dates(dates: list[str]) -> str:
