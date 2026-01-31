@@ -213,8 +213,9 @@ class DQTJSON:
             print("(Incompatible OS: unable to open the file with the program)")
             return
         
-        print(f"File opened in a new window!")
-        print("Remember to save changes before closing the file.")
+        print(f"File opened in a new window.")
+        print("Remember to save changes before closing the file!")
+        print("(Rerun the program for changes to take effect)")
     
     def configure(self, **kwargs) -> None:
         """Update configuration options via keyword arguments.
