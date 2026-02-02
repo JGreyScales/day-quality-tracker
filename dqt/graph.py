@@ -1,11 +1,11 @@
 import sys
+import math
 from subprocess import check_call
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
 try:
     import matplotlib.pyplot as plt
-    import matplotlib.dates as mdates
 except ModuleNotFoundError:
     print("\nThe python package 'matplotlib' is required before running.")
     if input("Install now? (y/n): ").lower() != 'y':
@@ -15,7 +15,6 @@ except ModuleNotFoundError:
     print("\nInstallation complete!")
     print("Resuming program...\n")
     import matplotlib.pyplot as plt
-    import matplotlib.dates as mdates
 
 
 if TYPE_CHECKING:
@@ -90,6 +89,7 @@ class Graph:
         self.ylabel_fontsize = 14
 
         self.tick_params_fontsize = 7
+        self.max_xticks = 15  # None = no limit
         
         self.graph_date_format = '%a %b %d'
         self.autofmt_xdates = True
@@ -162,7 +162,7 @@ class Graph:
         
         self._set_title(ax)
         self._draw_xylabels(ax)
-        self._set_ticks(fig, ax)
+        self._set_ticks(fig, ax, dates)
         
         self._plot_ratings(ax, dates, ratings)
         self._draw_neutral_rating_line(ax)
@@ -228,15 +228,51 @@ class Graph:
         ax.set_xlabel(self.xlabel, fontsize=self.xlabel_fontsize)
         ax.set_ylabel(self.ylabel, fontsize=self.ylabel_fontsize)
         
-    def _set_ticks(self, fig: plt.Figure, ax: plt.Axes) -> None:
+    def _set_ticks(self,
+                   fig: plt.Figure,
+                   ax: plt.Axes,
+                   dates: list[datetime]) -> None:
         """Set tick label sizes, format dates, and set y-tick increments."""
         ax.tick_params(labelsize=self.tick_params_fontsize)
-        if self.autofmt_xdates:
+        
+        # ---- x-ticks ----
+        if not dates:
+            return
+        
+        # Prevent date clustering by reducing shown dates
+        shown_dates = dates
+        if self.max_xticks is not None:
+            if len(dates) > self.max_xticks:
+                step = math.ceil(len(dates) / self.max_xticks)
+                shown_dates = dates[::step]
+        
+        ax.set_xticks(shown_dates)
+        ax.set_xticklabels(
+            [d.strftime(self.graph_date_format) for d in shown_dates],
+            fontsize=self.tick_params_fontsize,
+        )
+        
+        if self.autofmt_xdates and len(shown_dates) > 1:
             fig.autofmt_xdate()
-        ax.xaxis.set_major_locator(mdates.AutoDateLocator())
-        ax.xaxis.set_major_formatter(mdates.DateFormatter(self.graph_date_format))
+        
+        # ---- y-ticks ----
         ax.set_yticks(
             range(self.dqt.min_rating, self.dqt.max_rating + 1)
+        )
+    
+    def _plot_ratings(self, ax: plt.Axes, dates: list[datetime],
+                      ratings: list[float | None]) -> None:
+        """Plot rating values."""
+        ax.plot(
+            dates,
+            ratings,
+            linewidth=self.line_width,
+            linestyle=self.line_style,
+            marker=self.marker,
+            markersize=self.marker_size,
+            markerfacecolor=self.marker_face_color,
+            markeredgewidth=self.marker_edge_width,
+            label=self.line_label,
         )
     
     def _draw_year_labels(self, ax: plt.Axes, dates: list[datetime]) -> None:
@@ -259,21 +295,6 @@ class Graph:
                 )
                 shown_years.add(year)
     
-    def _plot_ratings(self, ax: plt.Axes, dates: list[datetime],
-                      ratings: list[float | None]) -> None:
-        """Plot rating values."""
-        ax.plot(
-            dates,
-            ratings,
-            linewidth=self.line_width,
-            linestyle=self.line_style,
-            marker=self.marker,
-            markersize=self.marker_size,
-            markerfacecolor=self.marker_face_color,
-            markeredgewidth=self.marker_edge_width,
-            label=self.line_label,
-        )
-    
     def _draw_neutral_rating_line(self, ax: plt.Axes) -> None:
         """Draw horizontal neutral rating line."""
         ax.axhline(
@@ -285,7 +306,7 @@ class Graph:
         )
         
     def _draw_average_rating_line(self, ax: plt.Axes,
-                                  ratings: list[float | None],) -> None:
+                                  ratings: list[float | None]) -> None:
         """Draw horizontal average rating line."""
         avg = self._average_rating(ratings)
         if avg is None:
