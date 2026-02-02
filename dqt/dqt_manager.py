@@ -252,7 +252,7 @@ class Manager:
                 You can copy and paste from your original entry above.
                 
                 To insert your original memory entry into your edit,
-                use curly brackets ({tmp}).
+                use '{tmp}'.
 
                 For example:
                   * To append to the end of your original entry, input:
