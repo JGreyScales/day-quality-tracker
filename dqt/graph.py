@@ -32,16 +32,13 @@ class Graph:
         'title',
         'title_fontsize',
         'title_padding',
-        'xlabel',
         'xlabel_fontsize',
-        'ylabel',
         'ylabel_fontsize',
-        'tick_params_fontsize',
+        'tick_labels_fontsize',
         'graph_date_format',
         'autofmt_xdates',
         'year_labels_fontsize',
         'year_labels_fontweight',
-        'line_label',
         'line_width',
         'line_color',
         'line_style',
@@ -49,23 +46,17 @@ class Graph:
         'marker_size',
         'marker_face_color',
         'marker_edge_width',
-        'neutralline_label',
         'neutralline_width',
         'neutralline_color',
         'neutralline_style',
-        'averageline_label',
         'averageline_width',
         'averageline_color',
         'averageline_style',
-        'highest_rating_label',
         'highest_rating_point_size',
         'highest_rating_point_color',
-        'highest_rating_point_zorder',
-        'lowest_rating_label',
         'lowest_rating_point_size',
         'lowest_rating_point_color',
-        'lowest_rating_point_zorder',
-        'legend_label',
+        'legend_fontsize',
         'legend_loc',
         'legend_frameon',
     }
@@ -90,7 +81,7 @@ class Graph:
         self.ylabel = "Rating"
         self.ylabel_fontsize = 14
 
-        self.tick_params_fontsize = 7
+        self.tick_labels_fontsize = 7
         self.max_xticks = 15  # None = no limit
         
         self.graph_date_format = '%a %b %d'
@@ -187,12 +178,12 @@ class Graph:
         """Close the graph."""
         plt.close('all')
         
-    def configure(self, **kwargs) -> None:
+    def configure(self, **configs) -> None:
         """Update configuration options via keyword arguments.
         
         Must be called before `run()`.
         """
-        for key, value in kwargs.items():
+        for key, value in configs.items():
             if key not in self._CONFIG_KEYS:
                 raise ValueError(f"Unknown configuration option: '{key}'")
             setattr(self, key, value)
@@ -235,7 +226,7 @@ class Graph:
                    ax: plt.Axes,
                    dates: list[datetime]) -> None:
         """Set tick label sizes, format dates, and set y-tick increments."""
-        ax.tick_params(labelsize=self.tick_params_fontsize)
+        ax.tick_params(labelsize=self.tick_labels_fontsize)
         
         # ---- x-ticks ----
         if not dates:
@@ -251,7 +242,7 @@ class Graph:
         ax.set_xticks(shown_dates)
         ax.set_xticklabels(
             [d.strftime(self.graph_date_format) for d in shown_dates],
-            fontsize=self.tick_params_fontsize,
+            fontsize=self.tick_labels_fontsize,
         )
         
         if self.autofmt_xdates and len(shown_dates) > 1:

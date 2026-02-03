@@ -20,16 +20,6 @@ _today = datetime.today()
 class DQTJSON:
     """A class to manage Day Quality Tracker JSON contents handling."""
     
-    _CONFIG_KEYS = {
-        'filedirname',
-        'filedirpath',
-        'filename',
-        'filepath',
-        'rating_kyname',
-        'memory_kyname',
-        'json_indent',
-    }
-    
     def __init__(self, dqt: Tracker):
         """Initialize attributes."""
         self.dqt = dqt
@@ -347,20 +337,11 @@ class DQTJSON:
         return invalid
     
     def _memory_matches_file(self, order_matters: bool = True) -> bool:
+        """Return if the logs in `self.logs` matches those in the JSON file."""
         file_logs = self._load_raw_json()
         if order_matters:
             return file_logs == self.logs
         return set(file_logs.items()) == set(self.logs.items())
-    
-    def configure(self, **kwargs) -> None:
-        """Update configuration options via keyword arguments.
-
-        Must be called before `run()`.
-        """
-        for key, value in kwargs.items():
-            if key not in self._CONFIG_KEYS:
-                raise ValueError(f"Unknown configuration option: '{key}'")
-            setattr(self, key, value)
     
     def _load_json(self) -> dict:
         """Load, validate, and normalize JSON log data."""

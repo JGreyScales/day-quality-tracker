@@ -21,13 +21,11 @@ class Tracker:
         'min_time',
         'min_rating',
         'max_rating',
-        'neutral_rating',
         'rating_inp_dp',
         'linewrap_maxcol',
         'date_format',
         'date_format_print',
         'clock_format_12',
-        'memory_edit_placeholder',
         'enable_ansi',
     }
     
@@ -238,12 +236,12 @@ class Tracker:
                 case _:
                     err("Only enter 1~7 or the given letters.")
     
-    def configure(self, **kwargs) -> None:
+    def configure(self, **configs) -> None:
         """Update configuration options via keyword arguments.
         
         Must be called before `run()`.
         """
-        for key, value in kwargs.items():
+        for key, value in configs.items():
             if key not in self._CONFIG_KEYS:
                 raise ValueError(f"Unknown configuration option: '{key}'")
             setattr(self, key, value)

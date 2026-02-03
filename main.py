@@ -8,6 +8,7 @@ if __name__ == '__main__':
             
             from dqt.styletext import StyleText as Txt
             from dqt.tracker import Tracker
+            from settings import CONFIGS
         except ModuleNotFoundError as e:
             print("\n*!* —————————————————————————————— *!*")
             print(Txt("\n❌Error!").bold().red())
@@ -20,17 +21,8 @@ if __name__ == '__main__':
         
         try:
             
-            # Custom configurations go here ↴  ——————————————————— #
-            dqt.configure(
-            
-            )
-            dqt.json.configure(
-            
-            )
-            dqt.graph.configure(
-            
-            )
-            # ———————————————————————————————————————————————————— #
+            dqt.configure(**CONFIGS['tracker'])
+            dqt.graph.configure(**CONFIGS['graph'])
         
         except ValueError as e:
             print("\n*!* —————————————————————————————— *!*")
