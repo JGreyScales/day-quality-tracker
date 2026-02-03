@@ -12,15 +12,19 @@ def _detect_ansi_support() -> bool:
     if os.environ.get('PYCHARM_HOSTED') == '1':
         return True
     
-    # 3) Real terminal
+    # 3) IDLE console
+    if 'idlelib.run' in sys.modules:
+        return False
+    
+    # 4) Real terminal
     if sys.stdout.isatty():
         return True
     
-    # 4) Dumb terminals explicitly disable ANSI
+    # 5) Dumb terminals explicitly disable ANSI
     if os.environ.get('TERM') in (None, 'dumb'):
         return False
     
-    # 5) Modern Windows terminals usually support ANSI
+    # 6) Modern Windows terminals usually support ANSI
     if os.name == 'nt':
         return True
     
