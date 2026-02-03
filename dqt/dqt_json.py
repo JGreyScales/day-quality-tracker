@@ -54,10 +54,10 @@ class DQTJSON:
         
         self.logs = self._load_json()
     
-    def update(self,
-               date: str = None,
-               rating: float | None = _UNSET,
-               memory: str = _UNSET) -> None:
+    def update_json(self,
+                    date: str = None,
+                    rating: float | None = _UNSET,
+                    memory: str = _UNSET) -> None:
         """Dump updated logs to JSON file.
 
         Update with new rating and memory values if provided before dumping.

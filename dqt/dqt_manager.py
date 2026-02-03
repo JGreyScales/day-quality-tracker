@@ -240,7 +240,7 @@ class Manager:
                 f"Enter new rating for {selected_date} "
                 f"({self.dqt.min_rating}~{self.dqt.max_rating}): ",
             )
-            self.json.update(date=selected_date, rating=new_rating)
+            self.json.update_json(date=selected_date, rating=new_rating)
             notify_log_saved("Rating updated and saved!")
         # Changing memory entry
         else:
@@ -269,7 +269,7 @@ class Manager:
                 self.json.logs[selected_date][self.json.memory_kyname]
             )
             new_memory = self._resolve_memory_edit(new_memory, original_mem)
-            self.json.update(date=selected_date, memory=new_memory)
+            self.json.update_json(date=selected_date, memory=new_memory)
             notify_log_saved("Memory entry updated and saved!")
     
     def _resolve_memory_edit(self, mem_input: str, original_mem: str) -> str:
