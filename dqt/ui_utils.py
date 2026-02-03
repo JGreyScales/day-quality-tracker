@@ -16,7 +16,7 @@ def err(message: str, *desc: str, pause: bool = True) -> None:
         sleep(1)
 
 
-def notify_log_saved(text: str = "Log saved!") -> None:
+def log_saved(text: str = "Log saved!") -> None:
     """Print formatted message to inform user that log was saved."""
     print("\n" + Txt(text).bold().green())
     sleep(1)

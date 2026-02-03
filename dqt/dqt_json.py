@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from dqt.styletext import StyleText as Txt
-from dqt.ui_utils import err, notify_log_saved, cont_on_enter, print_wrapped
+from dqt.ui_utils import err, log_saved, cont_on_enter, print_wrapped
 
 if TYPE_CHECKING:
     from tracker import Tracker
@@ -240,7 +240,7 @@ class DQTJSON:
         
         successful, dst_filepath = self._start_file_backup_process()
         if successful:
-            notify_log_saved(
+            log_saved(
                 f"\nBackup created successfully at '{dst_filepath}' !"
             )
         

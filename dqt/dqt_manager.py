@@ -2,7 +2,7 @@ from textwrap import dedent
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
-from dqt.ui_utils import err, notify_log_saved, print_wrapped
+from dqt.ui_utils import err, log_saved, print_wrapped
 from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
@@ -74,7 +74,7 @@ class Manager:
                         
                         self.json.add(date_str, rating, memory)
                     
-                    notify_log_saved()
+                    log_saved()
                     
                     return choice
                 
@@ -144,7 +144,7 @@ class Manager:
             # Save data
             today = _today.strftime(self.dqt.date_format)
             self.json.add(today, tdys_rating, tdys_memory)
-            notify_log_saved()
+            log_saved()
         
         else:
             # Format time in 12-hour or 24-hour clock
@@ -241,7 +241,7 @@ class Manager:
                 f"({self.dqt.min_rating}~{self.dqt.max_rating}): ",
             )
             self.json.update_json(date=selected_date, rating=new_rating)
-            notify_log_saved("Rating updated and saved!")
+            log_saved("Rating updated and saved!")
         # Changing memory entry
         else:
             tmp = self.dqt.memory_edit_placeholder
@@ -270,7 +270,7 @@ class Manager:
             )
             new_memory = self._resolve_memory_edit(new_memory, original_mem)
             self.json.update_json(date=selected_date, memory=new_memory)
-            notify_log_saved("Memory entry updated and saved!")
+            log_saved("Memory entry updated and saved!")
     
     def _resolve_memory_edit(self, mem_input: str, original_mem: str) -> str:
         """Replace the first instance of the placeholder with the original."""
