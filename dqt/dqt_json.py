@@ -240,7 +240,7 @@ class DQTJSON:
         successful, dst_filepath = self._start_file_backup_process()
         if successful:
             log_saved(
-                f"\nBackup created successfully at '{dst_filepath}' !"
+                f"Backup created successfully at '{dst_filepath}'!"
             )
         
     def _start_file_backup_process(self) -> tuple[bool, str | None]:
@@ -252,12 +252,12 @@ class DQTJSON:
         while True:
             dirpath = self._prompt_dirpath(
                 "Enter the directory path where you would like to create the "
-                "backup file: "
+                "backup file"
             )
             print(f"\nBackup will be saved to:\n{dirpath}")
             filename = self._prompt_filename(
                 "Name the backup file "
-                "\n(Tip: include a date or number for future reference): "
+                "\n(Tip: include a date or number for future reference)"
             )
             chosen_filepath = dirpath / filename
             if not confirm(
@@ -306,7 +306,10 @@ class DQTJSON:
         home_dir = Path.home() if from_home_dir else None
         while True:
             base = home_dir if from_home_dir else Path('/')
-            dirpath = base / input(f"\n{prompt}: {base}")
+            if from_home_dir:
+                dirpath = base / input(f"\n{prompt}: \n{base}").lstrip('/')
+            else:
+                dirpath = input(f"\n{prompt}: \n{base}")
             if not dirpath.is_dir():
                 err(
                     f"Directory '{dirpath}' not found.",
@@ -319,7 +322,7 @@ class DQTJSON:
     def _prompt_filename(self, prompt: str) -> str:
         """Prompt and validate file name based on OS."""
         while True:
-            filename = input(f"\n{prompt}").strip()
+            filename = input(f"\n{prompt}: ").strip()
             if not filename:
                 err("File name must not be empty.", "Try again.")
             if not filename.endswith('.json'):
