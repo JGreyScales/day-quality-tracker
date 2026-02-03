@@ -28,7 +28,6 @@ class DQTJSON:
         'rating_kyname',
         'memory_kyname',
         'json_indent',
-        'memory_linewrap_maxcol',
     }
     
     def __init__(self, dqt: Tracker):
@@ -47,8 +46,6 @@ class DQTJSON:
         self.memory_kyname = 'memory'
         
         self.json_indent = 4
-        
-        self.memory_linewrap_maxcol = 60
         
         self._touch()
         
@@ -69,7 +66,7 @@ class DQTJSON:
                 raise ValueError("Missing date argument")
             return
         if date not in self.logs:
-            raise KeyError(f"Date '{date}' not found.")
+            raise KeyError(f"Date '{date}' not found")
         if rating is not _UNSET:
             self.logs[date][self.rating_kyname] = rating
         if memory is not _UNSET:
@@ -149,7 +146,7 @@ class DQTJSON:
             if memory:
                 print(Txt("Memory:").bold())
                 if linewrap_memory:
-                    print_wrapped(memory, self.memory_linewrap_maxcol)
+                    print_wrapped(memory, self.dqt.linewrap_maxcol)
                 else:
                     print(memory)
             else:
