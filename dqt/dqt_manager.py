@@ -2,7 +2,7 @@ from textwrap import dedent
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
-from dqt.ui_utils import err, log_saved, print_wrapped
+from dqt.ui_utils import err, confirm, log_saved, print_wrapped
 from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
@@ -116,8 +116,7 @@ class Manager:
         """
         print("\n*❖* —————————————————————————————— *❖*")
         if datetime.now().time().hour >= self.dqt.min_time:
-            if (input("\nWould you like to enter today's log now? (y/n): ")
-                    .strip().lower() != 'y'):
+            if not confirm("Would you like to enter today's log now?"):
                 print("\nRerun the program later to enter your log!")
                 return
             
@@ -128,8 +127,7 @@ class Manager:
                 f"\n(enter 'null' to skip): "
             )
             
-            if (input("\nWould you like to enter a memory entry? (y/n): ")
-                    .strip().lower() != 'y'):
+            if not confirm("Would you like to enter a memory entry?"):
                 print(
                     "\nTo enter your memory entry later: "
                     "\nMain menu -> Edit today's/previous log -> Edit memory"
@@ -292,9 +290,9 @@ class Manager:
             raw = input(f"\n{prompt}").lower().strip()
             
             if raw in ['null', '-']:
-                if input(
-                        "\nAre you sure you want to enter an empty (null) rating? (y/n): "
-                ).lower().strip() == 'y':
+                if confirm(
+                    "Are you sure you want to enter an empty (null) rating?"
+                ):
                     return None
                 continue
             
@@ -319,10 +317,9 @@ class Manager:
             ).strip()
             
             if not tdys_mem:
-                if input(
-                        "\nAre you sure you want to enter an empty memory "
-                        "entry? (y/n): "
-                ).lower().strip() == 'y':
+                if confirm(
+                    "Are you sure you want to enter an empty memory entry?"
+                ):
                     return tdys_mem
                 continue
             break

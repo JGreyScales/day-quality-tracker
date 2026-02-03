@@ -16,6 +16,15 @@ def err(message: str, *desc: str, pause: bool = True) -> None:
         sleep(1)
 
 
+def confirm(message: str, confirm_char: str = 'y') -> bool:
+    """Prompt the user for confirmation.
+    
+    Return whether user input (lowercased) is equal to `confirm_char`.
+    """
+    inp = input(f"\n{message} [y/n]: ").strip().lower()
+    return inp == confirm_char.lower()
+
+
 def log_saved(text: str = "Log saved!") -> None:
     """Print formatted message to inform user that log was saved."""
     print("\n" + Txt(text).bold().green())

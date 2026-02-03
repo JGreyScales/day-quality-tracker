@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from dqt.styletext import StyleText as Txt
-from dqt.ui_utils import err, log_saved, cont_on_enter, print_wrapped
+from dqt.ui_utils import err, confirm, log_saved, cont_on_enter, print_wrapped
 
 if TYPE_CHECKING:
     from tracker import Tracker
@@ -187,8 +187,7 @@ class DQTJSON:
         _loop_print(last_30_items)
         
         if len(items_list) > 30:
-            choice = input("\nShow the rest of the logs? (y/n): ").strip().lower()
-            if choice != 'y':
+            if not confirm("Show the rest of the logs?"):
                 return
             
             items_until_last_30th = items_list[:-30]
@@ -261,20 +260,17 @@ class DQTJSON:
                 "\n(Tip: include a date or number for future reference): "
             )
             chosen_filepath = dirpath / filename
-            if input(
-                f"Backup file will be created at '{chosen_filepath}'. "
-                f"Confirm? (y/n): "
-            ).strip().lower() != "y":
+            if not confirm(
+                f"Backup file will be created at '{chosen_filepath}'. Confirm?"
+            ):
                 continue
             
             print("\nCreating backup file...")
             try:
                 dst = self._create_json_copy(chosen_filepath, exist_ok=False)
             except FileExistsError:
-                if input(
-                    f"The filename '{filename}' already exists in the "
-                    f"directory '{dirpath}'. Overwrite? (y/n): "
-                ).strip().lower() == 'y':
+                if confirm(f"The filename '{filename}' already exists in the "
+                           f"directory '{dirpath}'. Overwrite?"):
                     self._create_json_copy(chosen_filepath, exist_ok=True)
                     return True, dst
                 continue

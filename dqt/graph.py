@@ -4,11 +4,13 @@ from subprocess import check_call
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
+from dqt.ui_utils import confirm
+
 try:
     import matplotlib.pyplot as plt
 except ModuleNotFoundError:
     print("\nThe python package 'matplotlib' is required before running.")
-    if input("Install now? (y/n): ").lower() != 'y':
+    if not confirm("Install now?"):
         raise SystemExit()
     check_call([sys.executable, '-m', 'pip', 'install', '--upgrade', 'pip'])
     check_call([sys.executable, '-m', 'pip', 'install', 'matplotlib'])
