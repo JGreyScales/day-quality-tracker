@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from dqt.styletext import StyleText as Txt
-from dqt.ui_utils import cont_on_enter, print_wrapped
+from dqt.ui_utils import err, notify_log_saved, cont_on_enter, print_wrapped
 
 if TYPE_CHECKING:
     from tracker import Tracker
@@ -216,6 +216,145 @@ class DQTJSON:
         print(f"File opened in a new window.")
         print("Remember to save changes before closing the file!")
         print("(Rerun the program for changes to take effect)")
+        
+    def backup_json_file(self) -> None:
+        """Create a backup copy of the JSON file in a chosen directory."""
+        print_wrapped(
+            "\nSometimes an error can occur while the program is running, "
+            "which can corrupt or accidentally erase the JSON file where your "
+            "logs are stored."
+            "\nIt is good practice to back up your logs every once in a while.",
+            self.dqt.linewrap_maxcol
+        )
+        
+        if not self._memory_matches_file():
+            err(
+                "Your logs saved in runtime memory do not match those in the "
+                "JSON file.",
+                "Ensure all changes are saved to the JSON before "
+                "creating a backup file.",
+                "If you have made changes to the JSON file manually, please "
+                "rerun the program first."
+            )
+            return
+        
+        successful, dst_filepath = self._start_file_backup_process()
+        if successful:
+            notify_log_saved(
+                f"\nBackup created successfully at '{dst_filepath}' !"
+            )
+        
+    def _start_file_backup_process(self) -> tuple[bool, str | None]:
+        """Start the backup JSON prompting and file creation process.
+        
+        Return success.
+        """
+        dst = None
+        while True:
+            dirpath = self._prompt_dirpath(
+                "Enter the directory path where you would like to create the "
+                "backup file: "
+            )
+            print(f"\nBackup will be saved to:\n{dirpath}")
+            filename = self._prompt_filename(
+                "Name the backup file "
+                "\n(Tip: include a date or number for future reference): "
+            )
+            chosen_filepath = dirpath / filename
+            if input(
+                f"Backup file will be created at '{chosen_filepath}'. "
+                f"Confirm? (y/n): "
+            ).strip().lower() != "y":
+                continue
+            
+            print("\nCreating backup file...")
+            try:
+                dst = self._create_json_copy(chosen_filepath, exist_ok=False)
+            except FileExistsError:
+                if input(
+                    f"The filename '{filename}' already exists in the "
+                    f"directory '{dirpath}'. Overwrite? (y/n): "
+                ).strip().lower() == 'y':
+                    self._create_json_copy(chosen_filepath, exist_ok=True)
+                    return True, dst
+                continue
+            except Exception as e:
+                err(
+                    "An error occurred while trying to create the backup "
+                    "file: ",
+                    f"Error message: {e}.",
+                    "Try again."
+                )
+                return False, dst
+            else:
+                break
+        return True, dst
+    
+    def _create_json_copy(self, target_path: Path, exist_ok: bool) -> str:
+        """Create a copy of the JSON file in a chosen directory.
+        
+        Raise a FileExistsError if the target path already exists.
+        """
+        if not exist_ok and target_path.exists():
+            raise FileExistsError
+        return shutil.copy2(self.filepath, target_path)
+    
+    @staticmethod
+    def _prompt_dirpath(prompt: str, from_home_dir: bool = True) -> Path:
+        """Prompt and validate path input.
+        
+        If `home_dir` is True, the user's path input will be appended to the
+        home directory. e.g. If the user inputs "Desktop", the final path will
+        be Path("User/username/Desktop").
+        """
+        home_dir = Path.home() if from_home_dir else None
+        while True:
+            base = home_dir if from_home_dir else Path('/')
+            dirpath = base / input(f"\n{prompt}: {base}")
+            if not dirpath.is_dir():
+                err(
+                    f"Directory '{dirpath}' not found.",
+                    "Try again."
+                )
+                continue
+            break
+        return dirpath
+    
+    def _prompt_filename(self, prompt: str) -> str:
+        """Prompt and validate file name based on OS."""
+        while True:
+            filename = input(f"\n{prompt}").strip()
+            if not filename:
+                err("File name must not be empty.", "Try again.")
+            if not filename.endswith('.json'):
+                filename += '.json'
+            
+            for ch in self._invalid_filename_chars():
+                if ch in filename:
+                    err(
+                        f"Invalid character '{ch}' in filename '{filename}'",
+                        "Try again."
+                    )
+                    break
+            else:
+                return filename
+    
+    @staticmethod
+    def _invalid_filename_chars() -> str:
+        """Return a list of invalid filename characters based on OS."""
+        if os.name == 'nt':  # Windows invalid characters
+            invalid = '<>:"/\\|?*'
+            # Control characters (0-31)
+            invalid += ''.join([chr(i) for i in range(32)])
+        else:  # POSIX (Linux, macOS) invalid characters
+            invalid = '/\0'
+        return invalid
+    
+    def _memory_matches_file(self, order_matters: bool = True) -> bool:
+        file_logs = self._load_raw_json()
+        if order_matters:
+            return file_logs == self.logs
+        return set(file_logs.items()) == set(self.logs.items())
     
     def configure(self, **kwargs) -> None:
         """Update configuration options via keyword arguments.
@@ -269,8 +408,7 @@ class DQTJSON:
     
     def _validate_and_normalize_logs(
             self,
-            contents: dict
-    ) -> dict[str, dict[str, float | None | str]]:
+            contents: dict) -> dict[str, dict[str, float | None | str]]:
         """Validate and normalize raw log data.
 
         - Ensures dates are strictly increasing

@@ -94,7 +94,8 @@ class Tracker:
             print("3) Edit [P]revious log...")
             print("4) See [S]tats")
             print("5) View [A]ll logs...")
-            print("6) E[x]it")
+            print("6) [B]ack up logs...")
+            print("7) E[x]it")
             
             match input("> ").lower().strip():
                 case '1' | 'g':
@@ -222,14 +223,20 @@ class Tracker:
                                 err("Only enter 1~3 or the given letters.")
                                 continue
                         break
+                        
+                case '6' | 'b':
+                    if not self.json.logs:
+                        err("You haven't entered any logs yet!")
+                        continue
+                    self.json.backup_json_file()
                 
-                case '6' | 'x':
+                case '7' | 'x':
                     print("\n*⎋* —————————————————————————————— *⎋*")
                     print("\nBye!")
                     raise SystemExit()
                 
                 case _:
-                    err("Only enter 1~6 or the given letters.")
+                    err("Only enter 1~7 or the given letters.")
     
     def configure(self, **kwargs) -> None:
         """Update configuration options via keyword arguments.
