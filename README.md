@@ -88,6 +88,13 @@ If you choose to skip the missed logs, you will have to enter them later manuall
 before entering today's log). This is because the program determines if you've missed a log by checking the last log 
 recorded.
 
+### Back up logs
+
+Sometimes an error can occur while the program is running, which can corrupt or accidentally erase the JSON file 
+where your logs are stored. It is good practice to back up your logs every once in a while.
+
+The program creates a copy of the JSON file with your logs in it into the chosen directory.
+
 ### Custom Configurations
 
 To add custom configurations, pass any valid keyword argument into the provided empty `configure()` calls in `main.py`.
