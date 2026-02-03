@@ -38,5 +38,9 @@ def cont_on_enter(msg: str = "\n[Press ENTER to return to main menu]") -> None:
 
 def print_wrapped(text: str, maxcol: int):
     """Print line-wrapped text with a maximum of `maxcol` chars per line."""
-    print(textwrap.fill(text, maxcol))
+    leading_newlines = len(text) - len(text.lstrip('\n'))
+    stripped = text.lstrip('\n')
+
+    wrapped = textwrap.fill(stripped, maxcol)
+    print("\n" * leading_newlines + wrapped)
     
