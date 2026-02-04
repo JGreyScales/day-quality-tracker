@@ -1,20 +1,20 @@
 """Customize DQT behaviour and settings here."""
 
-CONFIGS: dict[str, dict] = {
+CONFIGS: dict[str, dict[str, ...]] = {
     
     # UI BEHAVIOR & SETTINGS
-    #                                         CONFIGURATION DESCRIPTION:
+    #                                          CONFIGURATION DESCRIPTION:
     'tracker': {
-        'min_time': 20,  #                    Earliest time of day log entry is accepted
-        'min_rating': 1,  #                   Minimum day quality rating (`1` recommended)
-        'max_rating': 20,  #                  Maximum day quality rating (even number recommended)
-        'rating_inp_dp': 2,  #                Number of decimal units ratings are rounded to
-        'linewrap_maxcol': 70,  #             Line width at which longs lines are wrapped
-        'date_format': '%Y-%m-%d',  #         ★ Date format used
-        'date_format_print': 'YYYY-MM-DD',  # Date format represented as a user-friendly string
-        'clock_format_12': True,  #           Whether time will be printed in 12-hour clock format (24-hour otherwise)
-        'enable_ansi': None,  #               Whether to enable ANSI escape codes for text coloring and styling (`None`
-        #                                         = automatically detect terminal compatibility, not so reliable)
+        'min_time': 20,  #                     Earliest time of day log entry is accepted
+        'min_rating': 1,  #                    Minimum day quality rating (1 recommended)
+        'max_rating': 20,  #                   Maximum day quality rating (even number recommended)
+        'rating_inp_dp': 2,  #                 Number of decimal units ratings are rounded to
+        'linewrap_maxcol': 70,  #              Line width at which longs lines are wrapped ('inf' for no line wrapping)
+        'date_format': '%Y-%m-%d',  #          ★ Date format used
+        'date_format_print': 'YYYY-MM-DD',  #  Date format represented as a user-friendly string
+        'clock_format_12': True,  #            Whether time will be printed in 12-hour clock format (24-hour otherwise)
+        'enable_ansi': None,  #                Whether to enable ANSI escape codes for text coloring and styling (`None`
+        #                                          = automatically detect terminal compatibility, not so reliable)
     },
     
     # GRAPH APPEARANCE & SETTINGS
@@ -47,9 +47,9 @@ CONFIGS: dict[str, dict] = {
         'averageline_color': 'red',  #             Average rating line color
         'averageline_style': '-.',  #              * Average rating line style
         'highest_rating_point_size': 20,  #        Highest rating point size (pt)
-        'highest_rating_point_color': 'green',  #  Highest rating point color
+        'highest_rating_point_color': 'green',  #  Highest rating point color (None = default color)
         'lowest_rating_point_size': 20,  #         Lowest rating point size (pt)
-        'lowest_rating_point_color': 'orange',  #  Lowest rating point color
+        'lowest_rating_point_color': 'orange',  #  Lowest rating point color (None = default color)
         'legend_fontsize': 8,  #                   Legend text font size (pt)
         'legend_loc': 'upper right',  #            Location of legend on graph
         'legend_frameon': True,  #                 Whether to show the legend in a box

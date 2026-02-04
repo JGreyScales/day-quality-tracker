@@ -3,6 +3,7 @@ import math
 from subprocess import check_call
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
+from types import NoneType
 
 from dqt.ui_utils import err, confirm
 
@@ -38,39 +39,39 @@ if TYPE_CHECKING:
 class Graph:
     """A class to manage graph plotting for day_quality_tracker."""
     
-    _CONFIG_KEYS = {
-        'graph_style',
-        'graph_show_block',
-        'title',
-        'title_fontsize',
-        'title_padding',
-        'xlabel_fontsize',
-        'ylabel_fontsize',
-        'tick_labels_fontsize',
-        'graph_date_format',
-        'autofmt_xdates',
-        'year_labels_fontsize',
-        'year_labels_fontweight',
-        'line_width',
-        'line_color',
-        'line_style',
-        'marker',
-        'marker_size',
-        'marker_face_color',
-        'marker_edge_width',
-        'neutralline_width',
-        'neutralline_color',
-        'neutralline_style',
-        'averageline_width',
-        'averageline_color',
-        'averageline_style',
-        'highest_rating_point_size',
-        'highest_rating_point_color',
-        'lowest_rating_point_size',
-        'lowest_rating_point_color',
-        'legend_fontsize',
-        'legend_loc',
-        'legend_frameon',
+    _CONFIG_KEYS: dict[str, type | tuple[type, ...]] = {
+        'graph_style': (str, NoneType),
+        'graph_show_block': bool,
+        'title': str,
+        'title_fontsize': (float, int, str),
+        'title_padding': (float, int),
+        'xlabel_fontsize': (float, int, str),
+        'ylabel_fontsize': (float, int, str),
+        'tick_labels_fontsize': (float, int, str),
+        'graph_date_format': str,
+        'autofmt_xdates': bool,
+        'year_labels_fontsize': (float, int, str),
+        'year_labels_fontweight': (int, str),
+        'line_width': (float, int),
+        'line_color': (str, tuple, NoneType),
+        'line_style': str,
+        'marker': str,
+        'marker_size': (float, int),
+        'marker_face_color': (str, tuple, NoneType),
+        'marker_edge_width': (float, int),
+        'neutralline_width': (float, int),
+        'neutralline_color': (str, tuple, NoneType),
+        'neutralline_style': str,
+        'averageline_width': (float, int),
+        'averageline_color': (str, tuple, NoneType),
+        'averageline_style': str,
+        'highest_rating_point_size': (float, int),
+        'highest_rating_point_color': (str, tuple, NoneType),
+        'lowest_rating_point_size': (float, int),
+        'lowest_rating_point_color': (str, tuple, NoneType),
+        'legend_fontsize': (float, int),
+        'legend_loc': (str, tuple),
+        'legend_frameon': bool,
     }
 
     def __init__(self, dqt: Tracker):
@@ -190,15 +191,31 @@ class Graph:
         """Close the graph."""
         plt.close('all')
         
-    def configure(self, **configs) -> None:
+    def configure(self, **configs: str | float | int | bool | tuple) -> None:
         """Update configuration options via keyword arguments.
         
         Must be called before `run()`.
+        Raises:
+            ValueError: Invalid configuration option
+            TypeError: Incorrect type
         """
-        for key, value in configs.items():
-            if key not in self._CONFIG_KEYS:
-                raise ValueError(f"Unknown configuration option: '{key}'")
-            setattr(self, key, value)
+        for config_name, value in configs.items():
+            if config_name not in self._CONFIG_KEYS:
+                raise ValueError(
+                    f"Invalid configuration option: '{config_name}'"
+                )
+            expected = self._CONFIG_KEYS[config_name]
+            if not isinstance(value, expected):
+                expected_name = (
+                    expected.__name__
+                    if isinstance(expected, type)
+                    else " or ".join(t.__name__ for t in expected)
+                )
+                raise TypeError(
+                    f"Expected {expected_name} for configuration "
+                    f"'{config_name}', got {type(value).__name__} instead"
+                )
+            setattr(self, config_name, value)
         
     def _fill_missing(self, dates: list[datetime]) \
             -> tuple[list[datetime], list[float | None]]:

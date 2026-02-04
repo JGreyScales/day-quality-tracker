@@ -1,4 +1,6 @@
 from datetime import datetime
+from typing import Literal
+from types import NoneType
 
 from dqt.graph import Graph
 from dqt.dqt_json import DQTJSON
@@ -17,16 +19,16 @@ class Tracker:
     VERSION = 5
     SEMVER = '0.5.0-alpha'
     
-    _CONFIG_KEYS = {
-        'min_time',
-        'min_rating',
-        'max_rating',
-        'rating_inp_dp',
-        'linewrap_maxcol',
-        'date_format',
-        'date_format_print',
-        'clock_format_12',
-        'enable_ansi',
+    _CONFIG_KEYS: dict[str, type | tuple[type, ...]] = {
+        'min_time': int,
+        'min_rating': int,
+        'max_rating': int,
+        'rating_inp_dp': int,
+        'linewrap_maxcol': (int, Literal['inf']),
+        'date_format': str,
+        'date_format_print': str,
+        'clock_format_12': bool,
+        'enable_ansi': (bool, NoneType),
     }
     
     def __init__(self):
@@ -158,7 +160,7 @@ class Tracker:
                         )
                         
                         while True:
-                            print(Txt("\nSelect:").bold())
+                            print(Txt("\nChoose what to do:").bold())
                             print("1) Edit [R]ating")
                             print("2) Edit [M]emory entry")
                             print("3) Edit [B]oth")
@@ -203,7 +205,7 @@ class Tracker:
                 
                 case '5' | 'a':
                     while True:
-                        print(Txt("\nSelect:").bold())
+                        print(Txt("\nChoose what to do:").bold())
                         print("1) [P]rint logs to standard output")
                         print("2) [O]pen JSON file in default viewer/editor")
                         print("3) [C]ancel -> Main menu")
@@ -236,12 +238,28 @@ class Tracker:
                 case _:
                     err("Only enter 1~7 or the given letters.")
     
-    def configure(self, **configs) -> None:
+    def configure(self, **configs: int | str | bool | None) -> None:
         """Update configuration options via keyword arguments.
-        
+
         Must be called before `run()`.
+        Raises:
+            ValueError: Invalid configuration option
+            TypeError: Incorrect type
         """
-        for key, value in configs.items():
-            if key not in self._CONFIG_KEYS:
-                raise ValueError(f"Unknown configuration option: '{key}'")
-            setattr(self, key, value)
+        for config_name, value in configs.items():
+            if config_name not in self._CONFIG_KEYS:
+                raise ValueError(
+                    f"Invalid configuration option: '{config_name}'"
+                )
+            expected = self._CONFIG_KEYS[config_name]
+            if not isinstance(value, expected):
+                expected_name = (
+                    expected.__name__
+                    if isinstance(expected, type)
+                    else " or ".join(t.__name__ for t in expected)
+                )
+                raise TypeError(
+                    f"Expected {expected_name} for configuration "
+                    f"'{config_name}', got {type(value).__name__} instead"
+                )
+            setattr(self, config_name, value)
