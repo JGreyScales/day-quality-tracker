@@ -11,8 +11,8 @@ if __name__ == '__main__':
             from settings import CONFIGS
         except ModuleNotFoundError as e:
             print("\n*!* —————————————————————————————— *!*")
-            print(Txt("\n❌Error!").bold().red())
-            print(e)
+            print(Txt("\n❌ Error!").bold().red())
+            print(f"{e}.")
             print(f"Ensure that module '{e.name}' exists in the current "
                   f"working directory.")
             sys.exit(1)
@@ -26,10 +26,10 @@ if __name__ == '__main__':
         
         except ValueError as e:
             print("\n*!* —————————————————————————————— *!*")
-            print(Txt("\n❌Error!").bold().red())
-            print(e)
-            print("Ensure that you have passed valid configuration keys into "
-                  "the `configure()` calls in main.py.")
+            print(Txt("\n❌ Error!").bold().red())
+            print(f"{e}.")
+            print("Ensure that you have passed valid configuration keys in "
+                  "`settings.py`.")
             sys.exit(1)
             
         try:
@@ -44,7 +44,8 @@ if __name__ == '__main__':
             sys.exit()
     except Exception:
         print("\n*!* —————————————————————————————— *!*")
-        print(Txt("\n❌Error!").bold().red())
+        print(Txt("\n❌ Error!").bold().red())
+        print("An unexpected error occurred...")
         traceback.print_exc()
         sys.exit(1)
     

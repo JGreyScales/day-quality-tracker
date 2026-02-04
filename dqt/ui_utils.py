@@ -7,7 +7,7 @@ from dqt.styletext import StyleText as Txt
 def err(message: str, *desc: str, pause: bool = True) -> None:
     """Print formatted error message."""
     print(
-        Txt("\nError: ").bold().red()
+        Txt("\n❌ Error: ").bold().red()
         + message
     )
     for d in desc:
@@ -25,13 +25,13 @@ def confirm(message: str, confirm_char: str = 'y') -> bool:
     return inp == confirm_char.lower()
 
 
-def log_saved(text: str = "Log saved!") -> None:
+def log_saved(text: str = "✅ Log saved!") -> None:
     """Print formatted message to inform user that log was saved."""
     print("\n" + Txt(text).bold().green())
     sleep(1)
 
 
-def cont_on_enter(msg: str = "\n[Press ENTER to return to main menu]") -> None:
+def cont_on_enter(msg: str = "\n[Press ENTER ↩ to return to main menu]") -> None:
     """Pause the program until the user presses Enter."""
     input(msg)
 
