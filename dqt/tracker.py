@@ -4,8 +4,8 @@ from types import NoneType
 
 from dqt.graph import Graph
 from dqt.dqt_json import DQTJSON
-from dqt.dqt_manager import Manager
-from dqt.dqt_stats import Stats
+from dqt.manager import Manager
+from dqt.stats import Stats
 from dqt.ui_utils import cont_on_enter, err, invalid_choice, menu
 from dqt.styletext import StyleText as Txt
 
