@@ -2,7 +2,9 @@ from textwrap import dedent
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
-from dqt.ui_utils import confirm, err, log_saved, menu, print_wrapped
+from dqt.ui_utils import (
+    confirm, err, invalid_choice, log_saved, menu, print_wrapped
+)
 from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
@@ -41,7 +43,7 @@ class Manager:
         print(f"\nYou haven't logged data since {last_date} (last log).")
         
         while True:
-            opt = menu(
+            opts = menu(
                 "1) Enter missing logs now",
                 "2) Enter missing logs later -> Main menu",
                 "3) Skip missing logs -> Enter today's log",
@@ -106,7 +108,7 @@ class Manager:
                     return choice
                 
                 case _:
-                    err(f"Only enter a number from 1~{opt}.")
+                    invalid_choice(opts, False)
                     continue
     
     def input_todays_log(self) -> None:

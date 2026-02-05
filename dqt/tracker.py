@@ -6,7 +6,7 @@ from dqt.graph import Graph
 from dqt.dqt_json import DQTJSON
 from dqt.dqt_manager import Manager
 from dqt.dqt_stats import Stats
-from dqt.ui_utils import cont_on_enter, err, menu
+from dqt.ui_utils import cont_on_enter, err, invalid_choice, menu
 from dqt.styletext import StyleText as Txt
 
 _UNSET = object()
@@ -144,9 +144,7 @@ class Tracker:
                             case '4' | 'c':
                                 break
                             case _:
-                                err(
-                                    f"Only enter 1~{opts} or the given letters."
-                                )
+                                invalid_choice(opts)
                                 continue
                         break
                 
@@ -194,9 +192,7 @@ class Tracker:
                                 case '5' | 'c':
                                     break
                                 case _:
-                                    err(
-                                        f"Only enter 1~{opt} or the given letters."
-                                    )
+                                    invalid_choice(opts)
                                     continue
                             break
                         
@@ -226,9 +222,7 @@ class Tracker:
                             case '3' | 'c':
                                 break
                             case _:
-                                err(
-                                    f"Only enter 1~{opt} or the given letters."
-                                )
+                                invalid_choice(opts)
                                 continue
                         break
                 
@@ -244,7 +238,7 @@ class Tracker:
                     raise SystemExit()
                 
                 case _:
-                    err(f"Only enter 1~{opts} or the given letters.")
+                    invalid_choice(opts)
     
     def configure(self, **configs: int | str | bool | None) -> None:
         """Update configuration options via keyword arguments.

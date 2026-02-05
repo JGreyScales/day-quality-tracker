@@ -28,6 +28,15 @@ def err(message: str, *desc: str, pause: bool = True) -> None:
         print(d)
     if pause:
         sleep(1)
+        
+
+def invalid_choice(opts: int,
+                   letters_given: bool = True,
+                   start: int = 1) -> None:
+    err(
+        f"Only enter a number {start}~{opts}"
+        f"{" or the given letters" if letters_given else ""}."
+    )
 
 
 def log_saved(text: str = "Log saved!") -> None:
