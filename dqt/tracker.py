@@ -46,8 +46,6 @@ class Tracker:
         # Format printed time using 12-hour clock if True
         self.clock_format_12 = True
         
-        self.memory_edit_placeholder = '{}'
-        
         try:
             self.json = DQTJSON(self)
         except ValueError as e:

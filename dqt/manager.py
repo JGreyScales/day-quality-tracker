@@ -19,6 +19,8 @@ class Manager:
     def __init__(self, dqt: Tracker):
         self.dqt = dqt
         self.json = dqt.json
+        
+        self.memory_edit_placeholder = '{}'
     
     def handle_missing_logs(self) -> str | None:
         """Check if any previous days are missing ratings.
@@ -245,7 +247,7 @@ class Manager:
             log_saved("Rating updated and saved!")
         # Changing memory entry
         else:
-            tmp = self.dqt.memory_edit_placeholder
+            tmp = self.memory_edit_placeholder
             #  ^ Cuz the variable attribute name is way too long
             new_memory = self._input_memory(dedent(f"""
                 Enter new memory entry for {selected_date}.
@@ -275,10 +277,10 @@ class Manager:
     
     def _resolve_memory_edit(self, mem_input: str, original_mem: str) -> str:
         """Replace the first instance of the placeholder with the original."""
-        if self.dqt.memory_edit_placeholder in mem_input:
+        if self.memory_edit_placeholder in mem_input:
             print("\n(Original memory entry has been inserted into your edit)")
             return mem_input.replace(
-                self.dqt.memory_edit_placeholder, original_mem, 1
+                self.memory_edit_placeholder, original_mem, 1
             )
         return mem_input
     
