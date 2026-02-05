@@ -29,6 +29,7 @@ class Tracker:
         'date_format_print': str,
         'clock_format_12': bool,
         'enable_ansi': (bool, NoneType),
+        'autofill_json': bool,
     }
     
     def __init__(self):
@@ -43,8 +44,9 @@ class Tracker:
         
         self.date_format = '%Y-%m-%d'
         self.date_format_print = "YYYY-MM-DD"
-        # Format printed time using 12-hour clock if True
         self.clock_format_12 = True
+        self.enable_ansi = False
+        self.autofill_json = True
         
         try:
             self.json = DQTJSON(self)
@@ -60,8 +62,6 @@ class Tracker:
         self.graph = Graph(self)
         self.manager = Manager(self)
         self.stats = Stats(self)
-        
-        self.enable_ansi = False
     
     def run(self) -> None:
         """Run Day Quality Tracker."""

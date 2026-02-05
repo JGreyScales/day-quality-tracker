@@ -1,20 +1,33 @@
-"""Customize DQT behaviour and settings here."""
+"""Customize DQT behavior and settings here.
+
+Make sure to enter values with the right data type. Incorrect data types will
+raise an error. You will be notified to fix the issue before proceeding.
+
+Adding unknown configurations will raise an error. You will be notified to fix
+the issue before proceeding.
+
+If any configuration is removed, the default value will be used.
+"""
 
 CONFIGS: dict[str, dict[str, ...]] = {
     
     # UI BEHAVIOR & SETTINGS
     #                                          CONFIGURATION DESCRIPTION:
     'tracker': {
-        'min_time': 20,  #                     Earliest time of day log entry is accepted
+        'min_time': 20,  #                     Earliest hour of day a log entry is accepted (0 = no limit)
         'min_rating': 1,  #                    Minimum day quality rating (1 recommended)
         'max_rating': 20,  #                   Maximum day quality rating (even number recommended)
         'rating_inp_dp': 2,  #                 Number of decimal units ratings are rounded to
-        'linewrap_maxcol': 70,  #              Line width at which longs lines are wrapped ('inf' for no line wrapping)
+        'linewrap_maxcol': 70,  #              Line width at which long lines are wrapped ('inf' = no line wrapping)
         'date_format': '%Y-%m-%d',  #          ★ Date format used
         'date_format_print': 'YYYY-MM-DD',  #  Date format represented as a user-friendly string
         'clock_format_12': True,  #            Whether time will be printed in 12-hour clock format (24-hour otherwise)
         'enable_ansi': None,  #                Whether to enable ANSI escape codes for text coloring and styling (`None`
         #                                          = automatically detect terminal compatibility, not so reliable)
+        'autofill_json': True,  #              Whether the program should silently fill in missing values in the JSON
+        #                                          file where possible. If `True`, ratings will be set to `None` if
+        #                                          not found, and memory entries will be set to an empty string. If
+        #                                          `False`, an error will be raised instead.
     },
     
     # GRAPH APPEARANCE & SETTINGS
@@ -56,7 +69,7 @@ CONFIGS: dict[str, dict[str, ...]] = {
     }
     
     # * = See more options in the official Matplotlib documentation
-    #     at https://matplotlib.org/stable/
+    #     at https://matplotlib.org/stable
     # ★ = See more information on date format codes in the official Python documentation at
     #     https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes
 }

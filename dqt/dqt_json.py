@@ -388,15 +388,13 @@ class DQTJSON:
             contents: dict) -> dict[str, dict[str, float | None | str]]:
         """Validate and normalize raw log data.
 
-        - Ensures dates are strictly increasing
-        - Upgrades pre-DQT-5 format to current format
+        - Ensures dates are increasing
         - Ensures rating exists
-        - Auto-fills missing memory entries
+        - Auto-fills missing memory entries (optional)
         """
-        updated = False
-        
         prev_date = None
         validated: dict[str, dict[str, float | None | str]] = {}
+        updated = False
         
         for date, value in contents.items():
             
@@ -407,42 +405,56 @@ class DQTJSON:
                 diff = (d - prev_d).days
                 if diff < 0:
                     raise ValueError(
-                        f"Date {date} is older than previous date {prev_date}"
+                        f"Date '{date}' is older than previous date "
+                        f"'{prev_date}'"
                     )
                 if diff == 0:
                     raise ValueError(
-                        f"Date {prev_date} is repeated"
+                        f"Date '{prev_date}' is repeated"
                     )
             
             prev_date = date
             
-            # ---------- Pre-DQT-5 format ----------
-            # { "YYYY-MM-DD": rating }
-            if isinstance(value, (int, float)):
-                validated[date] = {
-                    self.rating_kyname: float(value),
-                    self.memory_kyname: ''  # Default to empty mem-entry
-                }
-                updated = True
-                continue
-            
-            # ---------- ≥ DQT-5 format ----------
-            # { "YYYY-MM-DD": { "rating": rating, "memory": memory entry } }
+            # Format:
+            # {
+            #     "YYYY-MM-DD": {
+            #         "rating": 10,
+            #         "memory": "This is a memory entry."
+            #     }
+            # }
             if isinstance(value, dict):
-                raw_rating = value.get(self.rating_kyname, None)  # Handle null ratings
+                try:
+                    raw_rating = value[self.rating_kyname]
+                except KeyError:
+                    if not self.dqt.autofill_json:
+                        raise KeyError(
+                            f"'{self.rating_kyname}' key not found for date "
+                            f"'{date}'")
+                    raw_rating = None
+                    updated = True
                 rating = None if raw_rating is None else float(raw_rating)
-                memory = value.get(self.memory_kyname, '')
+                try:
+                    memory = value[self.memory_kyname]
+                except KeyError:
+                    if not self.dqt.autofill_json:
+                        raise KeyError(
+                            f"'{self.memory_kyname}' key not found for date "
+                            f"'{date}'")
+                    memory = ''
+                    updated = True
                 
                 validated[date] = {
                     self.rating_kyname: rating,
                     self.memory_kyname: memory
                 }
                 
-                updated = True
                 continue
             
-            # ---------- Invalid format ----------
-            raise ValueError(f"Invalid log format for date {date}")
+            else:
+                raise ValueError(
+                    f"Invalid log format for date '{date}'; "
+                    f"value must be a dict"
+                )
         
         if updated:
             self._dump(validated)
@@ -453,7 +465,7 @@ class DQTJSON:
               logs: dict[str, dict[str, float | None | str]] = None) -> None:
         """Dump JSON file contents.
 
-        If logs=None (default), dump from `logs` attribute.
+        If `logs=None` (default), dump from `logs` attribute.
         If a logs dict is provided, the dict will be dumped instead.
         """
         with open(self.filepath, 'w') as file:
