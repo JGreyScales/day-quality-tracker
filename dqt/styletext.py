@@ -115,13 +115,17 @@ class StyleText:
             combined = f"{self.prefix}{self.text}{self.RESET}{other}"
             return StyleText(combined, '', reset=False)
         
-        return StyleText(self.text + other, self.prefix, reset=False)
+        return StyleText(
+            self.text + other,
+            self.prefix,
+            reset=False
+        )
     
     def __radd__(self, other: str) -> "StyleText":
         if not isinstance(other, str):
             return NotImplemented
         return StyleText(
-            other + self.text,
-            self.prefix,
+            self.text,
+            other + self.prefix,
             reset=self.reset
         )

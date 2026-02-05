@@ -69,7 +69,7 @@ class Tracker:
         """Run Day Quality Tracker."""
         Txt.set_ansi(self.enable_ansi)
         
-        title = f"*--- 🗓 Day Quality Tracker {self.VERSION}! 📈 ---*"
+        title = f"*--- 📆 Day Quality Tracker {self.VERSION}! 📈 ---*"
         print(
             Txt(
                 f"\n{title}"
@@ -90,12 +90,12 @@ class Tracker:
                 Txt("— choose what to do: ").bold()
             )
             print("1) 📈 View ratings [G]raph")
-            print("2) ✏️ Edit [T]oday's log...")
-            print("3) ✏️ Edit [P]revious log...")
+            print("2) 📝 Edit [T]oday's log...")
+            print("3) 🕗 Edit [P]revious log...")
             print("4) 📊 See [S]tats")
             print("5) 📂 View [A]ll logs...")
             print("6) 💾 [B]ack up logs...")
-            print("7) 🚪 E[x]it")
+            print("7) E[x]it")
             
             match input("> ").lower().strip():
                 case '1' | 'g':
