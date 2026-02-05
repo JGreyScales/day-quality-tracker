@@ -17,7 +17,7 @@ class Tracker:
     """Track and visualize day quality ratings in a graph."""
     
     VERSION = 5
-    SEMVER = '0.5.0-alpha'
+    SEMVER = 'v0.5.0-alpha'
     
     _CONFIG_KEYS: dict[str, type | tuple[type, ...]] = {
         'min_time': int,
@@ -75,7 +75,8 @@ class Tracker:
                 f"\n{title}"
             ).bold().yellow()
         )
-        print(Txt(f"{"Version " + self.SEMVER:^{len(title)}}").dim())
+        semver_str = "~~~ " + self.SEMVER + " ~~~"
+        print(Txt(f"{semver_str:^{len(title) + 2}}").dim())
         
         choice = self.manager.handle_missing_logs()
         
