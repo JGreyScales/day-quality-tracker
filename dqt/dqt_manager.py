@@ -2,7 +2,7 @@ from textwrap import dedent
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
-from dqt.ui_utils import err, confirm, log_saved, print_wrapped
+from dqt.ui_utils import confirm, err, log_saved, menu, print_wrapped
 from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
@@ -41,10 +41,11 @@ class Manager:
         print(f"\nYou haven't logged data since {last_date} (last log).")
         
         while True:
-            print(Txt("\nChoose what to do:").bold())
-            print("1) Enter missing logs now")
-            print("2) Enter missing logs later -> Main menu")
-            print("3) Skip missing logs -> Enter today's log")
+            opt = menu(
+                "1) Enter missing logs now",
+                "2) Enter missing logs later -> Main menu",
+                "3) Skip missing logs -> Enter today's log",
+            )
             
             choice = input("> ").strip()
             
@@ -95,7 +96,7 @@ class Manager:
                         f"manually in `{self.json.filename}`, unless you "
                         "don't enter today's log yet."
                         "\nYou can open the file by selecting:"
-                        "\nMain menu -> 4) View [A]ll logs "
+                        "\nMain menu -> 5) View [A]ll logs "
                         "-> 2) [O]pen JSON file in default viewer/editor"
                         "\nMake sure you save any changed before closing "
                         "the file.",
@@ -105,7 +106,7 @@ class Manager:
                     return choice
                 
                 case _:
-                    err("Only enter a number from 1~3.")
+                    err(f"Only enter a number from 1~{opt}.")
                     continue
     
     def input_todays_log(self) -> None:

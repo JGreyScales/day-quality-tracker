@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from dqt.styletext import StyleText as Txt
-from dqt.ui_utils import err, confirm, log_saved, cont_on_enter, print_wrapped
+from dqt.ui_utils import confirm, cont_on_enter, err, log_saved, print_wrapped
 
 if TYPE_CHECKING:
     from tracker import Tracker

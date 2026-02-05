@@ -6,7 +6,7 @@ from dqt.graph import Graph
 from dqt.dqt_json import DQTJSON
 from dqt.dqt_manager import Manager
 from dqt.dqt_stats import Stats
-from dqt.ui_utils import err, cont_on_enter
+from dqt.ui_utils import cont_on_enter, err, menu
 from dqt.styletext import StyleText as Txt
 
 _UNSET = object()
@@ -86,16 +86,19 @@ class Tracker:
         while True:
             print("\n*❖* —————————————————————————————— *❖*")
             print(
-                "\n🏠 " + Txt("MAIN MENU").blue().underline().bold(),
-                Txt("— choose what to do: ").bold()
+                f"\n🏠 {Txt("MAIN MENU").blue().underline().bold()} "
+                f"{Txt("— choose what to do:").bold()}"
             )
-            print("1) 📈 View ratings [G]raph")
-            print("2) 📝 Edit [T]oday's log...")
-            print("3) 🕗 Edit [P]revious log...")
-            print("4) 📊 See [S]tats")
-            print("5) 📂 View [A]ll logs...")
-            print("6) 💾 [B]ack up logs...")
-            print("7) E[x]it")
+            opts = menu(
+                "1) 📈 View ratings [G]raph",
+                "2) 📝 Edit [T]oday's log...",
+                "3) 🕗 Edit [P]revious log...",
+                "4) 📊 See [S]tats",
+                "5) 📂 View [A]ll logs...",
+                "6) 💾 [B]ack up logs...",
+                "7) E[x]it",
+                title=None
+            )
             
             match input("> ").lower().strip():
                 case '1' | 'g':
@@ -123,11 +126,12 @@ class Tracker:
                     )
                     
                     while True:
-                        print(Txt("\nSelect:"))
-                        print("1) Edit [R]ating")
-                        print("2) Edit [M]emory entry")
-                        print("3) Edit [B]oth")
-                        print("4) [C]ancel -> Main menu")
+                        opts = menu(
+                            "1) Edit [R]ating",
+                            "2) Edit [M]emory entry",
+                            "3) Edit [B]oth",
+                            "4) [C]ancel -> Main menu",
+                        )
                         
                         match input("> ").strip().lower():
                             case '1' | 'r':
@@ -141,7 +145,7 @@ class Tracker:
                                 break
                             case _:
                                 err(
-                                    "Only enter 1~4 or the given letters."
+                                    f"Only enter 1~{opts} or the given letters."
                                 )
                                 continue
                         break
@@ -160,12 +164,13 @@ class Tracker:
                         )
                         
                         while True:
-                            print(Txt("\nChoose what to do:").bold())
-                            print("1) Edit [R]ating")
-                            print("2) Edit [M]emory entry")
-                            print("3) Edit [B]oth")
-                            print("4) Reselect [D]ate")
-                            print("5) [C]ancel -> Main menu")
+                            opt = menu(
+                                "1) Edit [R]ating",
+                                "2) Edit [M]emory entry",
+                                "3) Edit [B]oth",
+                                "4) Reselect [D]ate",
+                                "5) [C]ancel -> Main menu",
+                            )
                             
                             choice = input("> ").strip().lower()
                             match choice:
@@ -190,7 +195,7 @@ class Tracker:
                                     break
                                 case _:
                                     err(
-                                        "Only enter 1~5 or the given letters."
+                                        f"Only enter 1~{opt} or the given letters."
                                     )
                                     continue
                             break
@@ -205,10 +210,11 @@ class Tracker:
                 
                 case '5' | 'a':
                     while True:
-                        print(Txt("\nChoose what to do:").bold())
-                        print("1) [P]rint logs to standard output")
-                        print("2) [O]pen JSON file in default viewer/editor")
-                        print("3) [C]ancel -> Main menu")
+                        opt = menu(
+                            "1) [P]rint logs to standard output",
+                            "2) [O]pen JSON file in default viewer/editor",
+                            "3) [C]ancel -> Main menu",
+                        )
                         
                         choice = input("> ").strip().lower()
                         match choice:
@@ -220,10 +226,12 @@ class Tracker:
                             case '3' | 'c':
                                 break
                             case _:
-                                err("Only enter 1~3 or the given letters.")
+                                err(
+                                    f"Only enter 1~{opt} or the given letters."
+                                )
                                 continue
                         break
-                        
+                
                 case '6' | 'b':
                     if not self.json.logs:
                         err("You haven't entered any logs yet!")
@@ -236,7 +244,7 @@ class Tracker:
                     raise SystemExit()
                 
                 case _:
-                    err("Only enter 1~7 or the given letters.")
+                    err(f"Only enter 1~{opts} or the given letters.")
     
     def configure(self, **configs: int | str | bool | None) -> None:
         """Update configuration options via keyword arguments.

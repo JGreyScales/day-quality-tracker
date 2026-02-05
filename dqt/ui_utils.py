@@ -1,7 +1,21 @@
 import textwrap
 from time import sleep
 
-from dqt.styletext import StyleText as Txt
+from dqt.styletext import StyleText as Txt, StyleText
+
+
+def confirm(message: str, confirm_char: str = 'y') -> bool:
+    """Prompt the user for confirmation.
+
+    Return whether user input (lowercased) is equal to `confirm_char`.
+    """
+    inp = input(f"\n{message} [y/n]: ").strip().lower()
+    return inp == confirm_char.lower()
+
+
+def cont_on_enter(msg: str = "\n[Press ENTER ↩ to return to main menu]") -> None:
+    """Pause the program until the user presses Enter."""
+    input(msg)
 
 
 def err(message: str, *desc: str, pause: bool = True) -> None:
@@ -16,24 +30,20 @@ def err(message: str, *desc: str, pause: bool = True) -> None:
         sleep(1)
 
 
-def confirm(message: str, confirm_char: str = 'y') -> bool:
-    """Prompt the user for confirmation.
-    
-    Return whether user input (lowercased) is equal to `confirm_char`.
-    """
-    inp = input(f"\n{message} [y/n]: ").strip().lower()
-    return inp == confirm_char.lower()
-
-
-def log_saved(text: str = "✅ Log saved!") -> None:
+def log_saved(text: str = "Log saved!") -> None:
     """Print formatted message to inform user that log was saved."""
-    print("\n" + Txt(text).bold().green())
+    print("\n✅ " + Txt(text).bold().green())
     sleep(1)
 
 
-def cont_on_enter(msg: str = "\n[Press ENTER ↩ to return to main menu]") -> None:
-    """Pause the program until the user presses Enter."""
-    input(msg)
+def menu(*options: str | StyleText,
+         title: str | StyleText | None = "Choose what to do: ") -> int:
+    """Display menu options with title prompt. Return number of options."""
+    if title is not None:
+        print(Txt(title).bold())
+    for i, o in enumerate(options, 1):
+        print(Txt(f"{i})").bold(), o.removeprefix(f'{i})'))
+    return len(options)
 
 
 def print_wrapped(text: str, maxcol: int):
