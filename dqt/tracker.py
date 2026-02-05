@@ -163,7 +163,7 @@ class Tracker:
                         )
                         
                         while True:
-                            opt = menu(
+                            opts = menu(
                                 "1) Edit [R]ating",
                                 "2) Edit [M]emory entry",
                                 "3) Edit [B]oth",
@@ -207,7 +207,7 @@ class Tracker:
                 
                 case '5' | 'a':
                     while True:
-                        opt = menu(
+                        opts = menu(
                             "1) [P]rint logs to standard output",
                             "2) [O]pen JSON file in default viewer/editor",
                             "3) [C]ancel -> Main menu",
