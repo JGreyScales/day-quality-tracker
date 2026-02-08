@@ -58,9 +58,11 @@ class Stats:
         """Print the number of days rated."""
         days_total = len(logs)
         days_rated = len(rated_items)
+        first_date = rated_items[0][0]
         
         print(
             f"{Txt("Days rated:").bold()} {Txt(days_rated).bold()} "
+            f"since {first_date} "
             f"({days_total} including null ratings)"
         )
     
