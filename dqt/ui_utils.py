@@ -46,7 +46,7 @@ def log_saved(text: str = "Log saved!") -> None:
 
 
 def menu(*options: str | StyleText,
-         title: str | StyleText | None = "Choose what to do: ") -> int:
+         title: str | StyleText | None = "\nChoose what to do: ") -> int:
     """Display menu options with title prompt. Return number of options."""
     if title is not None:
         print(Txt(title).bold())
