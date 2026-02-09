@@ -1,13 +1,18 @@
 # Day Quality Tracker 5 <sub><sup>(v0.5.0-beta)</sup></sub>
 
-This is a simple Python CLI that helps you track your day quality ratings and visualize them on a graph using the 
-Matplotlib.pyplot module.
+Day Quality Tracker (DQT) is a simple Python CLI that helps you record and track daily “day quality” ratings and 
+visualize them over time using the `matplotlib.pyplot` module.
+
+It is designed to be lightweight, flexible, and reflective — combining numeric ratings with short memory entries so you
+can track both trends and moments.
+
+---
 
 ## How to use
 
 Before using the program, ensure you have a Python interpreter installed on your system **(version 3.12+ recommended)**.
 
-To start the program, **run `main.py`**, or
+To start the program, **run `main.py`**, or initialize and run the tracker manually:
    
    ```python
    from dqt.tracker import Tracker
@@ -16,36 +21,26 @@ To start the program, **run `main.py`**, or
    dqt.run()
    ```
 
+---
+
 ### Ratings
 
-Every day, if you have not yet entered a rating, the program will prompt you to do so.
-The default earliest time you can enter a rating is 8 PM. You can change this by adding the following keyword 
-argument in `main.py`:
+Each day, if you have not yet entered a rating, the program will prompt you to do so.
+By default, the earliest time you can enter a rating is **8:00 PM** (configurable).
 
-```python
-dqt.configure(
-    min_time=0  # Earliest hour of day to enter rating
-)
-```
+You may also enter a null rating, indicating that you are unable or unwilling to rate your day at the moment.
+Ratings can be edited at any time.
 
-You can change the range of ratings by (default is 1~20):
-
-```python
-dqt.configure(
-    max_rating=10,
-    min_rating=1,
-)
-```
-
-You can choose to enter a null rating, meaning you are unable or unwilling to rate your date for now. You can edit 
-ratings at any time.
+---
 
 ### Memory entries
 
-You can also choose to enter a memory entry. Memory entries are similar to diary entries, and are a few lines long. 
-You can enter anything you wish to remember for the future.
+You may optionally add a memory entry alongside your rating. Memory entries function like short diary notes and can span
+a few lines.
 
-You can enter empty memory entries if you do not wish to enter one.
+You may enter anything you wish to remember for the future, or leave the entry empty if you do not wish to write one.
+
+---
 
 ### Main menu
 
@@ -53,7 +48,8 @@ After entering your log for the day, you have a number of options:
 
 #### View ratings graph
 
-Visually see your ratings plotted on a line graph. You can also see your average, highest, and lowest ratings.
+Visually display your ratings on a line graph.
+The graph also shows your average, highest, and lowest ratings.
 
 #### Edit today's log
 
@@ -65,13 +61,13 @@ To choose the log to edit, the program will prompt you to enter either:
 * The date of the log you wish to edit
     * By default, the format you must use is `YYYY-MM-DD` (e.g., `2026-01-20`)
 * The number of days ago the log is for
-    * e.g., Yesterday's log: `1`, log from last week: `7`
+    * e.g.: yesterday → `1`, last week → `7`
 
 Choose to edit the rating or memory (or both) you entered for that day
 
 #### See stats
 
-See your rating stats! You can find out your average, highest, and lowest rating and more.
+View detailed statistics about your ratings, including averages, highs, lows, and more.
 
 #### View all logs
 
@@ -81,23 +77,39 @@ Choose either to:
 
 #### Back up logs
 
-Sometimes an error can occur while the program is running, which can corrupt or accidentally erase the JSON file 
-where your logs are stored. It is good practice to back up your logs every once in a while.
+Occasionally, errors or interruptions may corrupt or erase the JSON file where logs are stored.
+To prevent data loss, it is recommended to back up your logs periodically.
 
-The program creates a copy of the JSON file with your logs in it into the chosen directory.
+This option creates a copy of your log JSON file in a directory of your choosing.
+
+---
 
 ### Missed logs
 
 After the running the program, the program first checks if you've missed any prior logs.
-You can choose whether to enter the missed logs now or later.
 
-If you choose to skip the missed logs, you will have to enter them later manually (unless you stop the program 
-before entering today's log). This is because the program determines if you've missed a log by checking the last log 
-recorded.
+You may choose to enter the missed logs immediately or skip them for later.
+
+If you skip missed logs, they must be entered manually at a later time (unless the program is exited before entering 
+today’s log).
+This is because the program determines missed logs by comparing dates against the most recent recorded entry.
+
+---
 
 ### Custom Configurations
 
-To add custom configurations, pass any valid keyword argument into the provided empty `configure()` calls in `main.py`.
+To configure and customize DQT, open `settings.py`. Each configuration comes with a description, and to change a 
+settings, simple change the value after the colon.
+
+For example, to set the earliest hour of day a log entry is accepted to **10:00 PM**:
+```python
+# (Simplified)
+CONFIGS: dict[str, dict[str, ...]] = {
+    'tracker': {
+        'min_time': 22,  # Earliest hour of day a log entry is accepted (0 = no limit)
+```
+
+Feel free to experiment with each setting to tune DQT to your preferences.
 
 ## License
 
