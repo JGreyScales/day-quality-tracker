@@ -21,6 +21,7 @@ class Manager:
         self.json = dqt.json
         
         self.memory_edit_placeholder = '{}'
+        self.memory_edit_length_diff_alert_threshold = 100
     
     def handle_missing_logs(self) -> str | None:
         """Check if any previous days are missing ratings.
@@ -229,51 +230,95 @@ class Manager:
         Parameter `changing` must be either the rating or memory key name
         specified in DQTJSON (raises a ValueError otherwise).
         """
-        if changing not in [self.json.rating_kyname, self.json.memory_kyname]:
+        if changing not in (self.json.rating_kyname, self.json.memory_kyname):
             raise ValueError(
-                f"Parameter 'changing' must be '{self.json.rating_kyname}' "
-                f"or '{self.json.memory_kyname}'"
+                f"'changing' argument must be '{self.json.rating_kyname}' or "
+                f"'{self.json.memory_kyname}'"
             )
+        
         if selected_date == 'today':
             selected_date = _today.strftime(self.dqt.date_format)
         
-        # Changing rating
         if changing == self.json.rating_kyname:
-            new_rating = self._input_rating(
-                f"Enter new rating for {selected_date} "
-                f"({self.dqt.min_rating}~{self.dqt.max_rating}): ",
-            )
-            self.json.update_json(date=selected_date, rating=new_rating)
-            log_saved("Rating updated and saved!")
-        # Changing memory entry
+            self._change_rating_for_date(selected_date)
         else:
-            tmp = self.memory_edit_placeholder
-            #  ^ Cuz the variable attribute name is way too long
-            new_memory = self._input_memory(dedent(f"""
-                Enter new memory entry for {selected_date}.
-                
-                You can copy and paste from your original entry above.
-                
-                To insert your original memory entry into your edit,
-                use '{tmp}'.
+            self._change_memory_for_date(selected_date)
+    
+    def _change_rating_for_date(self, date: str) -> None:
+        """Prompt the user to update a rating for a date and save it."""
+        new_rating = self._input_rating(
+            f"Enter new rating for {date} "
+            f"({self.dqt.min_rating}~{self.dqt.max_rating}): "
+        )
+        
+        self.json.update_json(date=date, rating=new_rating)
+        log_saved("Rating updated and saved!")
+    
+    def _change_memory_for_date(self, date: str) -> None:
+        """Prompt the user to update a memory entry for a date and save it."""
+        original_mem = self.json.logs[date][self.json.memory_kyname]
+        placeholder = self.memory_edit_placeholder
+        
+        raw = self._input_memory(dedent(f"""
+            Enter new memory entry for {date}.
 
-                For example:
-                  * To append to the end of your original entry, input:
-                      → {tmp} This is a new sentence.
-                  * To append to the start of your original entry, input:
-                      → This is a new sentence. {tmp}
-                  * To append around your original entry, input:
-                      → This is a new sentence. {tmp} This is another sentence.
+            To insert your original memory entry into your edit,
+            use '{placeholder}'.
 
-                (The program replaces the first occurrence of '{tmp}' in your
-                input with your original entry)
-            """))
-            original_mem = (
-                self.json.logs[selected_date][self.json.memory_kyname]
+            Examples:
+              → {placeholder} This is a new sentence.
+              → This is a new sentence. {placeholder}
+              → This is new. {placeholder} More text.
+
+            (Only the first '{placeholder}' will be replaced.)
+        """), False)
+        
+        new_memory = self._confirm_memory_edit(raw, original_mem, date)
+        self.json.update_json(date=date, memory=new_memory)
+        log_saved("Memory entry updated and saved!")
+    
+    def _confirm_memory_edit(self, raw: str, original: str, date: str) -> str:
+        """Validate, preview, and confirm an edited memory entry.
+
+        Handles placeholder resolution, length-difference warnings, and
+        final user confirmation. Re-prompts until the user confirms
+        the edited entry.
+        """
+
+        while True:
+            new_memory = self._resolve_memory_edit(raw, original)
+            
+            if not original.strip() and raw.strip():
+                if not confirm(
+                        "The original memory entry was empty. Are you sure?"
+                ):
+                    raw = self._input_memory(
+                        f"Enter new memory entry for {date}"
+                    )
+                    continue
+            
+            len_diff = len(original) - len(new_memory)
+            if len_diff > self.memory_edit_length_diff_alert_threshold:
+                if not confirm(
+                        "The new memory entry is significantly shorter than "
+                        f"the original (by {len_diff} characters). Are you "
+                        "sure?"
+                ):
+                    raw = self._input_memory(
+                        f"Enter new memory entry for {date}"
+                    )
+                    continue
+            
+            print("\nNew memory entry:")
+            print_wrapped(new_memory, self.dqt.linewrap_maxcol)
+            
+            if confirm("\nConfirm?"):
+                break
+            
+            raw = self._input_memory(
+                f"Enter new memory entry for {date}"
             )
-            new_memory = self._resolve_memory_edit(new_memory, original_mem)
-            self.json.update_json(date=selected_date, memory=new_memory)
-            log_saved("Memory entry updated and saved!")
+        return new_memory
     
     def _resolve_memory_edit(self, mem_input: str, original_mem: str) -> str:
         """Replace the first instance of the placeholder with the original."""
@@ -284,7 +329,7 @@ class Manager:
             )
         return mem_input
     
-    def _input_rating(self, prompt: str) -> float | None:
+    def _input_rating(self, prompt: str, newline: bool = True) -> float | None:
         """Get and validate user float input."""
         error_msg = (
             f"Please enter a valid number from "
@@ -292,7 +337,7 @@ class Manager:
         )
         
         while True:
-            raw = input(f"\n{prompt}").lower().strip()
+            raw = input(f"{"\n" if newline else ""}{prompt}").lower().strip()
             
             if raw in ['null', '-']:
                 if confirm(
@@ -314,11 +359,14 @@ class Manager:
             return round(value, self.dqt.rating_inp_dp)
     
     @staticmethod
-    def _input_memory(prompt: str) -> str:
+    def _input_memory(prompt: str, newline: bool = True) -> str:
         """Prompt user for today's memory entry."""
         while True:
             tdys_mem = input(
-                f"\n{prompt}\n\n->: "
+                f"{"\n" if newline else ""}"
+                f"{prompt}"
+                f"{"\n" if newline else ""}"
+                f"\n->: "
             ).strip()
             
             if not tdys_mem:
