@@ -346,13 +346,6 @@ class DQTJSON:
             return file_logs == self.logs
         return set(file_logs.items()) == set(self.logs.items())
     
-    def _load_json(self) -> dict:
-        """Load, validate, and normalize JSON log data."""
-        contents = self._load_raw_json()
-        if not contents:
-            return {}
-        return self._validate_and_normalize_logs(contents)
-    
     def _touch(self) -> None:
         """Check if JSON file exists, create if not."""
         if not self.filedirpath.exists():
@@ -370,6 +363,13 @@ class DQTJSON:
                 print(f"\nCreating `{self.filename}`...")
                 self.filepath.touch()
                 print("Success!")
+                
+    def _load_json(self) -> dict:
+        """Load, validate, and normalize JSON log data."""
+        contents = self._load_raw_json()
+        if not contents:
+            return {}
+        return self._validate_and_normalize_logs(contents)
     
     def _load_raw_json(self) -> dict:
         """Load raw JSON contents from disk.
@@ -470,13 +470,16 @@ class DQTJSON:
 
         If `logs=None` (default), dump from `logs` attribute.
         If a logs dict is provided, the dict will be dumped instead.
+        If log is given and is empty, or if a log is NOT
+        # given and the `logs` attribute is empty, do not dump (user is
+        notified).
         """
-        if logs == {} or logs is None and self.logs == {}:
+        if not logs or logs is None and not self.logs:
             print(
                 Txt(
                     "\n(The program tried to save an empty logs dict. Logs "
                     "were not saved to prevent data loss. Consider creating a "
-                    "copy of your JSON file manually now, just in case.)"
+                    "copy of your JSON file now, just in case.)"
                 ).dim()
             )
             return
@@ -487,3 +490,39 @@ class DQTJSON:
                 file,
                 indent=self.json_indent
             )
+    
+    def no_logs(self, check_file: bool = True) -> bool:
+        """Determine whether there are no logs available.
+
+        Return True if `self.logs` is empty and, if `check_file` is True,
+        the JSON log file is also empty.
+
+        If `check_file` is True and `self.logs` is empty but the JSON file
+        contains data, the user is prompted to load the data. If the user
+        agrees, `self.logs` is populated and False is returned.
+        """
+        # If only checking in-memory logs
+        if not check_file:
+            return not self.logs
+        
+        # If in-memory logs already exist, logs are not empty
+        if self.logs:
+            return False
+        
+        # In-memory logs are empty; check the JSON file
+        raw_json = self._load_raw_json()
+        
+        if not raw_json:
+            return True
+        
+        # JSON has data but logs are not loaded
+        if confirm(
+            "There seems to be unloaded data from the JSON file. "
+            "Load now?"
+        ):
+            self.logs = self._load_json()
+            return False
+        
+        return True
+
+    

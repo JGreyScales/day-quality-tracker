@@ -101,8 +101,8 @@ class Tracker:
             
             match input("> ").lower().strip():
                 case '1' | 'g':
-                    if not self.json.logs:
-                        err("You haven't entered any ratings yet!")
+                    if self.json.no_logs():
+                        err("You haven't entered any logs yet!")
                         continue
                     self.graph.view_ratings_graph()
                     if not self.graph.graph_show_block:
@@ -148,7 +148,7 @@ class Tracker:
                         break
                 
                 case '3' | 'p':
-                    if not self.json.logs:
+                    if self.json.no_logs():
                         err("You haven't entered any logs yet!")
                         continue
                     while True:
@@ -226,7 +226,7 @@ class Tracker:
                         break
                 
                 case '6' | 'b':
-                    if not self.json.logs:
+                    if self.json.no_logs():
                         err("You haven't entered any logs yet!")
                         continue
                     self.json.backup_json_file()

@@ -147,7 +147,7 @@ class Graph:
     def _build(self) -> None:
         """Build the graph and initialize plt, fig, and ax properties."""
         logs = self.json.logs
-        if not logs:
+        if self.json.no_logs():
             raise ValueError("No logs saved")
         
         dates, ratings = self._fill_missing(

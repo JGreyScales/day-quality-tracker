@@ -30,7 +30,7 @@ class Manager:
         loop through each missing date and prompt rating.
         Return the option the user chose if missed prior dates.
         """
-        if not self.dqt.json.logs:  # Ignore for first-time runs (empty dict)
+        if self.json.no_logs():  # Ignore for first-time runs (empty dict)
             return None
         
         last_date_str = max(self.dqt.json.logs.keys())
