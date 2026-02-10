@@ -58,13 +58,12 @@ class Stats:
         """Print the number of days rated."""
         days_total = len(logs)
         days_rated = len(rated_items)
-        first_date = rated_items[0][0]
+        output = f"{Txt("Days rated:").bold()} {Txt(days_rated).bold()} "
+        if rated_items:
+            output += f"since {Txt(str(rated_items[0][0])).bold()} "
+            output += f"({days_total} including null ratings)"
         
-        print(
-            f"{Txt("Days rated:").bold()} {Txt(days_rated).bold()} "
-            f"since {first_date} "
-            f"({days_total} including null ratings)"
-        )
+        print(output)
     
     def _print_average_rating(self, ratings_only: list[float]) -> None:
         """Print average rating for each day of the week."""
