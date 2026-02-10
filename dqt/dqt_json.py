@@ -466,15 +466,19 @@ class DQTJSON:
     
     def _dump(self,
               logs: dict[str, dict[str, float | None | str]] = None) -> None:
-        """Dump JSON file contents.
+        """Dump logs to the JSON file.
 
-        If `logs=None` (default), dump from `logs` attribute.
-        If a logs dict is provided, the dict will be dumped instead.
-        If log is given and is empty, or if a log is NOT
-        # given and the `logs` attribute is empty, do not dump (user is
-        notified).
+        If `logs` is None (default), dump the contents of `self.logs`.
+        If a logs dict is provided, dump that dict instead.
+        
+        To prevent data loss, dumping is aborted if the JSON file already
+        contains data and the logs to be dumped are empty.
         """
-        if not logs or logs is None and not self.logs:
+        logs_to_dump = self.logs if logs is None else logs
+        raw_json = self._load_raw_json()
+        
+        # Prevent overwriting existing data with an empty logs dict
+        if raw_json and not logs_to_dump:
             print(
                 Txt(
                     "\n(The program tried to save an empty logs dict. Logs "
@@ -484,9 +488,9 @@ class DQTJSON:
             )
             return
         
-        with open(self.filepath, 'w') as file:
+        with open(self.filepath, "w") as file:
             json.dump(
-                self.logs if logs is None else logs,
+                logs_to_dump,
                 file,
                 indent=self.json_indent
             )
