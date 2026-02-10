@@ -39,7 +39,7 @@ if __name__ == '__main__':
             print("\n\n*⎋* —————————————————————————————— *⎋*")
             print("\nUser interrupted the program.")
             print("\nSaving changes...")
-            dqt.json.update_json()
+            dqt.json.update()
             print(Txt("Success!").bold().green())
             sys.exit()
     except Exception:

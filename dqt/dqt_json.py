@@ -41,10 +41,10 @@ class DQTJSON:
         
         self.logs = self._load_json()
     
-    def update_json(self,
-                    date: str = None,
-                    rating: float | None = _UNSET,
-                    memory: str = _UNSET) -> None:
+    def update(self,
+               date: str = None,
+               rating: float | None = _UNSET,
+               memory: str = _UNSET) -> None:
         """Dump updated logs to JSON file.
 
         Update with new rating and memory values if provided before dumping.
@@ -468,6 +468,16 @@ class DQTJSON:
         If `logs=None` (default), dump from `logs` attribute.
         If a logs dict is provided, the dict will be dumped instead.
         """
+        if logs == {} or logs is None and self.logs == {}:
+            print(
+                Txt(
+                    "\n(The program tried to save an empty logs dict. Logs "
+                    "were not saved to prevent data loss. Consider creating a "
+                    "copy of your JSON file manually now, just in case.)"
+                ).dim()
+            )
+            return
+        
         with open(self.filepath, 'w') as file:
             json.dump(
                 self.logs if logs is None else logs,

@@ -251,7 +251,7 @@ class Manager:
             f"({self.dqt.min_rating}~{self.dqt.max_rating}): "
         )
         
-        self.json.update_json(date=date, rating=new_rating)
+        self.json.update(date=date, rating=new_rating)
         log_saved("Rating updated and saved!")
     
     def _change_memory_for_date(self, date: str) -> None:
@@ -274,7 +274,7 @@ class Manager:
         """), False)
         
         new_memory = self._confirm_memory_edit(raw, original_mem, date)
-        self.json.update_json(date=date, memory=new_memory)
+        self.json.update(date=date, memory=new_memory)
         log_saved("Memory entry updated and saved!")
     
     def _confirm_memory_edit(self, raw: str, original: str, date: str) -> str:
