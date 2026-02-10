@@ -216,14 +216,17 @@ class DQTJSON:
         if not self._memory_matches_file():
             err(
                 "Your logs saved in runtime memory do not match those in the "
-                "JSON file.",
-                "Ensure all changes are saved to the JSON before "
-                "creating a backup file.",
-                "If you have made changes to the JSON file manually, please "
-                "rerun the program first."
-            )
-            return
-        
+                "JSON file.")
+            if not confirm("Are you sure you want to continue?"):
+                print_wrapped(
+                    "Ensure all changes are saved to the JSON file before "
+                    "creating a backup file.", self.dqt.linewrap_maxcol)
+                print_wrapped(
+                    "If you have made changes to the JSON file manually, "
+                    "please rerun the program first.", self.dqt.linewrap_maxcol
+                )
+                return
+                
         successful, dst_filepath = self._start_file_backup_process()
         if successful:
             log_saved(
