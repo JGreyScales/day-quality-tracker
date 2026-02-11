@@ -61,6 +61,7 @@ class Stats:
         output = f"{Txt("Days rated:").bold()} {Txt(days_rated).bold()} "
         if rated_items:
             output += f"since {Txt(str(rated_items[0][0])).bold()} "
+        if not days_rated == days_total:
             output += f"({days_total} including null ratings)"
         
         print(output)
