@@ -130,7 +130,7 @@ class Manager:
                 f"Rate your day from {self.dqt.min_rating} to "
                 f"{self.dqt.max_rating}, {self.dqt.neutral_rating} being an "
                 f"average day "
-                f"\n(enter 'null' to skip): "
+                f"\n(enter '-' to skip): "
             )
             
             if not confirm("Would you like to enter a memory entry?"):
@@ -339,7 +339,7 @@ class Manager:
         while True:
             raw = input(f"{"\n" if newline else ""}{prompt}").lower().strip()
             
-            if raw in ['null', '-']:
+            if raw == '-':
                 if confirm(
                     "Are you sure you want to enter an empty (null) rating?"
                 ):
