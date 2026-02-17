@@ -2,9 +2,9 @@ from datetime import datetime
 from typing import Literal
 from types import NoneType
 
-from dqt.graph import Graph
 from dqt.dqt_json import DQTJSON
 from dqt.manager import Manager
+from dqt.graph import Graph
 from dqt.stats import Stats
 from dqt.ui_utils import cont_on_enter, err, invalid_choice, menu
 from dqt.styletext import StyleText as Txt
@@ -85,7 +85,7 @@ class Tracker:
         while True:
             print("\n*❖* —————————————————————————————— *❖*")
             print(
-                f"\n🏠 {Txt("MAIN MENU").blue().underline().bold()} "
+                f"🏠 {Txt("MAIN MENU").blue().underline().bold()} "
                 f"{Txt("— choose what to do:").bold()}"
             )
             opts = menu(

@@ -1,7 +1,11 @@
 import textwrap
 from time import sleep
+from typing import TYPE_CHECKING
 
-from dqt.styletext import StyleText as Txt, StyleText
+from dqt.styletext import StyleText as Txt
+
+if TYPE_CHECKING:
+    from dqt.styletext import StyleText
 
 
 def confirm(message: str, confirm_char: str = 'y') -> bool:

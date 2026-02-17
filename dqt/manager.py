@@ -3,7 +3,12 @@ from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
 from dqt.ui_utils import (
-    confirm, err, invalid_choice, log_saved, menu, print_wrapped
+    confirm,
+    err,
+    invalid_choice,
+    log_saved,
+    menu,
+    print_wrapped
 )
 from dqt.styletext import StyleText as Txt
 
