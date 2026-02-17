@@ -143,6 +143,8 @@ class Graph:
         print("\nBuilding graph...")
         self._build()
         print("\nDisplaying graph...")
+        if self.graph_show_block:
+            print("\n[Close the graph window to continue]")
         self._show()
         
     def _build(self) -> None:
