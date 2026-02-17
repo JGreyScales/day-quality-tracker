@@ -13,9 +13,9 @@ def confirm(message: str, confirm_char: str = 'y') -> bool:
     return inp == confirm_char.lower()
 
 
-def cont_on_enter(msg: str = "\n[Press ENTER ↩ to return to main menu]") -> None:
+def cont_on_enter(msg: str = "[Press ENTER ↩ to return to main menu]") -> None:
     """Pause the program until the user presses Enter."""
-    input(msg)
+    input(f"\n{msg}")
 
 
 def err(message: str, *desc: str, pause: bool = True) -> None:
@@ -46,10 +46,10 @@ def log_saved(text: str = "Log saved!") -> None:
 
 
 def menu(*options: str | StyleText,
-         title: str | StyleText | None = "\nChoose what to do: ") -> int:
+         title: str | StyleText | None = "Choose what to do: ") -> int:
     """Display menu options with title prompt. Return number of options."""
     if title is not None:
-        print(Txt(title).bold())
+        print(Txt(f"\n{title}").bold())
     for i, o in enumerate(options, 1):
         print(Txt(f"{i})").bold(), o.removeprefix(f'{i}) '))
     return len(options)
