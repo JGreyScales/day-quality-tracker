@@ -16,7 +16,7 @@ _today = datetime.today()
 class Tracker:
     """Track and visualize day quality ratings in a graph."""
     
-    VERSION = 5
+    RELEASE_VER = 5
     SEMVER = 'v0.5.0-rc'
     
     _CONFIG_KEYS: dict[str, type | tuple[type, ...]] = {
