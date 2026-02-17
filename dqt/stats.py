@@ -2,6 +2,7 @@ from datetime import datetime
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
+from dqt.dqt_json import DQTJSON
 from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
@@ -13,8 +14,8 @@ class Stats:
     
     def __init__(self, dqt: Tracker):
         """Initialize attributes."""
-        self.dqt = dqt
-        self.json = dqt.json
+        self.dqt: Tracker = dqt
+        self.json: DQTJSON = dqt.json
         
     def show_stats(self) -> None:
         """Show day quality rating stats.

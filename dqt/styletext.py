@@ -34,9 +34,9 @@ def _detect_ansi_support() -> bool:
 class StyleText:
     """A class to create basic styled text with ANSI escape codes."""
     
-    ansi_enabled = _detect_ansi_support()
+    ansi_enabled: bool | None = _detect_ansi_support()
     
-    RESET = '\033[0m' if ansi_enabled else ''
+    RESET: str = '\033[0m' if ansi_enabled else ''
     
     @classmethod
     def set_ansi(cls, enabled: bool | None) -> None:
@@ -52,9 +52,9 @@ class StyleText:
             cls.RESET = '\033[0m' if enabled else ''
     
     def __init__(self, text: object, prefix: str = '', reset: bool = True):
-        self.text = str(text)
-        self.prefix = prefix
-        self.reset = reset
+        self.text: str = str(text)
+        self.prefix: str = prefix
+        self.reset: bool = reset
     
     def _code(self, ansi: str) -> str:
         """Return ANSI code or empty string depending on terminal support."""

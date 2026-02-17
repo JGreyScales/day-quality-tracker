@@ -17,7 +17,7 @@ if __name__ == '__main__':
                   f"working directory.")
             sys.exit(1)
         
-        dqt = Tracker()
+        dqt: Tracker = Tracker()
         
         try:
             

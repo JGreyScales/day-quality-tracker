@@ -9,15 +9,15 @@ from dqt.stats import Stats
 from dqt.ui_utils import cont_on_enter, err, invalid_choice, menu
 from dqt.styletext import StyleText as Txt
 
-_UNSET = object()
-_today = datetime.today()
+_UNSET: object = object()
+_today: datetime = datetime.today()
 
 
 class Tracker:
     """Track and visualize day quality ratings in a graph."""
     
-    RELEASE_VER = 5
-    SEMVER = 'v0.5.0-rc'
+    RELEASE_VER: int = 5
+    SEMVER: str = 'v0.5.0-rc'
     
     _CONFIG_KEYS: dict[str, type | tuple[type, ...]] = {
         'min_time': int,
@@ -35,21 +35,21 @@ class Tracker:
     def __init__(self):
         """Load saved data, initialize settings and Graph instance."""
         # Initialize settings
-        self.min_time = 20  # Earliest hour the of day to enter rating
-        self.min_rating = 1  # 1 recommended
-        self.max_rating = 20  # Even number recommended
-        self.neutral_rating = round(self.max_rating / 2)
-        self.rating_inp_dp = 2
-        self.linewrap_maxcol = 70
+        self.min_time: int = 20  # Earliest hour the of day to enter rating
+        self.min_rating: int = 1  # 1 recommended
+        self.max_rating: int = 20  # Even number recommended
+        self.neutral_rating: int = round(self.max_rating / 2)
+        self.rating_inp_dp: int = 2
+        self.linewrap_maxcol: int | Literal['inf'] = 70
         
-        self.date_format = '%Y-%m-%d'
-        self.date_format_print = "YYYY-MM-DD"
-        self.clock_format_12 = True
-        self.enable_ansi = False
-        self.autofill_json = True
+        self.date_format: str = '%Y-%m-%d'
+        self.date_format_print: str = "YYYY-MM-DD"
+        self.clock_format_12: bool = True
+        self.enable_ansi: bool | None = False
+        self.autofill_json: bool = True
         
         try:
-            self.json = DQTJSON(self)
+            self.json: DQTJSON = DQTJSON(self)
         except ValueError as e:
             err(
                 f"Something's wrong with '{self.json.filename}'...",
@@ -59,15 +59,15 @@ class Tracker:
             )
             raise SystemExit()
         
-        self.graph = Graph(self)
-        self.manager = Manager(self)
-        self.stats = Stats(self)
+        self.graph: Graph = Graph(self)
+        self.manager: Manager = Manager(self)
+        self.stats: Stats = Stats(self)
     
     def run(self) -> None:
         """Run Day Quality Tracker."""
         Txt.set_ansi(self.enable_ansi)
         
-        title = f"*--- 📆 Day Quality Tracker {self.VERSION}! 📈 ---*"
+        title = f"*--- 📆 Day Quality Tracker {self.RELEASE_VER}! 📈 ---*"
         print(
             Txt(
                 f"\n{title}"
