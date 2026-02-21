@@ -88,6 +88,9 @@ class IterableSettings:
         with open(file_path, "w", encoding="utf-8") as f:
             f.writelines(new_lines)
 
+        # refresh the current config so dynamic ranges are recomputed
+        self.loadCurrentConfig(**CONFIGS)
+
     # returns a list of all the properties of the class at runtime excluding private properties
     # this allows iteration over keys and references to values (since all values are lists)
     def returnRanges(self) -> dict[str, List[Special]]:

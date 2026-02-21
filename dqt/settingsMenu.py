@@ -84,6 +84,9 @@ class SettingsMenu:
                     targetKey = keys[currentYIndex]
                     self.iterableObject.replace_config_value(targetKey, targetValue)
 
+                    # fetch the newest version of the config
+                    settings: dict[str, List[Special]] = self.iterableObject.returnRanges()
+
     def getSubMenu(self) -> subDictEnum | bool:
         """this is where the sub menu is determined which is used in this class, the tracker class, and the iterableSettings class"""
         print("\n*❖* —————————————————————————————— *❖*")
