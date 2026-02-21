@@ -1,12 +1,13 @@
-from dqt.iterableSettings import subDictEnum, IterableSettings, Special, T
-from typing import TypeVar, List, Union
-from dqt.ui_utils import cont_on_enter, err, invalid_choice, menu
+from dqt.iterableSettings import subDictEnum, IterableSettings, Special
+from typing import List
+from dqt.ui_utils import invalid_choice, menu
 from dqt.styletext import StyleText as Txt, clear_console
 from itertools import cycle
 import sys
 
 class SettingsMenu:
     def __init__(self):
+        """This class handles the actual rendering of the settings menu in the terminal"""
         self.choosenMenu: subDictEnum = self.getSubMenu()
 
         # if the exit command was invoked exit the class
@@ -17,6 +18,8 @@ class SettingsMenu:
         self.displayOptionList()
 
     def displayOptionList(self) -> None:
+        """Displays the settings and fetches user input
+        both the x and y directions will loop infinitely when interacted with"""
         # dict is dynamically pulled from the runtime properties of the class
         # all display options, and handling of selection below is generic enough where
         # it will update as the class updates and the next returnRange call happens
@@ -79,10 +82,10 @@ class SettingsMenu:
                 case 'ENTER':
                     targetValue = chosenValues[currentXIndex]
                     targetKey = keys[currentYIndex]
-                    self.iterableObject.config[targetKey] = targetValue
                     self.iterableObject.replace_config_value(targetKey, targetValue)
 
     def getSubMenu(self) -> subDictEnum | bool:
+        """this is where the sub menu is determined which is used in this class, the tracker class, and the iterableSettings class"""
         print("\n*❖* —————————————————————————————— *❖*")
         print(
             f"\n🏠 {Txt("Settings MENU").blue().underline().bold()} "

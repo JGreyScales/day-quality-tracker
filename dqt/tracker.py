@@ -9,6 +9,9 @@ from dqt.stats import Stats
 from dqt.ui_utils import cont_on_enter, err, invalid_choice, menu
 from dqt.styletext import StyleText as Txt
 from dqt.settingsMenu import SettingsMenu
+from dqt.iterableSettings import subDictEnum
+
+from settings import CONFIGS
 
 _UNSET = object()
 _today = datetime.today()
@@ -234,7 +237,11 @@ class Tracker:
                     self.json.backup_json_file()
                 
                 case '7' | 'm':
-                    SettingsMenu()
+                    SettingsMenuObject = SettingsMenu()
+                    if (False == SettingsMenuObject.choosenMenu):
+                        continue
+
+                    self.configure(**CONFIGS[SettingsMenuObject.choosenMenu.value])
                 
                 case '8' | 'x':
                     print("\n*⎋* —————————————————————————————— *⎋*")
