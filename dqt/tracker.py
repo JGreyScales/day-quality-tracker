@@ -237,12 +237,13 @@ class Tracker:
                 
                 case '7' | 'm':
                     SettingsMenuObject = SettingsMenu()
-                    if (False == SettingsMenuObject.choosenMenu):
+                    if (False == SettingsMenuObject.chosen_menu):
                         continue
 
                     # only refresh memory if the tracker was updated
-                    if (SettingsMenuObject.choosenMenu.value == 'tracker'):
-                        self.configure(**CONFIGS[SettingsMenuObject.choosenMenu.value])
+                    if (SettingsMenuObject.chosen_menumenu.value == 'tracker'):
+                        self.configure(**CONFIGS[
+                            SettingsMenuObject.chosen_menu.value])
 
                     
                 

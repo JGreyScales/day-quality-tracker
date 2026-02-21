@@ -3,34 +3,43 @@ from typing import TypeVar, List, Union
 
 from settings import CONFIGS
 
-T = TypeVar("T", int, float)
+T = TypeVar('T', int, float)
 Special = Union[T, str]
 
-class subDictEnum(Enum):
-    """Storage of the sub dict we are accessing, to allow us to easily compute keys"""
-    # this string represents the key to access this dict in settings.py
+
+class SubDictEnum(Enum):
+    """Store custom configurations subdict keys."""
     TRACKER = 'tracker'
     GRAPH = 'graph'
 
-class IterableSettings:
-    """Iterable settings class, controls the backend logic of the display and handling 
-    updating and getting values from config"""
-    config: dict[str, ...] #type: ignore
-    subdictType: subDictEnum
-        
-    def __init__(self, subDict: subDictEnum):
-        """Stores the enum to the instance followed up by loading the current config from memory
-        a new instance of this class is created each time the settings menu is entered"""
-        # subdict is stored seperately so it will be easier to write conditionals for the eventually implimention of graph
-        # and if future dicts exist in the future
-        self.subdictType = subDict
-        self.loadCurrentConfig(**CONFIGS)
 
-    # ai generated function for debugging
-    # prints all properties at runtime excluding private properties
-    def displayRanges(self) -> None:
-        """A debug function which will dump all the ranges currently assiocated with the instance at runtime
-        useful for double checking values while creating new settings"""
+class IterableSettings:
+    """Control the display, handling, updating and fetching of configs."""
+    config: dict[str, ...]  # type: ignore
+    subdict_type: SubDictEnum
+    
+    def __init__(self, sub_dict: SubDictEnum):
+        """
+        Initialize attributes and load current configs.
+        
+        Store the enum to the instance followed up by loading the current
+        config from memory. A new instance of this class is created each time
+        the settings menu is entered.
+        """
+        # Subdict is stored separately so it will be easier to write
+        # conditionals for the eventual implementation of graph and if future
+        # dicts exist in the future
+        self.subdict_type = sub_dict
+        self.load_current_config(**CONFIGS)
+
+    def display_ranges(self) -> None:
+        """Dump all ranges currently associated with the instance at runtime.
+        
+        Useful for double-checking values while creating new settings.
+        
+        AI generated function for debugging.
+        Print all properties at runtime excluding private properties.
+        """
         if not hasattr(self, "config"):
             print("no config loaded, therefore no ranges created")
             return
@@ -41,150 +50,215 @@ class IterableSettings:
             if isinstance(attr_value, list) and not attr_name.startswith("__"):
                 print(f"{attr_name} range:", attr_value)
 
-
     def replace_config_value(self, target_key: str, new_value: Special):
-        """Replaces a config value in current memory, and in the file for next load
-        keeps formatting & comments in the file"""
-        if (target_key == 'min_time' and new_value == "no limit"):
+        """Replace a config value in current memory, and in the file.
+        
+        Keeps formatting & comments in the file
+        """
+        if target_key == 'min_time' and new_value == 'no limit':
             new_value = 0
 
-        # replace the value in memory
+        # Replace the value in memory
         self.config[target_key] = new_value
 
-        # replace the value in the file
-        sub_key = self.subdictType.value
-        file_path = "settings.py"
+        # Replace the value in the file
+        sub_key = self.subdict_type.value
+        file_path = 'settings.py'
         new_lines = []
         inside_subdict = False
-        indent = ""
+        indent = ''
         
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             for line in f:
                 stripped = line.strip()
                 
                 # Detect the start of the sub-dictionary
                 if stripped.startswith(f"'{sub_key}':"):
                     inside_subdict = True
-                    indent = line[:line.find("'")]
+                    indent = line[:line.find('\'')]
                 
                 # Detect the end of the sub-dictionary
-                if inside_subdict and stripped.startswith("},"):
+                if inside_subdict and stripped.startswith('},'):
                     inside_subdict = False
                 
                 # Replace the target key value
                 if inside_subdict and stripped.startswith(f"'{target_key}'"):
                     # Preserve comments after '#'
-                    if "#" in line:
-                        comment = line[line.index("#"):]
+                    if '#' in line:
+                        comment = line[line.index('#'):]
                     else:
-                        comment = ""
+                        comment = ''
 
-                        
                     new_line = f"{indent}    '{target_key}': {repr(new_value)},  {comment}"
                     new_lines.append(new_line)
                 else:
                     new_lines.append(line)
         
         # Write back to file
-        with open(file_path, "w", encoding="utf-8") as f:
+        with open(file_path, 'w', encoding='utf-8') as f:
             f.writelines(new_lines)
 
-        # refresh the current config so dynamic ranges are recomputed
-        self.loadCurrentConfig(**CONFIGS)
+        # Refresh the current config so dynamic ranges are recomputed
+        self.load_current_config(**CONFIGS)
 
-    # returns a list of all the properties of the class at runtime excluding private properties
-    # this allows iteration over keys and references to values (since all values are lists)
-    def returnRanges(self) -> dict[str, List[Special]]:
-        """Similiar to the displayRanges function, except it returns it as a key value pair
-        this is primarily used in the rendering of the scroll menus in the terminal"""
-        returnValue: dict[str, list[Special]] = {}
-        if not hasattr(self, "config"):
+    def return_ranges(self) -> dict[str, List[Special]]:
+        """Similar to `displayRanges()`, except return as a key-value pair.
+        
+        This is primarily used in the rendering of the scroll menus in the
+        terminal.
+        
+        Return a list of all the properties of the class at runtime excluding
+        private properties. This allows iteration over keys and references to
+        values (since all values are lists).
+        """
+        return_value: dict[str, list[Special]] = {}
+        if not hasattr(self, 'config'):
             print("no config loaded, therefore no ranges created")
             return
         
         for attr_name in dir(self):
             attr_value = getattr(self, attr_name)
             if isinstance(attr_value, list) and not attr_name.startswith("__"):
-                returnValue[attr_name] = attr_value
+                return_value[attr_name] = attr_value
 
-        return returnValue
+        return return_value
     
+    def load_current_config(self, **configs: int | str | bool | None) -> None:
+        """Load current config, determine the subdict and create preset ranges
+        
+        It should be noted ranges can be computed at runtime, such as the min
+        and max rating values
+        """
+        # type: ignore
+        self.config: dict[str, ...] = configs[self.subdict_type.value]
 
-    # generates class properties for usage later
-    def loadCurrentConfig(self, **configs: int | str | bool | None) -> None:
-        """loads the current config, determines the sub dict and creates preset ranges
-        it should be noted ranges can be computed at runtime, such as the min and max rating values"""
-        self.config: dict[str, ...] = configs[self.subdictType.value] #type: ignore
-
-        if (self.subdictType == subDictEnum.TRACKER):
-            self.min_time: List[Special] = IterableSettings.registerRange(1, 24, special_values=["no limit"])
-            self.min_rating: List[int] = IterableSettings.registerRange(1, self.config['max_rating'] - 1)
-            self.max_rating: List[int] = IterableSettings.registerRange(self.config['min_rating'], 20)
-            self.rating_inp_dp: List[int] = IterableSettings.registerRange(0, 5)
-            self.linewrap_maxcol: List[Special] = IterableSettings.registerRange(0, 100, 10, ["inf"])
-            self.date_format: List[str] = ["%Y-%m-%d", "%d-%m-%Y", "%m/%d/%Y", "%d %b %Y", "%d %B %Y"]
-            self.date_format_print: List[str] = ["YYYY-MM-DD","DD-MM-YYYY","MM/DD/YYYY","DD Mon YYYY","DD Month YYYY"]
-            self.clock_format_12: List[bool] = IterableSettings.registerBoolean()
-            self.enable_ansi: List[bool] = IterableSettings.registerBoolean()
-            self.autofill_json: List[bool] = IterableSettings.registerBoolean()
+        if self.subdict_type == SubDictEnum.TRACKER:
+            self.min_time: List[Special] = IterableSettings.register_range(
+                1, 24, special_values=["no limit"]
+            )
+            self.min_rating: List[int] = IterableSettings.register_range(
+                1, self.config['max_rating'] - 1
+            )
+            self.max_rating: List[int] = IterableSettings.register_range(
+                self.config['min_rating'], 20
+            )
+            self.rating_inp_dp: List[int] = IterableSettings.register_range(
+                0, 5
+            )
+            self.linewrap_maxcol: List[Special] = (
+                IterableSettings.register_range(
+                    0, 100, 10, ["inf"]
+                )
+            )
+            self.date_format: List[str] = [
+                "%Y-%m-%d",
+                "%d-%m-%Y",
+                "%m/%d/%Y",
+                "%d %b %Y",
+                "%d %B %Y",
+            ]
+            self.date_format_print: List[str] = [
+                "YYYY-MM-DD",
+                "DD-MM-YYYY",
+                "MM/DD/YYYY",
+                "DD Mon YYYY",
+                "DD Month YYYY"
+            ]
+            self.clock_format_12: List[bool] = IterableSettings.register_boolean()
+            self.enable_ansi: List[bool] = IterableSettings.register_boolean()
+            self.autofill_json: List[bool] = IterableSettings.register_boolean()
             return
         
-        elif(self.subdictType == subDictEnum.GRAPH):
-            self.graph_style: List[str] = ['Solarize_Light2', '_classic_test_patch', '_mpl-gallery', '_mpl-gallery-nogrid', 'bmh', 'classic', 'dark_background', 'fast', 'fivethirtyeight', 'ggplot', 'grayscale', 'seaborn-v0_8', 'seaborn-v0_8-bright', 'seaborn-v0_8-colorblind', 'seaborn-v0_8-dark', 'seaborn-v0_8-dark-palette', 'seaborn-v0_8-darkgrid', 'seaborn-v0_8-deep', 'seaborn-v0_8-muted', 'seaborn-v0_8-notebook', 'seaborn-v0_8-paper', 'seaborn-v0_8-pastel', 'seaborn-v0_8-poster', 'seaborn-v0_8-talk', 'seaborn-v0_8-ticks', 'seaborn-v0_8-white', 'seaborn-v0_8-whitegrid', 'tableau-colorblind10']
+        elif self.subdictType == SubDictEnum.GRAPH:
+            self.graph_style: List[str] = [
+                'Solarize_Light2', '_classic_test_patch', '_mpl-gallery',
+                '_mpl-gallery-nogrid', 'bmh', 'classic', 'dark_background',
+                'fast', 'fivethirtyeight', 'ggplot', 'grayscale',
+                'seaborn-v0_8', 'seaborn-v0_8-bright',
+                'seaborn-v0_8-colorblind', 'seaborn-v0_8-dark',
+                'seaborn-v0_8-dark-palette', 'seaborn-v0_8-darkgrid',
+                'seaborn-v0_8-deep', 'seaborn-v0_8-muted',
+                'seaborn-v0_8-notebook', 'seaborn-v0_8-paper',
+                'seaborn-v0_8-pastel', 'seaborn-v0_8-poster',
+                'seaborn-v0_8-talk', 'seaborn-v0_8-ticks', 'seaborn-v0_8-white',
+                'seaborn-v0_8-whitegrid', 'tableau-colorblind10'
+            ]
             self.graph_show_block: List[bool] = IterableSettings.registerBoolean()
             self.title_fontsize: List[int] = IterableSettings.registerRange(15, 30)
             self.title_padding: List[int] = IterableSettings.registerRange(13, 25)
             self.xlabel_fontsize: List[int] = IterableSettings.registerRange(8, 20)
             self.ylabel_fontsize: List[int] = IterableSettings.registerRange(8, 20)
             self.tick_labels_fontsize: List[int] = IterableSettings.registerRange(5, 15)
-            self.graph_date_format: List[str] = ["%Y-%m-%d", "%d-%m-%y", "%m/%d", "%a %b %d", "%d %b %Y"]
+            self.graph_date_format: List[str] = [
+                "%Y-%m-%d", "%d-%m-%y", "%m/%d", "%a %b %d", "%d %b %Y"
+            ]
             self.autofmt_xdates: List[bool] = IterableSettings.registerBoolean()
             self.year_labels_fontsize: List[int] = IterableSettings.registerRange(5, 15)
             self.year_labels_fontweight: List[str] = ["normal", "bold", "light"]
             self.line_width: List[int] = IterableSettings.registerRange(1, 10)
-            self.line_color: List[Special] = ["blue", "red", "green", "black", "orange", "purple", "none"]
+            self.line_color: List[Special] = [
+                "blue", "red", "green", "black", "orange", "purple", "none"
+            ]
             self.line_style: List[str] = ["-", "--", "-.", ":", "None"]
             self.marker: List[str] = ["o", "s", "D", "^", "v", "x", "+", "None"]
             self.marker_size: List[int] = IterableSettings.registerRange(1, 20)
-            self.marker_face_color: List[Special] = ["blue", "red", "green", "black", "white", "none"]
+            self.marker_face_color: List[Special] = [
+                "blue", "red", "green", "black", "white", "none"
+            ]
             self.marker_edge_width: List[int] = IterableSettings.registerRange(0, 10)
             self.neutralline_width: List[int] = IterableSettings.registerRange(0, 5)
             self.neutralline_color: List[str] = ["black", "gray", "red", "blue"]
             self.neutralline_style: List[str] = ["-", "--", "-.", ":"]
             self.averageline_width: List[int] = IterableSettings.registerRange(0, 5)
-            self.averageline_color: List[str] = ["red", "blue", "black", "green"]
+            self.averageline_color: List[str] = [
+                "red", "blue", "black", "green"
+            ]
             self.averageline_style: List[str] = ["-", "--", "-.", ":"]
             self.highest_rating_point_size: List[int] = IterableSettings.registerRange(5, 50)
-            self.highest_rating_point_color: List[Special] = ["green", "gold", "blue", "none"]
+            self.highest_rating_point_color: List[Special] = [
+                "green", "gold", "blue", "none"
+            ]
             self.lowest_rating_point_size: List[int] = IterableSettings.registerRange(5, 50)
-            self.lowest_rating_point_color: List[Special] = ["orange", "red", "black", "none"]
+            self.lowest_rating_point_color: List[Special] = [
+                "orange", "red", "black", "none"
+            ]
             self.legend_fontsize: List[int] = IterableSettings.registerRange(5, 15)
-            self.legend_loc: List[str] = ["best", "upper right", "upper left", "lower left", "lower right", "center"]
+            self.legend_loc: List[str] = [
+                "best", "upper right", "upper left", "lower left",
+                "lower right", "center"
+            ]
             self.legend_frameon: List[bool] = IterableSettings.registerBoolean()
             return
 
     @staticmethod
-    # a static method for standarizing the creation of numeric ranges
-    def registerRange(min: T, max: T, step: int = 1, special_values: List[str] = []) -> List[Special]:
-        """a simple helper function to create a list from a range, supporting special value inserts"""
-        curList: List[Special] = []
-        curList.extend(special_values)
-        current = min
-        while current <= max:
-            curList.append(current)
+    def register_range(min_: T,
+                       max_: T,
+                       step: int = 1,
+                       special_values: List[str] = []) -> List[Special]:
+        """Create a list from a range, supporting special value inserts.
+        
+        A static method for standardizing the creation of numeric ranges.
+        """
+        cur_list: List[Special] = []
+        cur_list.extend(special_values)
+        current = min_
+        while current <= max_:
+            cur_list.append(current)
             current += step
-        return curList
+        return cur_list
     
     @staticmethod
-    # a static method for standarizing the creation of boolean ranges
-    def registerBoolean() -> List[bool]:
-        """ standarization of list creation"""
+    def register_boolean() -> List[bool]:
+        """Standardize list creation.
+        
+        a static method for standardizing the creation of boolean ranges
+        """
         return [True, False]
     
 
 # for testing and debugging this class
 # run from project root as ```python -m dqt.iterableSettings```
 if __name__ == '__main__':
-    """used for running this file directly for testing"""
-    test = IterableSettings(subDictEnum.TRACKER)
-    test.displayRanges()
+    """Used for running this file directly for testing."""
+    test = IterableSettings(SubDictEnum.TRACKER)
+    test.display_ranges()

@@ -2,95 +2,125 @@ import sys
 from itertools import cycle
 from typing import List
 
-from dqt.iterableSettings import subDictEnum, IterableSettings, Special
+from dqt.iterableSettings import SubDictEnum, IterableSettings, Special
 from dqt.ui_utils import invalid_choice, menu
 from dqt.styletext import StyleText as Txt, clear_console
 
 
 class SettingsMenu:
+    
     def __init__(self):
-        """This class handles the actual rendering of the settings menu in the terminal"""
-        self.choosenMenu: subDictEnum = self.getSubMenu()
-
-        # if the exit command was invoked exit the class
-        if (self.choosenMenu == False):
+        """Handle the actual rendering of the settings menu in the terminal"""
+        self.chosen_menu: SubDictEnum = self.get_submenu()
+        
+        # If the exit command was invoked, exit the class
+        if not self.chosen_menu:
             return
         
-        self.iterableObject: IterableSettings = IterableSettings(self.choosenMenu)
-        self.displayOptionList()
-
-    def displayOptionList(self) -> None:
-        """Displays the settings and fetches user input
-        both the x and y directions will loop infinitely when interacted with"""
-        # dict is dynamically pulled from the runtime properties of the class
-        # all display options, and handling of selection below is generic enough where
-        # it will update as the class updates and the next returnRange call happens
-        settings: dict[str, List[Special]] = self.iterableObject.returnRanges()
-        currentYIndex: int = 0
-        currentXIndex: int = 0
+        self.iterable_object: IterableSettings = IterableSettings(
+            self.chosen_menu
+        )
+        self.display_option_list()
+    
+    def display_option_list(self) -> None:
+        """Display the settings and fetch user input.
+        
+        Both the x and y directions will loop infinitely when interacted with.
+        """
+        # Dict is dynamically pulled from the runtime properties of the class.
+        # All display options, and handling of selection below is generic
+        # enough where it will update as the class updates and the next
+        # return_ranges() call happens.
+        settings: dict[
+            str, List[Special]] = self.iterable_object.return_ranges()
+        current_yindex: int = 0
+        current_xindex: int = 0
         keys = list(settings.keys())
         selecting: bool = True
-
-
+        
         while selecting:
-            chosenValues = settings[keys[currentYIndex]]
-            cycled_values = cycle(chosenValues[currentXIndex - 2:] + chosenValues[:currentXIndex - 2])
+            chosen_values = settings[keys[current_yindex]]
+            cycled_values = cycle(
+                chosen_values[current_xindex - 2:]
+                + chosen_values[:current_xindex - 2]
+            )
             clear_console()
-
+            
             print("\n*❖* —————————————————————————————— *❖*")
             print(
-                f"\n🏠 {Txt(f"{self.choosenMenu.value.upper()} SETTINGS MENU").blue().underline().bold()} "
-                f"{Txt("-- arrow keys to navigate menu, enter to confirm, q to exit:").bold()}"
+                f"\n🏠 {Txt(
+                    f"{self.chosen_menu.value.upper()} SETTINGS MENU"
+                ).blue().underline().bold()}",
+                f"{Txt(
+                    "-- arrow keys to navigate menu, enter to confirm, "
+                    "q to exit:"
+                ).bold()}"
             )
-            print(f"{Txt(f"Current value of: {keys[currentYIndex]} = {self.iterableObject.config[keys[currentYIndex]]}")}")
-
-
-            # doing it this way lets us pick our starting and ending positions
-            cycled_keys = cycle(keys[currentYIndex - 3:] + keys[:currentYIndex - 3])
-
-            # handling display
-            for y in range (7):
-                curSetting = next(cycled_keys)
+            print(
+                f"{Txt(
+                    f"Current value of: {keys[current_yindex]}"
+                    f" = {self.iterable_object.config[keys[current_yindex]]}"
+                )}"
+            )
+            
+            # Doing it this way lets us pick our starting and ending positions
+            cycled_keys = cycle(
+                keys[current_yindex - 3:] + keys[:current_yindex - 3])
+            
+            # Handling display
+            for y in range(7):
+                cur_setting = next(cycled_keys)
                 # highlight the middle element
-                if (y == 3):
-                    print(f"{Txt(curSetting).green().bold()}")
-                    optionChoices = "["
-                    for x in range (5):
-                        curSettingChoice = next(cycled_values)
-                        if (x == 2):
-                            optionChoices += str(Txt(str(curSettingChoice)).blue().bold())
+                if y == 3:
+                    print(f"{Txt(cur_setting).green().bold()}")
+                    option_choices = '['
+                    for x in range(5):
+                        cur_setting_choice = next(cycled_values)
+                        if x == 2:
+                            option_choices += str(
+                                Txt(str(cur_setting_choice)).blue().bold()
+                            )
                         else:
-                            optionChoices += str(Txt(str(curSettingChoice)))
-                        optionChoices += " "
-                    print(optionChoices + "]")
+                            option_choices += str(Txt(str(cur_setting_choice)))
+                        option_choices += ' '
+                    print(option_choices + ']')
                 else:
-                    print(f"{Txt(curSetting).dim()}")
-
+                    print(f"{Txt(cur_setting).dim()}")
+            
             # handling input
-            inputedChar = SettingsMenu.__getchar()
-            match inputedChar:
+            inputted_char = SettingsMenu._getchar()
+            match inputted_char:
                 case 'q':
                     selecting = False
                 case 'UP':
-                    currentYIndex = (currentYIndex - 1) % len(settings)
-                    currentXIndex = 0
+                    current_yindex = (current_yindex - 1) % len(settings)
+                    current_xindex = 0
                 case 'DOWN':
-                    currentYIndex = (currentYIndex + 1) % len(settings)
-                    currentXIndex = 0
+                    current_yindex = (current_yindex + 1) % len(settings)
+                    current_xindex = 0
                 case 'LEFT':
-                    currentXIndex = (currentXIndex - 1) % len(chosenValues)
+                    current_xindex = (current_xindex - 1) % len(chosen_values)
                 case 'RIGHT':
-                    currentXIndex = (currentXIndex + 1) % len(chosenValues)
+                    current_xindex = (current_xindex + 1) % len(chosen_values)
                 case 'ENTER':
-                    targetValue = chosenValues[currentXIndex]
-                    targetKey = keys[currentYIndex]
-                    self.iterableObject.replace_config_value(targetKey, targetValue)
-
-                    # fetch the newest version of the config
-                    settings: dict[str, List[Special]] = self.iterableObject.returnRanges()
-
-    def getSubMenu(self) -> subDictEnum | bool:
-        """this is where the sub menu is determined which is used in this class, the tracker class, and the iterableSettings class"""
+                    target_value = chosen_values[current_xindex]
+                    target_key = keys[current_yindex]
+                    self.iterable_object.replace_config_value(
+                        target_key,
+                        target_value
+                    )
+                    
+                    # Fetch the newest version of the config
+                    settings: dict[str, List[Special]] = (
+                        self.iterable_object.return_ranges()
+                    )
+    
+    def get_submenu(self) -> SubDictEnum | bool:
+        """Prompt user to select submenu option.
+        
+        This is where the submenu is determined which is used in this
+        class, the tracker class, and the iterableSettings class.
+        """
         print("\n*❖* —————————————————————————————— *❖*")
         print(
             f"\n🏠 {Txt("Settings MENU").blue().underline().bold()} "
@@ -103,24 +133,26 @@ class SettingsMenu:
                 "2) [G]raph",
                 "3) [B]ack"
             )
-
+            
             choice = input("> ").strip().lower()
             match choice:
                 case '1' | 't':
-                    return subDictEnum.TRACKER
+                    return SubDictEnum.TRACKER
                 case '2' | 'g':
-                    return subDictEnum.GRAPH
+                    return SubDictEnum.GRAPH
                 case '3' | 'b':
                     return False
                 case _:
                     invalid_choice(opts)
                     continue
-
+    
     @staticmethod
-    # ai generated helper function to allow cross platform get key presses
-    def __getchar():
-        """Return a single key press as a string. Arrow keys become 'UP', 'DOWN', etc., Enter becomes 'ENTER'."""
-        if sys.platform.startswith("win"):
+    def _getchar():
+        """Return a single key press as a string.
+        
+        Arrow keys become 'UP', 'DOWN', etc., Enter becomes 'ENTER'.
+        """
+        if sys.platform.startswith('win'):
             import msvcrt
             ch = msvcrt.getch()
             if ch in {b'\x00', b'\xe0'}:  # special keys
@@ -135,7 +167,8 @@ class SettingsMenu:
                 except UnicodeDecodeError:
                     return ''
         else:
-            import tty, termios
+            import tty
+            import termios
             fd = sys.stdin.fileno()
             old_settings = termios.tcgetattr(fd)
             try:
@@ -145,7 +178,9 @@ class SettingsMenu:
                     return 'ENTER'
                 if ch == '\x1b':  # ESC sequence for arrows
                     seq = sys.stdin.read(2)
-                    arrows = {'[A': 'UP', '[B': 'DOWN', '[C': 'RIGHT', '[D': 'LEFT'}
+                    arrows = {
+                        '[A': 'UP', '[B': 'DOWN', '[C': 'RIGHT', '[D': 'LEFT'
+                    }
                     return arrows.get(seq, '')
                 return ch
             finally:
