@@ -9,7 +9,6 @@ from dqt.stats import Stats
 from dqt.ui_utils import cont_on_enter, err, invalid_choice, menu
 from dqt.styletext import StyleText as Txt
 from dqt.settingsMenu import SettingsMenu
-from dqt.iterableSettings import subDictEnum
 
 from settings import CONFIGS
 

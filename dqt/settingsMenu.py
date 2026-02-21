@@ -1,9 +1,11 @@
-from dqt.iterableSettings import subDictEnum, IterableSettings, Special
+import sys
+from itertools import cycle
 from typing import List
+
+from dqt.iterableSettings import subDictEnum, IterableSettings, Special
 from dqt.ui_utils import invalid_choice, menu
 from dqt.styletext import StyleText as Txt, clear_console
-from itertools import cycle
-import sys
+
 
 class SettingsMenu:
     def __init__(self):

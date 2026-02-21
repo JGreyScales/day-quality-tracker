@@ -1,5 +1,6 @@
-from typing import TypeVar, List, Union
 from enum import Enum
+from typing import TypeVar, List, Union
+
 from settings import CONFIGS
 
 T = TypeVar("T", int, float)
