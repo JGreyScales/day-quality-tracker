@@ -8,6 +8,7 @@ from dqt.manager import Manager
 from dqt.stats import Stats
 from dqt.ui_utils import cont_on_enter, err, invalid_choice, menu
 from dqt.styletext import StyleText as Txt
+from dqt.settingsMenu import SettingsMenu
 
 _UNSET = object()
 _today = datetime.today()
@@ -95,7 +96,8 @@ class Tracker:
                 "4) 📊 See [S]tats",
                 "5) 📂 View [A]ll logs...",
                 "6) 💾 [B]ack up logs...",
-                "7) E[x]it",
+                "7) 💾 [M]odify Settings...",
+                "8) E[x]it",
                 title=None
             )
             
@@ -231,7 +233,10 @@ class Tracker:
                         continue
                     self.json.backup_json_file()
                 
-                case '7' | 'x':
+                case '7' | 'm':
+                    SettingsMenu()
+                
+                case '8' | 'x':
                     print("\n*⎋* —————————————————————————————— *⎋*")
                     print("\nBye!")
                     raise SystemExit()
