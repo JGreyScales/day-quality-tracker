@@ -3,8 +3,8 @@ from typing import TypeVar, List, Union
 
 from settings import CONFIGS
 
-T = TypeVar('T', int, float)
-Special = Union[T, str]
+T: TypeVar = TypeVar('T', int, float)
+Special: type = Union[T, str]
 
 
 class SubDictEnum(Enum):
