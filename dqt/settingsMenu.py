@@ -98,7 +98,7 @@ class SettingsMenu:
         while selecting:
             opts = menu(
                 "1) [T]racker",
-                "2) [G]raph (not yet implimented)",
+                "2) [G]raph",
                 "3) [B]ack"
             )
 

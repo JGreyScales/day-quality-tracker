@@ -129,7 +129,37 @@ class IterableSettings:
             return
         
         elif(self.subdictType == subDictEnum.GRAPH):
-            print("NOT IMPLIMENTED YET")
+            self.graph_style: List[str] = ['Solarize_Light2', '_classic_test_patch', '_mpl-gallery', '_mpl-gallery-nogrid', 'bmh', 'classic', 'dark_background', 'fast', 'fivethirtyeight', 'ggplot', 'grayscale', 'seaborn-v0_8', 'seaborn-v0_8-bright', 'seaborn-v0_8-colorblind', 'seaborn-v0_8-dark', 'seaborn-v0_8-dark-palette', 'seaborn-v0_8-darkgrid', 'seaborn-v0_8-deep', 'seaborn-v0_8-muted', 'seaborn-v0_8-notebook', 'seaborn-v0_8-paper', 'seaborn-v0_8-pastel', 'seaborn-v0_8-poster', 'seaborn-v0_8-talk', 'seaborn-v0_8-ticks', 'seaborn-v0_8-white', 'seaborn-v0_8-whitegrid', 'tableau-colorblind10']
+            self.graph_show_block: List[bool] = IterableSettings.registerBoolean()
+            self.title_fontsize: List[int] = IterableSettings.registerRange(15, 30)
+            self.title_padding: List[int] = IterableSettings.registerRange(13, 25)
+            self.xlabel_fontsize: List[int] = IterableSettings.registerRange(8, 20)
+            self.ylabel_fontsize: List[int] = IterableSettings.registerRange(8, 20)
+            self.tick_labels_fontsize: List[int] = IterableSettings.registerRange(5, 15)
+            self.graph_date_format: List[str] = ["%Y-%m-%d", "%d-%m-%y", "%m/%d", "%a %b %d", "%d %b %Y"]
+            self.autofmt_xdates: List[bool] = IterableSettings.registerBoolean()
+            self.year_labels_fontsize: List[int] = IterableSettings.registerRange(5, 15)
+            self.year_labels_fontweight: List[str] = ["normal", "bold", "light"]
+            self.line_width: List[int] = IterableSettings.registerRange(1, 10)
+            self.line_color: List[Special] = ["blue", "red", "green", "black", "orange", "purple", "none"]
+            self.line_style: List[str] = ["-", "--", "-.", ":", "None"]
+            self.marker: List[str] = ["o", "s", "D", "^", "v", "x", "+", "None"]
+            self.marker_size: List[int] = IterableSettings.registerRange(1, 20)
+            self.marker_face_color: List[Special] = ["blue", "red", "green", "black", "white", "none"]
+            self.marker_edge_width: List[int] = IterableSettings.registerRange(0, 10)
+            self.neutralline_width: List[int] = IterableSettings.registerRange(0, 5)
+            self.neutralline_color: List[str] = ["black", "gray", "red", "blue"]
+            self.neutralline_style: List[str] = ["-", "--", "-.", ":"]
+            self.averageline_width: List[int] = IterableSettings.registerRange(0, 5)
+            self.averageline_color: List[str] = ["red", "blue", "black", "green"]
+            self.averageline_style: List[str] = ["-", "--", "-.", ":"]
+            self.highest_rating_point_size: List[int] = IterableSettings.registerRange(5, 50)
+            self.highest_rating_point_color: List[Special] = ["green", "gold", "blue", "none"]
+            self.lowest_rating_point_size: List[int] = IterableSettings.registerRange(5, 50)
+            self.lowest_rating_point_color: List[Special] = ["orange", "red", "black", "none"]
+            self.legend_fontsize: List[int] = IterableSettings.registerRange(5, 15)
+            self.legend_loc: List[str] = ["best", "upper right", "upper left", "lower left", "lower right", "center"]
+            self.legend_frameon: List[bool] = IterableSettings.registerBoolean()
             return
 
     @staticmethod
