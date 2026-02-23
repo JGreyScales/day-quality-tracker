@@ -236,16 +236,14 @@ class Tracker:
                     self.json.backup_json_file()
                 
                 case '7' | 'm':
-                    SettingsMenuObject = SettingsMenu()
-                    if (False == SettingsMenuObject.chosen_menu):
+                    settings_menu_object = SettingsMenu()
+                    if not settings_menu_object.chosen_menu:
                         continue
 
                     # only refresh memory if the tracker was updated
-                    if (SettingsMenuObject.chosen_menumenu.value == 'tracker'):
+                    if settings_menu_object.chosen_menu.value == 'tracker':
                         self.configure(**CONFIGS[
-                            SettingsMenuObject.chosen_menu.value])
-
-                    
+                            settings_menu_object.chosen_menu.value])
                 
                 case '8' | 'x':
                     print("\n*⎋* —————————————————————————————— *⎋*")

@@ -28,17 +28,16 @@ class IterableSettings:
         """
         # Subdict is stored separately so it will be easier to write
         # conditionals for the eventual implementation of graph and if future
-        # dicts exist in the future
+        # dicts will be added later on.
         self.subdict_type = sub_dict
         self.load_current_config(**CONFIGS)
 
     def display_ranges(self) -> None:
         """Dump all ranges currently associated with the instance at runtime.
         
-        Useful for double-checking values while creating new settings.
-        
         AI generated function for debugging.
         Print all properties at runtime excluding private properties.
+        Useful for double-checking values while creating new settings.
         """
         if not hasattr(self, "config"):
             print("no config loaded, therefore no ranges created")
@@ -89,7 +88,8 @@ class IterableSettings:
                     else:
                         comment = ''
 
-                    new_line = f"{indent}    '{target_key}': {repr(new_value)},  {comment}"
+                    new_line = (f"{indent}    '{target_key}': "
+                                f"{repr(new_value)},  {comment}")
                     new_lines.append(new_line)
                 else:
                     new_lines.append(line)
@@ -102,7 +102,7 @@ class IterableSettings:
         self.load_current_config(**CONFIGS)
 
     def return_ranges(self) -> dict[str, List[Special]]:
-        """Similar to `displayRanges()`, except return as a key-value pair.
+        """Similar to `display_ranges()`, except return as a key-value pair.
         
         This is primarily used in the rendering of the scroll menus in the
         terminal.

@@ -115,7 +115,8 @@ class SettingsMenu:
                         self.iterable_object.return_ranges()
                     )
     
-    def get_submenu(self) -> SubDictEnum | bool:
+    @staticmethod
+    def get_submenu() -> SubDictEnum | bool:
         """Prompt user to select submenu option.
         
         This is where the submenu is determined which is used in this
