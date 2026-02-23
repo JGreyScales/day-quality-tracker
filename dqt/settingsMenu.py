@@ -48,11 +48,11 @@ class SettingsMenu:
             
             print("\n*❖* —————————————————————————————— *❖*")
             print(
-                f"\n🏠 {Txt(
+                f"\n⚙️ {Txt(
                     f"{self.chosen_menu.value.upper()} SETTINGS MENU"
                 ).blue().underline().bold()}",
                 f"{Txt(
-                    "-- arrow keys to navigate menu, enter to confirm, "
+                    "— arrow keys to navigate menu, enter to confirm, "
                     "q to exit:"
                 ).bold()}"
             )
@@ -124,15 +124,15 @@ class SettingsMenu:
         """
         print("\n*❖* —————————————————————————————— *❖*")
         print(
-            f"\n🏠 {Txt("Settings MENU").blue().underline().bold()} "
-            f"{Txt("— choose what to do:").bold()}"
+            f"\n⚙️ {Txt("SETTINGS MENU").blue().underline().bold()} "
         )
         selecting: bool = True
         while selecting:
             opts = menu(
                 "1) [T]racker",
                 "2) [G]raph",
-                "3) [B]ack"
+                "3) [R]eturn to Main Menu",
+                title="Select settings category:"
             )
             
             choice = input("> ").strip().lower()
@@ -141,7 +141,7 @@ class SettingsMenu:
                     return SubDictEnum.TRACKER
                 case '2' | 'g':
                     return SubDictEnum.GRAPH
-                case '3' | 'b':
+                case '3' | 'r':
                     return False
                 case _:
                     invalid_choice(opts)

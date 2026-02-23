@@ -91,6 +91,7 @@ class Tracker:
                 f"\n🏠 {Txt("MAIN MENU").blue().underline().bold()} "
                 f"{Txt("— choose what to do:").bold()}"
             )
+            
             opts = menu(
                 "1) 📈 View ratings [G]raph",
                 "2) 📝 Edit [T]oday's log...",
@@ -98,7 +99,7 @@ class Tracker:
                 "4) 📊 See [S]tats",
                 "5) 📂 View [A]ll logs...",
                 "6) 💾 [B]ack up logs...",
-                "7) 💾 [M]odify Settings...",
+                "7) ⚙️ [M]odify Settings...",
                 "8) E[x]it",
                 title=None
             )
