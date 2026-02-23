@@ -14,7 +14,7 @@ class SettingsMenu:
         self.chosen_menu: SubDictEnum = self.get_submenu()
         
         # If the exit command was invoked, exit the class
-        if not self.chosen_menu:
+        if self.chosen_menu == SubDictEnum.NONE_SELECTED:
             return
         
         self.iterable_object: IterableSettings = IterableSettings(
@@ -142,7 +142,7 @@ class SettingsMenu:
                 case '2' | 'g':
                     return SubDictEnum.GRAPH
                 case '3' | 'r':
-                    return False
+                    return SubDictEnum.NONE_SELECTED
                 case _:
                     invalid_choice(opts)
                     continue

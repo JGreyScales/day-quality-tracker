@@ -11,6 +11,7 @@ class SubDictEnum(Enum):
     """Store custom configurations subdict keys."""
     TRACKER = 'tracker'
     GRAPH = 'graph'
+    NONE_SELECTED = 'none_selected'
 
 
 class IterableSettings:
