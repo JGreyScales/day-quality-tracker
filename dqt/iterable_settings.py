@@ -20,8 +20,7 @@ class IterableSettings:
     subdict_type: SubDictEnum
     
     def __init__(self, sub_dict: SubDictEnum):
-        """
-        Initialize attributes and load current configs.
+        """Initialize attributes and load current configs.
         
         Store the enum to the instance followed up by loading the current
         config from memory. A new instance of this class is created each time

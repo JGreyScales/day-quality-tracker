@@ -8,9 +8,10 @@ from dqt.styletext import StyleText as Txt, clear_console
 
 
 class SettingsMenu:
+    """Display and control configurations menu."""
     
     def __init__(self):
-        """Handle the actual rendering of the settings menu in the terminal"""
+        """Handle the actual rendering of the settings menu in the terminal."""
         self.chosen_menu: SubDictEnum = self.get_submenu()
         
         # If the exit command was invoked, exit the class
