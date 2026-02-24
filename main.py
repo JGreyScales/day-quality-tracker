@@ -6,9 +6,9 @@ if __name__ == '__main__':
             import sys
             import traceback
             
-            from dqt.styletext import StyleText as Txt
             from dqt.tracker import Tracker
             from settings import CONFIGS
+            from dqt.styletext import StyleText as Txt
         except ModuleNotFoundError as e:
             print("\n*!* —————————————————————————————— *!*")
             print(Txt("\n❌ Error!").bold().red())
@@ -17,7 +17,7 @@ if __name__ == '__main__':
                   f"working directory.")
             sys.exit(1)
         
-        dqt = Tracker()
+        dqt: Tracker = Tracker()
         
         try:
             

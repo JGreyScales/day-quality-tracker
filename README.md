@@ -1,4 +1,4 @@
-# Day Quality Tracker 5 <sub><sup>(v0.5.0-rc)</sup></sub>
+# Day Quality Tracker 5 <sub><sup>(v1.0.0)</sup></sub>
 
 Day Quality Tracker (DQT) is a simple Python CLI that helps you record and track
 daily “day quality” ratings and visualize them over time using the 
@@ -9,20 +9,62 @@ ratings with short memory entries so you can track both trends and moments.
 
 ---
 
+## Installation
+
+On the [GitHub page](https://github.com/TheGittyPerson/day-quality-tracker):
+* Click the green "Code" button
+* Select "Download ZIP"
+* Unzip the ZIP file on your machine.
+
+Or, to install the latest _stable_ version:
+* Scroll down on the right column
+* Under
+  "[Releases](https://github.com/TheGittyPerson/day-quality-tracker/releases)", 
+  select the option labeled "Latest"
+* Scroll down to "Assets"
+* Click on "Source code (zip)" (recommended for basic installation)
+* Unzip the ZIP file on your machine.
+
+---
+
 ## How to use
 
 Before using the program, ensure you have a Python interpreter installed on your
-system **(version 3.12+ recommended)**.
+system **(version 3.12+ required)**.
 
 To start the program, **run `main.py`**, or initialize and run the tracker 
 manually:
    
-   ```python
-   from dqt.tracker import Tracker
-   
-   dqt = Tracker()
-   dqt.run()
-   ```
+```python
+from dqt.tracker import Tracker
+
+dqt = Tracker()
+dqt.run()
+```
+
+To set a configuration manually:
+
+```python
+# Example:
+from dqt.tracker import Tracker
+ 
+dqt = Tracker()
+dqt.configure(
+    enable_ansi=False,
+)
+dqt.run()
+```
+
+Or use `settings.py`:
+
+```python
+from dqt.tracker import Tracker
+from settings import CONFIGS
+ 
+dqt = Tracker()
+dqt.configure(*CONFIGS['tracker'])
+dqt.run()
+```
 
 ---
 
@@ -122,6 +164,8 @@ CONFIGS: dict[str, dict[str, ...]] = {
 ```
 
 Feel free to experiment with each setting to tune DQT to your preferences.
+
+---
 
 ## License
 

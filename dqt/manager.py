@@ -2,26 +2,32 @@ from textwrap import dedent
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
+from dqt.dqt_json import DQTJSON
 from dqt.ui_utils import (
-    confirm, err, invalid_choice, log_saved, menu, print_wrapped
+    confirm,
+    err,
+    invalid_choice,
+    log_saved,
+    menu,
+    print_wrapped
 )
 from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
     from tracker import Tracker
 
-_today = datetime.today()
+_today: datetime = datetime.today()
 
 
 class Manager:
     """A class to manage Day Quality Tracker JSON contents handling."""
     
     def __init__(self, dqt: Tracker):
-        self.dqt = dqt
-        self.json = dqt.json
+        self.dqt: Tracker = dqt
+        self.json: DQTJSON = dqt.json
         
-        self.memory_edit_placeholder = '{}'
-        self.memory_edit_length_diff_alert_threshold = 100
+        self.memory_edit_placeholder: str = '{}'
+        self.memory_edit_length_diff_alert_threshold: int = 100
     
     def handle_missing_logs(self) -> str | None:
         """Check if any previous days are missing ratings.

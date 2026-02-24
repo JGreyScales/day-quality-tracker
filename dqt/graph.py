@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 from types import NoneType
 
+from dqt.dqt_json import DQTJSON
 from dqt.ui_utils import err, confirm
 
 try:
@@ -73,75 +74,77 @@ class Graph:
         'legend_loc': (str, tuple),
         'legend_frameon': bool,
     }
-
+    
     def __init__(self, dqt: Tracker):
         """Get required DQT attributes and initialize graph settings."""
         # DayQualityTracker attributes
-        self.dqt = dqt
-        self.json = dqt.json
-
+        self.dqt: Tracker = dqt
+        self.json: DQTJSON = dqt.json
+        
         # Graph settings
-        self.graph_show_block = True
+        self.graph_show_block: bool = True
         
-        self.graph_style = 'ggplot'
-
-        self.title = "Day Quality Ratings"
-        self.title_fontsize = 20
-        self.title_padding = 18
-
-        self.xlabel = "Date"
-        self.xlabel_fontsize = 14
-        self.ylabel = "Rating"
-        self.ylabel_fontsize = 14
-
-        self.tick_labels_fontsize = 7
-        self.max_xticks = 15  # None = no limit
+        self.graph_style: str | None = 'ggplot'
         
-        self.graph_date_format = '%a %b %d'
-        self.autofmt_xdates = True
+        self.title: str = "Day Quality Ratings"
+        self.title_fontsize: float | int | str = 20
+        self.title_padding: float | int = 18
         
-        self.year_labels_fontsize = 9
-        self.year_labels_fontweight = 'bold'
+        self.xlabel: str = "Date"
+        self.xlabel_fontsize: float | int | str = 14
+        self.ylabel: str = "Rating"
+        self.ylabel_fontsize: float | int | str = 14
         
-        self.line_label = "Ratings"
-        self.line_width = 2
-        self.line_color = None
-        self.line_style = '-'
+        self.tick_labels_fontsize: float | int | str = 7
+        self.max_xticks: int = 15  # None = no limit
         
-        self.marker = 'o'
-        self.marker_size = 4
-        self.marker_face_color = None
-        self.marker_edge_width = 0
+        self.graph_date_format: str = '%a %b %d'
+        self.autofmt_xdates: bool = True
         
-        self.neutralline_label = 'Neutral rating (baseline)'
-        self.neutralline_width = 1
-        self.neutralline_color = 'black'
-        self.neutralline_style = '--'
+        self.year_labels_fontsize: float | int | str = 9
+        self.year_labels_fontweight: int | str = 'bold'
         
-        self.averageline_label = 'Average rating'
-        self.averageline_width = 1
-        self.averageline_color = 'red'
-        self.averageline_style = '-.'
+        self.line_label: str = "Ratings"
+        self.line_width: float | int = 2
+        self.line_color: str | tuple | None = None
+        self.line_style: str = '-'
         
-        self.highest_rating_label = 'Highest rating'
-        self.highest_rating_point_size = 20
-        self.highest_rating_point_color = 'green'
-        self.highest_rating_point_zorder = 5
+        self.marker: str = 'o'
+        self.marker_size: float | int = 4
+        self.marker_face_color: str | tuple | None = None
+        self.marker_edge_width: float | int = 0
         
-        self.lowest_rating_label = 'Lowest rating'
-        self.lowest_rating_point_size = 20
-        self.lowest_rating_point_color = 'orange'
-        self.lowest_rating_point_zorder = 5
+        self.neutralline_label: str = 'Neutral rating (baseline)'
+        self.neutralline_width: float | int = 1
+        self.neutralline_color: str | tuple | None = 'black'
+        self.neutralline_style: str = '--'
         
-        self.legend_fontsize = 8
-        self.legend_loc = 'upper right'
-        self.legend_frameon = True
+        self.averageline_label: str = 'Average rating'
+        self.averageline_width: float | int = 1
+        self.averageline_color: str | tuple | None = 'red'
+        self.averageline_style: str = '-.'
+        
+        self.highest_rating_label: str = 'Highest rating'
+        self.highest_rating_point_size: float | int = 20
+        self.highest_rating_point_color: str | tuple | None = 'green'
+        self.highest_rating_point_zorder: int = 5
+        
+        self.lowest_rating_label: str = 'Lowest rating'
+        self.lowest_rating_point_size: float | int = 20
+        self.lowest_rating_point_color: str | tuple | None = 'orange'
+        self.lowest_rating_point_zorder: int = 5
+        
+        self.legend_fontsize: float | int = 8
+        self.legend_loc: str | tuple = 'upper right'
+        self.legend_frameon: bool = True
     
     def view_ratings_graph(self) -> None:
         """Display current ratings graph."""
         print("\nBuilding graph...")
         self._build()
         print("\nDisplaying graph...")
+        if self.graph_show_block:
+            print("\n[Close the graph window to continue]")
         self._show()
         
     def _build(self) -> None:
