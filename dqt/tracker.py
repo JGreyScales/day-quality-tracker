@@ -16,8 +16,8 @@ _today: datetime = datetime.today()
 class Tracker:
     """Track and visualize day quality ratings in a graph."""
     
-    RELEASE_VER: int = 5
-    SEMVER: str = 'v0.5.0-rc'
+    RELEASE_NUM: int = 5
+    SEMVER: str = 'v1.0.0'
     
     _CONFIG_KEYS: dict[str, type | tuple[type, ...]] = {
         'min_time': int,
@@ -67,7 +67,7 @@ class Tracker:
         """Run Day Quality Tracker."""
         Txt.set_ansi(self.enable_ansi)
         
-        title = f"*--- 📆 Day Quality Tracker {self.RELEASE_VER}! 📈 ---*"
+        title = f"*--- 📆 Day Quality Tracker {self.RELEASE_NUM}! 📈 ---*"
         print(
             Txt(
                 f"\n{title}"
