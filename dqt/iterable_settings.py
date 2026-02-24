@@ -26,9 +26,7 @@ class IterableSettings:
         config from memory. A new instance of this class is created each time
         the settings menu is entered.
         """
-        # Subdict is stored separately so it will be easier to write
-        # conditionals for the eventual implementation of graph and if future
-        # dicts will be added later on.
+        # Subdict is stored separately so it will be easier to write conditionals for
         self.subdict_type = sub_dict
         self.load_current_config(**CONFIGS)
 
