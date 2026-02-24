@@ -24,12 +24,12 @@ Any addition to the project will be very much appreciated.
 2. Clone the forked repository to your local machine
 3. Create a new branch with a meaningful name
    - e.g.) `add-feature-xyz`, `fix-issue-12`
-4. Make and commit any changes made
+4. Make and commit your changes
 5. Push commits to GitHub (if you have made changes locally on your machine)
 6. Create a pull request and await review
 
 We will likely need to discuss the changes you make and apply some tweaks 
-and polishes before approval.
+and polishing before approval.
 
 You should receive a notification/email once your changes have been merged 
 onto the main branch of this project.
@@ -115,7 +115,7 @@ To report a bug or issue:
 2. Select "New issue"
 3. This is a tiny project, and I don't really have rules on how you should 
    write an issue report. Just include a descriptive title and helpful 
-   information in the descriptions.
+information in the description.
 4. Submit the issue.
 
 ---
@@ -123,6 +123,6 @@ To report a bug or issue:
 ## Suggesting a Feature
 
 If you do not wish to code any features yourself, feel free to either open 
-issue as described above, mentioning and explaining the new feature you 
+an issue as described above, mentioning and explaining the new feature you 
 would like to see, or add a comment under a 
 [discussion](https://github.com/TheGittyPerson/day-quality-tracker/discussions).
