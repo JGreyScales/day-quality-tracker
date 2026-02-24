@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import TypeVar, Union
 
+from dqt.MAGIC_NUMS import MAGIC_NUMS
 from settings import CONFIGS
 
 T: TypeVar = TypeVar('T', int, float)
@@ -60,7 +61,7 @@ class IterableSettings:
 
         # Replace the value in the file
         sub_key: str = self.subdict_type.value
-        file_path: str = 'settings.py'
+        file_path: str = MAGIC_NUMS.SETTINGS_FILE
         new_lines: list = []
         inside_subdict: bool = False
         indent: str = ''
