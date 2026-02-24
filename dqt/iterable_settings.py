@@ -234,13 +234,17 @@ class IterableSettings:
     def register_range(min_: T,
                        max_: T,
                        step: int = 1,
-                       special_values: list[str] = []) -> list[Special]:
+                       special_values: list[str]| None = None) -> list[Special]:
         """Create a list from a range, supporting special value inserts.
         
         A static method for standardizing the creation of numeric ranges.
         """
+
+
+
         cur_list: list[Special] = []
-        cur_list.extend(special_values)
+        if (special_values is not None):
+            cur_list.extend(special_values)
         current = min_
         while current <= max_:
             cur_list.append(current)
