@@ -39,8 +39,8 @@ class SettingsMenu:
         selecting: bool = True
         
         while selecting:
-            chosen_values = settings[keys[current_yindex]]
-            cycled_values = cycle(
+            chosen_values: list = settings[keys[current_yindex]]
+            cycled_values: cycle = cycle(
                 chosen_values[current_xindex - 2:]
                 + chosen_values[:current_xindex - 2]
             )
@@ -64,7 +64,7 @@ class SettingsMenu:
             )
             
             # Doing it this way lets us pick our starting and ending positions
-            cycled_keys = cycle(
+            cycled_keys: cycle[str] = cycle(
                 keys[current_yindex - 3:] + keys[:current_yindex - 3])
             
             # Handling display
@@ -75,7 +75,7 @@ class SettingsMenu:
                     print(f"{Txt(cur_setting).green().bold()}")
                     option_choices = '['
                     for x in range(5):
-                        cur_setting_choice = next(cycled_values)
+                        cur_setting_choice: any = next(cycled_values)
                         if x == 2:
                             option_choices += str(
                                 Txt(str(cur_setting_choice)).blue().bold()
@@ -88,23 +88,23 @@ class SettingsMenu:
                     print(f"{Txt(cur_setting).dim()}")
             
             # handling input
-            inputted_char = SettingsMenu._getchar()
+            inputted_char: str = SettingsMenu._getchar()
             match inputted_char:
                 case 'q':
                     selecting = False
                 case 'UP':
-                    current_yindex = (current_yindex - 1) % len(settings)
-                    current_xindex = 0
+                    current_yindex: int = (current_yindex - 1) % len(settings)
+                    current_xindex: int = 0
                 case 'DOWN':
-                    current_yindex = (current_yindex + 1) % len(settings)
-                    current_xindex = 0
+                    current_yindex: int = (current_yindex + 1) % len(settings)
+                    current_xindex: int = 0
                 case 'LEFT':
-                    current_xindex = (current_xindex - 1) % len(chosen_values)
+                    current_xindex: int = (current_xindex - 1) % len(chosen_values)
                 case 'RIGHT':
-                    current_xindex = (current_xindex + 1) % len(chosen_values)
+                    current_xindex: int = (current_xindex + 1) % len(chosen_values)
                 case 'ENTER':
-                    target_value = chosen_values[current_xindex]
-                    target_key = keys[current_yindex]
+                    target_value: any = chosen_values[current_xindex]
+                    target_key: str = keys[current_yindex]
                     self.iterable_object.replace_config_value(
                         target_key,
                         target_value
@@ -128,14 +128,14 @@ class SettingsMenu:
         )
         selecting: bool = True
         while selecting:
-            opts = menu(
+            opts: int = menu(
                 "1) [T]racker",
                 "2) [G]raph",
                 "3) [R]eturn to Main Menu",
                 title="Select settings category:"
             )
             
-            choice = input("> ").strip().lower()
+            choice: str = input("> ").strip().lower()
             match choice:
                 case '1' | 't':
                     return SubDictEnum.TRACKER
@@ -148,17 +148,17 @@ class SettingsMenu:
                     continue
     
     @staticmethod
-    def _getchar():
+    def _getchar() -> str:
         """Return a single key press as a string.
         
         Arrow keys become 'UP', 'DOWN', etc., Enter becomes 'ENTER'.
         """
         if sys.platform.startswith('win'):
             import msvcrt
-            ch = msvcrt.getch()
+            ch: bytes = msvcrt.getch()
             if ch in {b'\x00', b'\xe0'}:  # special keys
-                ch2 = msvcrt.getch()
-                arrows = {b'H': 'UP', b'P': 'DOWN', b'K': 'LEFT', b'M': 'RIGHT'}
+                ch2: bytes = msvcrt.getch()
+                arrows: dict[bytes, str] = {b'H': 'UP', b'P': 'DOWN', b'K': 'LEFT', b'M': 'RIGHT'}
                 return arrows.get(ch2, '')
             elif ch == b'\r':
                 return 'ENTER'
@@ -170,16 +170,16 @@ class SettingsMenu:
         else:
             import tty
             import termios
-            fd = sys.stdin.fileno()
-            old_settings = termios.tcgetattr(fd)
+            fd: int | any = sys.stdin.fileno()
+            old_settings: any = termios.tcgetattr(fd)
             try:
                 tty.setraw(fd)
-                ch = sys.stdin.read(1)
+                ch: bytes = sys.stdin.read(1)
                 if ch == '\r' or ch == '\n':
                     return 'ENTER'
                 if ch == '\x1b':  # ESC sequence for arrows
-                    seq = sys.stdin.read(2)
-                    arrows = {
+                    seq: str | any = sys.stdin.read(2)
+                    arrows: dict[str, str] = {
                         '[A': 'UP', '[B': 'DOWN', '[C': 'RIGHT', '[D': 'LEFT'
                     }
                     return arrows.get(seq, '')

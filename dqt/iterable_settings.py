@@ -27,7 +27,7 @@ class IterableSettings:
         the settings menu is entered.
         """
         # Subdict is stored separately so it will be easier to write conditionals for
-        self.subdict_type = sub_dict
+        self.subdict_type: SubDictEnum = sub_dict
         self.load_current_config(**CONFIGS)
 
     def display_ranges(self) -> None:
@@ -43,7 +43,7 @@ class IterableSettings:
         
         print("loaded config file:", self.config)
         for attr_name in dir(self):
-            attr_value = getattr(self, attr_name)
+            attr_value: any = getattr(self, attr_name)
             if isinstance(attr_value, list) and not attr_name.startswith("__"):
                 print(f"{attr_name} range:", attr_value)
 
@@ -53,40 +53,40 @@ class IterableSettings:
         Keeps formatting & comments in the file
         """
         if target_key == 'min_time' and new_value == 'no limit':
-            new_value = 0
+            new_value: any = 0
 
         # Replace the value in memory
         self.config[target_key] = new_value
 
         # Replace the value in the file
-        sub_key = self.subdict_type.value
-        file_path = 'settings.py'
-        new_lines = []
-        inside_subdict = False
-        indent = ''
+        sub_key: str = self.subdict_type.value
+        file_path: str = 'settings.py'
+        new_lines: list = []
+        inside_subdict: bool = False
+        indent: str = ''
         
         with open(file_path, 'r', encoding='utf-8') as f:
             for line in f:
-                stripped = line.strip()
+                stripped: str = line.strip()
                 
                 # Detect the start of the sub-dictionary
                 if stripped.startswith(f"'{sub_key}':"):
-                    inside_subdict = True
-                    indent = line[:line.find('\'')]
+                    inside_subdict: bool = True
+                    indent: str = line[:line.find('\'')]
                 
                 # Detect the end of the sub-dictionary
                 if inside_subdict and stripped.startswith('},'):
-                    inside_subdict = False
+                    inside_subdict: bool = False
                 
                 # Replace the target key value
                 if inside_subdict and stripped.startswith(f"'{target_key}'"):
                     # Preserve comments after '#'
                     if '#' in line:
-                        comment = line[line.index('#'):]
+                        comment: str = line[line.index('#'):]
                     else:
-                        comment = ''
+                        comment: str = ''
 
-                    new_line = (f"{indent}    '{target_key}': "
+                    new_line: str = (f"{indent}    '{target_key}': "
                                 f"{repr(new_value)},  {comment}")
                     new_lines.append(new_line)
                 else:
@@ -115,7 +115,7 @@ class IterableSettings:
             return
         
         for attr_name in dir(self):
-            attr_value = getattr(self, attr_name)
+            attr_value: any = getattr(self, attr_name)
             if isinstance(attr_value, list) and not attr_name.startswith("__"):
                 return_value[attr_name] = attr_value
 
@@ -243,7 +243,7 @@ class IterableSettings:
         cur_list: list[Special] = []
         if (special_values is not None):
             cur_list.extend(special_values)
-        current = min_
+        current: T = min_
         while current <= max_:
             cur_list.append(current)
             current += step
@@ -262,5 +262,5 @@ class IterableSettings:
 # run from project root as ```python -m dqt.iterableSettings```
 if __name__ == '__main__':
     """Used for running this file directly for testing."""
-    test = IterableSettings(SubDictEnum.TRACKER)
+    test: IterableSettings = IterableSettings(SubDictEnum.TRACKER)
     test.display_ranges()
