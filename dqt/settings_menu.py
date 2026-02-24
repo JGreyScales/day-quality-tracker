@@ -116,7 +116,7 @@ class SettingsMenu:
                     )
     
     @staticmethod
-    def get_submenu() -> SubDictEnum | bool:
+    def get_submenu() -> SubDictEnum:
         """Prompt user to select submenu option.
         
         This is where the submenu is determined which is used in this
