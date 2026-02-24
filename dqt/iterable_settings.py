@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import TypeVar, List, Union
+from typing import TypeVar, Union
 
 from settings import CONFIGS
 
@@ -101,7 +101,7 @@ class IterableSettings:
         # Refresh the current config so dynamic ranges are recomputed
         self.load_current_config(**CONFIGS)
 
-    def return_ranges(self) -> dict[str, List[Special]]:
+    def return_ranges(self) -> dict[str, list[Special]]:
         """Similar to `display_ranges()`, except return as a key-value pair.
         
         This is primarily used in the rendering of the scroll menus in the
@@ -133,44 +133,44 @@ class IterableSettings:
         self.config: dict[str, ...] = configs[self.subdict_type.value]
 
         if self.subdict_type == SubDictEnum.TRACKER:
-            self.min_time: List[Special] = IterableSettings.register_range(
+            self.min_time: list[Special] = IterableSettings.register_range(
                 1, 24, special_values=["no limit"]
             )
-            self.min_rating: List[int] = IterableSettings.register_range(
+            self.min_rating: list[int] = IterableSettings.register_range(
                 1, self.config['max_rating'] - 1
             )
-            self.max_rating: List[int] = IterableSettings.register_range(
+            self.max_rating: list[int] = IterableSettings.register_range(
                 self.config['min_rating'], 20
             )
-            self.rating_inp_dp: List[int] = IterableSettings.register_range(
+            self.rating_inp_dp: list[int] = IterableSettings.register_range(
                 0, 5
             )
-            self.linewrap_maxcol: List[Special] = (
+            self.linewrap_maxcol: list[Special] = (
                 IterableSettings.register_range(
                     0, 100, 10, ["inf"]
                 )
             )
-            self.date_format: List[str] = [
+            self.date_format: list[str] = [
                 "%Y-%m-%d",
                 "%d-%m-%Y",
                 "%m/%d/%Y",
                 "%d %b %Y",
                 "%d %B %Y",
             ]
-            self.date_format_print: List[str] = [
+            self.date_format_print: list[str] = [
                 "YYYY-MM-DD",
                 "DD-MM-YYYY",
                 "MM/DD/YYYY",
                 "DD Mon YYYY",
                 "DD Month YYYY"
             ]
-            self.clock_format_12: List[bool] = IterableSettings.register_boolean()
-            self.enable_ansi: List[bool] = IterableSettings.register_boolean()
-            self.autofill_json: List[bool] = IterableSettings.register_boolean()
+            self.clock_format_12: list[bool] = IterableSettings.register_boolean()
+            self.enable_ansi: list[bool] = IterableSettings.register_boolean()
+            self.autofill_json: list[bool] = IterableSettings.register_boolean()
             return
         
-        elif self.subdictType == SubDictEnum.GRAPH:
-            self.graph_style: List[str] = [
+        elif self.subdict_type == SubDictEnum.GRAPH:
+            self.graph_style: list[str] = [
                 'Solarize_Light2', '_classic_test_patch', '_mpl-gallery',
                 '_mpl-gallery-nogrid', 'bmh', 'classic', 'dark_background',
                 'fast', 'fivethirtyeight', 'ggplot', 'grayscale',
@@ -183,63 +183,63 @@ class IterableSettings:
                 'seaborn-v0_8-talk', 'seaborn-v0_8-ticks', 'seaborn-v0_8-white',
                 'seaborn-v0_8-whitegrid', 'tableau-colorblind10'
             ]
-            self.graph_show_block: List[bool] = IterableSettings.registerBoolean()
-            self.title_fontsize: List[int] = IterableSettings.registerRange(15, 30)
-            self.title_padding: List[int] = IterableSettings.registerRange(13, 25)
-            self.xlabel_fontsize: List[int] = IterableSettings.registerRange(8, 20)
-            self.ylabel_fontsize: List[int] = IterableSettings.registerRange(8, 20)
-            self.tick_labels_fontsize: List[int] = IterableSettings.registerRange(5, 15)
-            self.graph_date_format: List[str] = [
+            self.graph_show_block: list[bool] = IterableSettings.register_boolean()
+            self.title_fontsize: list[int] = IterableSettings.register_range(15, 30)
+            self.title_padding: list[int] = IterableSettings.register_range(13, 25)
+            self.xlabel_fontsize: list[int] = IterableSettings.register_range(8, 20)
+            self.ylabel_fontsize: list[int] = IterableSettings.register_range(8, 20)
+            self.tick_labels_fontsize: list[int] = IterableSettings.register_range(5, 15)
+            self.graph_date_format: list[str] = [
                 "%Y-%m-%d", "%d-%m-%y", "%m/%d", "%a %b %d", "%d %b %Y"
             ]
-            self.autofmt_xdates: List[bool] = IterableSettings.registerBoolean()
-            self.year_labels_fontsize: List[int] = IterableSettings.registerRange(5, 15)
-            self.year_labels_fontweight: List[str] = ["normal", "bold", "light"]
-            self.line_width: List[int] = IterableSettings.registerRange(1, 10)
-            self.line_color: List[Special] = [
+            self.autofmt_xdates: list[bool] = IterableSettings.register_boolean()
+            self.year_labels_fontsize: list[int] = IterableSettings.register_range(5, 15)
+            self.year_labels_fontweight: list[str] = ["normal", "bold", "light"]
+            self.line_width: list[int] = IterableSettings.register_range(1, 10)
+            self.line_color: list[Special] = [
                 "blue", "red", "green", "black", "orange", "purple", "none"
             ]
-            self.line_style: List[str] = ["-", "--", "-.", ":", "None"]
-            self.marker: List[str] = ["o", "s", "D", "^", "v", "x", "+", "None"]
-            self.marker_size: List[int] = IterableSettings.registerRange(1, 20)
-            self.marker_face_color: List[Special] = [
+            self.line_style: list[str] = ["-", "--", "-.", ":", "None"]
+            self.marker: list[str] = ["o", "s", "D", "^", "v", "x", "+", "None"]
+            self.marker_size: list[int] = IterableSettings.register_range(1, 20)
+            self.marker_face_color: list[Special] = [
                 "blue", "red", "green", "black", "white", "none"
             ]
-            self.marker_edge_width: List[int] = IterableSettings.registerRange(0, 10)
-            self.neutralline_width: List[int] = IterableSettings.registerRange(0, 5)
-            self.neutralline_color: List[str] = ["black", "gray", "red", "blue"]
-            self.neutralline_style: List[str] = ["-", "--", "-.", ":"]
-            self.averageline_width: List[int] = IterableSettings.registerRange(0, 5)
-            self.averageline_color: List[str] = [
+            self.marker_edge_width: list[int] = IterableSettings.register_range(0, 10)
+            self.neutralline_width: list[int] = IterableSettings.register_range(0, 5)
+            self.neutralline_color: list[str] = ["black", "gray", "red", "blue"]
+            self.neutralline_style: list[str] = ["-", "--", "-.", ":"]
+            self.averageline_width: list[int] = IterableSettings.register_range(0, 5)
+            self.averageline_color: list[str] = [
                 "red", "blue", "black", "green"
             ]
-            self.averageline_style: List[str] = ["-", "--", "-.", ":"]
-            self.highest_rating_point_size: List[int] = IterableSettings.registerRange(5, 50)
-            self.highest_rating_point_color: List[Special] = [
+            self.averageline_style: list[str] = ["-", "--", "-.", ":"]
+            self.highest_rating_point_size: list[int] = IterableSettings.register_range(5, 50)
+            self.highest_rating_point_color: list[Special] = [
                 "green", "gold", "blue", "none"
             ]
-            self.lowest_rating_point_size: List[int] = IterableSettings.registerRange(5, 50)
-            self.lowest_rating_point_color: List[Special] = [
+            self.lowest_rating_point_size: list[int] = IterableSettings.register_range(5, 50)
+            self.lowest_rating_point_color: list[Special] = [
                 "orange", "red", "black", "none"
             ]
-            self.legend_fontsize: List[int] = IterableSettings.registerRange(5, 15)
-            self.legend_loc: List[str] = [
+            self.legend_fontsize: list[int] = IterableSettings.register_range(5, 15)
+            self.legend_loc: list[str] = [
                 "best", "upper right", "upper left", "lower left",
                 "lower right", "center"
             ]
-            self.legend_frameon: List[bool] = IterableSettings.registerBoolean()
+            self.legend_frameon: list[bool] = IterableSettings.register_boolean()
             return
 
     @staticmethod
     def register_range(min_: T,
                        max_: T,
                        step: int = 1,
-                       special_values: List[str] = []) -> List[Special]:
+                       special_values: list[str] = []) -> list[Special]:
         """Create a list from a range, supporting special value inserts.
         
         A static method for standardizing the creation of numeric ranges.
         """
-        cur_list: List[Special] = []
+        cur_list: list[Special] = []
         cur_list.extend(special_values)
         current = min_
         while current <= max_:
@@ -248,7 +248,7 @@ class IterableSettings:
         return cur_list
     
     @staticmethod
-    def register_boolean() -> List[bool]:
+    def register_boolean() -> list[bool]:
         """Standardize list creation.
         
         a static method for standardizing the creation of boolean ranges

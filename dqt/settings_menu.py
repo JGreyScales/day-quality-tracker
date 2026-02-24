@@ -1,6 +1,5 @@
 import sys
 from itertools import cycle
-from typing import List
 
 from dqt.iterable_settings import SubDictEnum, IterableSettings, Special
 from dqt.ui_utils import invalid_choice, menu
@@ -33,7 +32,7 @@ class SettingsMenu:
         # enough where it will update as the class updates and the next
         # return_ranges() call happens.
         settings: dict[
-            str, List[Special]] = self.iterable_object.return_ranges()
+            str, list[Special]] = self.iterable_object.return_ranges()
         current_yindex: int = 0
         current_xindex: int = 0
         keys = list(settings.keys())
@@ -112,7 +111,7 @@ class SettingsMenu:
                     )
                     
                     # Fetch the newest version of the config
-                    settings: dict[str, List[Special]] = (
+                    settings: dict[str, list[Special]] = (
                         self.iterable_object.return_ranges()
                     )
     
