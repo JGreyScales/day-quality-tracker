@@ -1,0 +1,183 @@
+{
+  "tracker": {
+    "min_time": {
+      "value": 20,
+      "ranges": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, "no limit"]
+    },
+    "min_rating": {
+      "value": 1,
+      "ranges": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    },
+    "max_rating": {
+      "value": 20,
+      "ranges": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    },
+    "rating_inp_dp": {
+      "value": 2,
+      "ranges": [0, 1, 2, 3, 4, 5]
+    },
+    "linewrap_maxcol": {
+      "value": 70,
+      "ranges": [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, "inf"]
+    },
+    "date_format": {
+      "value": "%Y-%m-%d",
+      "ranges": ["%Y-%m-%d", "%d-%m-%Y", "%m/%d/%Y", "%d %b %Y", "%d %B %Y"]
+    },
+    "date_format_print": {
+      "value": "YYYY-MM-DD",
+      "ranges": ["YYYY-MM-DD", "DD-MM-YYYY", "MM/DD/YYYY", "DD Mon YYYY", "DD Month YYYY"]
+    },
+    "clock_format_12": {
+      "value": true,
+      "ranges": [true, false]
+    },
+    "enable_ansi": {
+      "value": null,
+      "ranges": [true, false]
+    },
+    "autofill_json": {
+      "value": true,
+      "ranges": [true, false]
+    }
+  },
+  "graph": {
+    "graph_style": {
+      "value": "ggplot",
+      "ranges": [
+        "Solarize_Light2", "_classic_test_patch", "_mpl-gallery", "_mpl-gallery-nogrid", 
+        "bmh", "classic", "dark_background", "fast", "fivethirtyeight", "ggplot", 
+        "grayscale", "seaborn-v0_8", "seaborn-v0_8-bright", "seaborn-v0_8-colorblind", 
+        "seaborn-v0_8-dark", "seaborn-v0_8-dark-palette", "seaborn-v0_8-darkgrid", 
+        "seaborn-v0_8-deep", "seaborn-v0_8-muted", "seaborn-v0_8-notebook", 
+        "seaborn-v0_8-paper", "seaborn-v0_8-pastel", "seaborn-v0_8-poster", 
+        "seaborn-v0_8-talk", "seaborn-v0_8-ticks", "seaborn-v0_8-white", 
+        "seaborn-v0_8-whitegrid", "tableau-colorblind10"
+      ]
+    },
+    "graph_show_block": {
+      "value": true,
+      "ranges": [true, false]
+    },
+    "title": {
+      "value": "Day Quality Ratings",
+      "ranges": null
+    },
+    "title_fontsize": {
+      "value": 20,
+      "ranges": [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+    },
+    "title_padding": {
+      "value": 18,
+      "ranges": [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+    },
+    "xlabel_fontsize": {
+      "value": 14,
+      "ranges": [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    },
+    "ylabel_fontsize": {
+      "value": 14,
+      "ranges": [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    },
+    "tick_labels_fontsize": {
+      "value": 7,
+      "ranges": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    },
+    "graph_date_format": {
+      "value": "%a %b %d",
+      "ranges": ["%Y-%m-%d", "%d-%m-%y", "%m/%d", "%a %b %d", "%d %b %Y"]
+    },
+    "autofmt_xdates": {
+      "value": true,
+      "ranges": [true, false]
+    },
+    "year_labels_fontsize": {
+      "value": 9,
+      "ranges": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    },
+    "year_labels_fontweight": {
+      "value": "bold",
+      "ranges": ["normal", "bold", "light"]
+    },
+    "line_width": {
+      "value": 2,
+      "ranges": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    },
+    "line_color": {
+      "value": null,
+      "ranges": ["blue", "red", "green", "black", "orange", "purple", "none"]
+    },
+    "line_style": {
+      "value": "-",
+      "ranges": ["-", "--", "-.", ":", "None"]
+    },
+    "marker": {
+      "value": "o",
+      "ranges": ["o", "s", "D", "^", "v", "x", "+", "None"]
+    },
+    "marker_size": {
+      "value": 4,
+      "ranges": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    },
+    "marker_face_color": {
+      "value": null,
+      "ranges": ["blue", "red", "green", "black", "white", "none"]
+    },
+    "marker_edge_width": {
+      "value": 0,
+      "ranges": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    },
+    "neutralline_width": {
+      "value": 1,
+      "ranges": [0, 1, 2, 3, 4, 5]
+    },
+    "neutralline_color": {
+      "value": "black",
+      "ranges": ["black", "gray", "red", "blue"]
+    },
+    "neutralline_style": {
+      "value": "--",
+      "ranges": ["-", "--", "-.", ":"]
+    },
+    "averageline_width": {
+      "value": 1,
+      "ranges": [0, 1, 2, 3, 4, 5]
+    },
+    "averageline_color": {
+      "value": "red",
+      "ranges": ["red", "blue", "black", "green"]
+    },
+    "averageline_style": {
+      "value": "-.",
+      "ranges": ["-", "--", "-.", ":"]
+    },
+    "highest_rating_point_size": {
+      "value": 20,
+      "ranges": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50]
+    },
+    "highest_rating_point_color": {
+      "value": "green",
+      "ranges": ["green", "gold", "blue", "none"]
+    },
+    "lowest_rating_point_size": {
+      "value": 20,
+      "ranges": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50]
+    },
+    "lowest_rating_point_color": {
+      "value": "orange",
+      "ranges": ["orange", "red", "black", "none"]
+    },
+    "legend_fontsize": {
+      "value": 8,
+      "ranges": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    },
+    "legend_loc": {
+      "value": "upper right",
+      "ranges": ["best", "upper right", "upper left", "lower left", "lower right", "center"]
+    },
+    "legend_frameon": {
+      "value": true,
+      "ranges": [true, false]
+    }
+  }
+}
