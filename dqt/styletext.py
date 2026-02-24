@@ -2,12 +2,6 @@ import os
 import sys
 
 
-def clear_console():
-    # ECMA-48 ansi escape sequence which the terminal will interpret as a
-    # full clear command
-    print("\033c", end="")
-
-
 def _detect_ansi_support() -> bool:
     """Determine if ANSI escape codes in stdout are supported."""
     # 1) Explicit override

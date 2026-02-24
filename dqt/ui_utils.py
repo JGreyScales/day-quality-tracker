@@ -62,4 +62,12 @@ def print_wrapped(text: str, maxcol: int):
 
     wrapped = textwrap.fill(stripped, maxcol)
     print("\n" * leading_newlines + wrapped)
-    
+
+
+def clear_console() -> None:
+    """
+    ECMA-48 ansi escape sequence which the terminal will interpret as a
+    full clear command
+    """
+    print("\033c")
+    return
