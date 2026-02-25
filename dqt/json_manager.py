@@ -18,7 +18,7 @@ class JsonManager:
     json_indent: Final[int] = 4
 
     @staticmethod
-    def __serialize_config(data: Any, indent: int = 2, level: int = 0) -> str:
+    def _serialize_config(data: Any, indent: int = 2, level: int = 0) -> str:
         """Recursively format dicts vertically and lists horizontally.
 
         Args:
@@ -36,7 +36,7 @@ class JsonManager:
             items: list[str] = []
             for key, value in data.items():  # type: ignore
                 formatted_key = json.dumps(key)
-                formatted_value = JsonManager.__serialize_config(
+                formatted_value = JsonManager._serialize_config(
                     value, indent, level + 1
                     )
                 items.append(
