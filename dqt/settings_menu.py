@@ -36,7 +36,7 @@ class SettingsMenu:
         self.display_option_list()
 
     @staticmethod
-    def __get_best_input_method() -> ReadMode:
+    def _get_best_input_method() -> ReadMode:
         if not sys.stdin.isatty():
             return ReadMode.input
             
@@ -205,7 +205,7 @@ class SettingsMenu:
             str: The interpreted key name or character.
         """
 
-        if (SettingsMenu.__get_best_input_method() == ReadMode.read_key):
+        if (SettingsMenu._get_best_input_method() == ReadMode.read_key):
             key_mappings: dict[str, str] = {
                 key.DOWN: "DOWN", 
                 key.UP: "UP", 
