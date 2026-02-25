@@ -204,30 +204,30 @@ class SettingsMenu:
 
         if (SettingsMenu._get_best_input_method() == ReadMode.read_key):
             key_mappings: dict[str, str] = {
-                key.DOWN: "DOWN", 
-                key.UP: "UP", 
-                key.RIGHT: "RIGHT", 
-                key.LEFT: "LEFT", 
-                key.ENTER: "ENTER"
+                key.DOWN: 'DOWN', 
+                key.UP: 'UP', 
+                key.RIGHT: 'RIGHT', 
+                key.LEFT: 'LEFT', 
+                key.ENTER: 'ENTER'
                 }
             entered_key: str = readkey()
 
             return key_mappings.get(entered_key, entered_key)
-        # only other option is "input"
+        # only other option is 'input'
         else:
             entered_text: str = input().strip().upper()
             
             input_mappings: dict[str, str] = {
-                "UP": "UP",
-                "W": "UP",
-                "DOWN": "DOWN",
-                "S": "DOWN",
-                "LEFT": "LEFT",
-                "A": "LEFT",
-                "RIGHT": "RIGHT",
-                "D": "RIGHT",
-                "ENTER": "ENTER",
-                "": "ENTER" # Allows just pressing Enter to count as "ENTER"
+                'UP': 'UP',
+                'W': 'UP',
+                'DOWN': 'DOWN',
+                'S': 'DOWN',
+                'LEFT': 'LEFT',
+                'A': 'LEFT',
+                'RIGHT': 'RIGHT',
+                'D': 'RIGHT',
+                'ENTER': 'ENTER',
+                '': 'ENTER'  # Allows just pressing Enter to count as 'ENTER'
             }
 
             return input_mappings.get(entered_text, entered_text.lower())
