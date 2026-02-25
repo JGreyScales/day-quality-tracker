@@ -70,7 +70,7 @@ class SettingsMenu:
             chosen_values: Any = values[current_yindex]
             # Slicing for the infinite loop display effect
             cycled_values: cycle[Any] | None = None
-            if (chosen_values is not None):
+            if chosen_values is not None:
                 cycled_values = cycle(
                     chosen_values[current_xindex - 2:]
                     + chosen_values[:current_xindex - 2]

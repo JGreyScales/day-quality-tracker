@@ -204,7 +204,7 @@ class Graph:
             TypeError: Incorrect type
         """
 
-        if SettingsManager.settings is None:
+        if not SettingsManager.settings:
             print("JSON manager has not been loaded, cannot configure graph")
             return
         
