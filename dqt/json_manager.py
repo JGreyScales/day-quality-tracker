@@ -59,7 +59,7 @@ class JsonManager:
             return False
 
         with open(MagicNums.SETTINGS_FILE, 'w') as file:
-            file.write(JsonManager.__serialize_config(JsonManager.settings))
+            file.write(JsonManager._serialize_config(JsonManager.settings))
         return True
 
     @staticmethod
