@@ -78,7 +78,7 @@ class SettingsManager:
             return False
 
     @staticmethod
-    def get_range_with_key(subdict: SubDictEnum, key: str) -> list[Any]:
+    def get_range_with_key(subdict: SubDictEnum, setting_name: str) -> list[Any]:
         """Retrieve the ranges list for a specific subdict and key.
 
         Args:
@@ -95,7 +95,7 @@ class SettingsManager:
             return settings_range
 
         try:
-            settings_range = SettingsManager.settings[subdict.value][key]['ranges']
+            settings_range = SettingsManager.settings[subdict.value][setting_name]['ranges']
         except KeyError:
             print(
                 "The subdict key combo does not exist, cannot retrieve range."
@@ -118,17 +118,17 @@ class SettingsManager:
             return []
 
         return [
-            (key, data['ranges'])
-            for key, data in SettingsManager.settings[subdict.value].items()
+            (setting_name, data['ranges'])
+            for setting_name, data in SettingsManager.settings[subdict.value].items()
         ]
 
     @staticmethod
-    def get_value(subdict: SubDictEnum, key: str) -> Any | None:
+    def get_value(subdict: SubDictEnum, setting_name: str) -> Any | None:
         """Retrieve a specific value from the settings option.
 
         Args:
             subdict: The SubDictEnum category.
-            key: The setting key.
+            setting_name: The setting key.
 
         Returns:
             Any | None: The stored value or None if not found.
@@ -140,7 +140,7 @@ class SettingsManager:
             return value
 
         try:
-            value = SettingsManager.settings[subdict.value][key]['value']
+            value = SettingsManager.settings[subdict.value][setting_name]['value']
         except KeyError:
             print(
                 "The given subdict key combo does not exist, cannot retrieve "
@@ -150,20 +150,20 @@ class SettingsManager:
         return value
 
     @staticmethod
-    def set_value(subdict: SubDictEnum, key: str, value: Any) -> None:
+    def set_value(subdict: SubDictEnum, setting_name: str, new_value: Any) -> None:
         """Set a specific value in the settings option.
 
         Args:
             subdict (SubDictEnum): The SubDictEnum category.
-            key (str): The setting key.
-            value (Any): The value to store.
+            setting_name (str): The setting key.
+            new_value (Any): The value to store.
         """
         if SettingsManager.settings is None:
             print("JSON is not loaded, no range to retrieve.")
             return
 
         try:
-            SettingsManager.settings[subdict.value][key]['value'] = value
+            SettingsManager.settings[subdict.value][setting_name]['value'] = new_value
         except KeyError:
             print(
                 "The given subdict key combo does not exist, "
