@@ -1,29 +1,30 @@
 """Run this module to start Day Quality Tracker."""
+
 if __name__ == '__main__':
     try:
         try:
             import sys
             import traceback
             
+            try:
+                from dqt.styletext import StyleText as Txt
+            except ModuleNotFoundError:
+                print("\n*!* —————————————————————————————— *!*")
+                print("\n❌ Error!")
+                print(f"Ensure that module 'styletext' is installed .")
+                sys.exit(1)
+            
             from dqt.tracker import Tracker
             from dqt.styletext import StyleText as Txt
             from dqt.json_manager import JsonManager
         except ModuleNotFoundError as e:
-            try:
-                from dqt.styletext import StyleText as Txt
-                print("\n*!* —————————————————————————————— *!*")
-                print(Txt("\n❌ Error!").bold().red())
-                print(f"{e}.")
-                print(f"Ensure that module '{e.name}' exists in the current "
-                      "working directory.")
-            except ModuleNotFoundError as e:
-                print("\n*!* —————————————————————————————— *!*")
-                print("\n❌ Error!")
-                print(f"{e}.")
-                print(f"Ensure that module '{e.name}' exists in the current "
-                      "working directory.")
-            finally:
-                sys.exit(1)
+            from dqt.styletext import StyleText as Txt
+            print("\n*!* —————————————————————————————— *!*")
+            print(Txt("\n❌ Error!").bold().red())
+            print(f"{e}.")
+            print(f"Ensure that module '{e.name}' exists in the current "
+                  "working directory.")
+            sys.exit(1)
         
         dqt: Tracker = Tracker()
         
@@ -36,21 +37,20 @@ if __name__ == '__main__':
     
             dqt.configure()
             dqt.graph.configure()
-            print("Settings loaded")
+            print("Settings loaded successfully.")
         
         except ValueError as e:
             print("\n*!* —————————————————————————————— *!*")
             print(Txt("\n❌ Error!").bold().red())
             print(f"{e}.")
-            print("Ensure that you have passed valid settings option keys in "
+            print("Ensure that you have passed valid configuration keys in "
                   "`settings.json`.")
             sys.exit(1)
         except FileNotFoundError as e:
             print("\n*!* —————————————————————————————— *!*")
             print(Txt("\n❌ Error!").bold().red())
             print(f"{e}.")
-            print("Ensure that you have passed valid settings option keys in "
-                  "`settings.json`.")
+            print("Ensure that `settings.json` exists in the directory.")
             sys.exit(1)            
    
         try:
@@ -63,17 +63,10 @@ if __name__ == '__main__':
             print(Txt("Success!").bold().green())
             sys.exit()
     except Exception:
-        try:
-            from dqt.styletext import StyleText as Txt
-            print("\n*!* —————————————————————————————— *!*")
-            print(Txt("\n❌ Error!").bold().red())
-            print("An unexpected error occurred...")
-            traceback.print_exc()
-        except ModuleNotFoundError as e:
-            print("\n*!* —————————————————————————————— *!*")
-            print("\n❌ Error!")
-            print("An unexpected error occurred...")
-            traceback.print_exc()
-        finally:
-            sys.exit(1)
+        print("\n*!* —————————————————————————————— *!*")
+        print(Txt("\n❌ Error!").bold().red())
+        print("An unexpected error occurred...")
+        traceback.print_exc()
+
+        sys.exit(1)
     
