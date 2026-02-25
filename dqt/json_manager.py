@@ -36,8 +36,12 @@ class JsonManager:
             items: list[str] = []
             for key, value in data.items():  # type: ignore
                 formatted_key = json.dumps(key)
-                formatted_value = JsonManager.__serialize_config(value, indent, level + 1)
-                items.append(f"{indent_amount}{formatted_key}: {formatted_value}")
+                formatted_value = JsonManager.__serialize_config(
+                    value, indent, level + 1
+                    )
+                items.append(
+                    f"{indent_amount}{formatted_key}: {formatted_value}"
+                    )
 
             return "{\n" + ",\n".join(items) + f"\n{close_indent}" + "}"
 

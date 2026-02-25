@@ -115,10 +115,14 @@ class SettingsMenu:
                             cur_setting_choice: Any = next(cycled_values)
                             if x == horizontal_range // 2:
                                 option_choices += str(
-                                    Txt(str(cur_setting_choice)).blue().bold()
+                                    Txt(
+                                        str(cur_setting_choice)
+                                    ).blue().bold()
                                 )
                             else:
-                                option_choices += str(Txt(str(cur_setting_choice)))
+                                option_choices += str(
+                                    Txt(str(cur_setting_choice))
+                                    )
                             option_choices += ' '
                         print(option_choices + ']')
                     else:
@@ -153,7 +157,8 @@ class SettingsMenu:
                 case _:
                     pass
 
-            ## count the amount of new lines in our output and add four for unaccounted whitespace and lines, add 7 for the vertical range
+            ## count the amount of new lines in our output and add four for 
+            # unaccounted whitespace and lines, add 7 for the vertical range
             clear_console(menu_output.count("\n") + 4 + vertical_range)
 
     @staticmethod
