@@ -63,7 +63,7 @@ from dqt.tracker import Tracker
 from qt.json_manger import Jsonmanger
 
 dqt = Tracker()
-JsonManager.load_json()
+SettingsManager.load_json()
 dqt.configure()
 dqt.run()
 ```

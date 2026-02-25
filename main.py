@@ -16,7 +16,7 @@ if __name__ == '__main__':
             
             from dqt.tracker import Tracker
             from dqt.styletext import StyleText as Txt
-            from dqt.json_manager import JsonManager
+            from dqt.settings_manager import SettingsManager
         except ModuleNotFoundError as e:
             from dqt.styletext import StyleText as Txt
             print("\n*!* —————————————————————————————— *!*")
@@ -30,7 +30,7 @@ if __name__ == '__main__':
         
         try:
             print("Loading settings...")
-            if not JsonManager.load_json():
+            if not SettingsManager.load_json():
                 raise ValueError(
                     "Settings could not be loaded from settings.json."
                 )

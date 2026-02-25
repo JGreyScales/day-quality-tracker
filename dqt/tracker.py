@@ -3,7 +3,7 @@ from typing import Any, Literal
 from types import NoneType
 
 from dqt.dqt_json import DQTJSON
-from dqt.json_manager import JsonManager, SubDictEnum
+from dqt.settings_manager import SettingsManager, SubDictEnum
 from dqt.manager import Manager
 from dqt.graph import Graph
 from dqt.stats import Stats
@@ -260,11 +260,11 @@ class Tracker:
             TypeError: Incorrect type
         """
 
-        if JsonManager.settings is None:
+        if SettingsManager.settings is None:
             print("JSON manager has not been loaded, cannot configure dqt")
             return
         
-        settings: dict[str, dict[str, Any]] = JsonManager.settings
+        settings: dict[str, dict[str, Any]] = SettingsManager.settings
 
         for setting_name, value_dict in settings['tracker'].items():
             if setting_name not in self._SETTING_KEYS:

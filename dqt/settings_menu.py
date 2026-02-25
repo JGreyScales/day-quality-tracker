@@ -5,7 +5,7 @@ from typing import Any
 
 from readchar import readkey, key
 
-from dqt.json_manager import SubDictEnum, JsonManager
+from dqt.settings_manager import SubDictEnum, SettingsManager
 from dqt.ui_utils import invalid_choice, menu, clear_console
 from dqt.styletext import StyleText as Txt
 
@@ -18,7 +18,7 @@ class SettingsMenu:
     """Display and control settings options menu.
 
     This class handles the interactive terminal UI for navigating and
-    modifying settings stored via the JsonManager.
+    modifying settings stored via the SettingsManager.
     """
 
     def __init__(self) -> None:
@@ -51,11 +51,11 @@ class SettingsMenu:
         """Display the settings and fetch user input for navigation.
 
         Both the x (values) and y (keys) directions loop infinitely.
-        The UI highlights the current selection and updates the JsonManager
+        The UI highlights the current selection and updates the SettingsManager
         upon confirmation.
         """
         # Dict is dynamically pulled from the runtime properties of the class.
-        settings: list[tuple[str, list[Any]]] = JsonManager.get_subdict_ranges(
+        settings: list[tuple[str, list[Any]]] = SettingsManager.get_subdict_ranges(
             self.chosen_menu
         )
         
@@ -87,7 +87,7 @@ class SettingsMenu:
 
             menu_output.append(f"\n⚙️ {header_txt} {help_txt}")
 
-            current_val: Any = JsonManager.get_value(
+            current_val: Any = SettingsManager.get_value(
                 self.chosen_menu, keys[current_yindex]
             )
             print(
@@ -146,12 +146,12 @@ class SettingsMenu:
                 case 'RIGHT':
                     current_xindex = (current_xindex + 1) % len(chosen_values)
                 case 'ENTER':
-                    JsonManager.set_value(
+                    SettingsManager.set_value(
                         self.chosen_menu, 
                         keys[current_yindex], 
                         chosen_values[current_xindex]
                     )
-                    if not JsonManager.save_json():
+                    if not SettingsManager.save_json():
                         print("Error saving to json")
                         selecting = False
                 case _:

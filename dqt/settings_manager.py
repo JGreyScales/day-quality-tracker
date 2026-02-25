@@ -12,7 +12,7 @@ class SubDictEnum(Enum):
     NONE_SELECTED = 'none_selected'
 
 
-class JsonManager:
+class SettingsManager:
     """Static manager for handling JSON settings with custom list formatting."""
     settings: dict[str, dict[str, Any]] | None = None
     json_indent: Final[int] = 4
@@ -36,7 +36,7 @@ class JsonManager:
             items: list[str] = []
             for key, value in data.items():  # type: ignore
                 formatted_key = json.dumps(key)
-                formatted_value = JsonManager._serialize_config(
+                formatted_value = SettingsManager._serialize_config(
                     value, indent, level + 1
                     )
                 items.append(
@@ -55,11 +55,11 @@ class JsonManager:
         Returns:
             bool: True if successful, False if settings is None.
         """
-        if JsonManager.settings is None:
+        if SettingsManager.settings is None:
             return False
 
         with open(MagicNums.SETTINGS_FILE, 'w') as file:
-            file.write(JsonManager._serialize_config(JsonManager.settings))
+            file.write(SettingsManager._serialize_config(SettingsManager.settings))
         return True
 
     @staticmethod
@@ -72,7 +72,7 @@ class JsonManager:
         try:
             with open(MagicNums.SETTINGS_FILE, 'r') as file:
                 setting_config: dict[str, dict[str, Any]] = json.load(file)
-            JsonManager.settings = setting_config
+            SettingsManager.settings = setting_config
             return True
         except Exception:
             return False
@@ -90,12 +90,12 @@ class JsonManager:
         """
         settings_range: list[Any] = []
 
-        if JsonManager.settings is None:
+        if SettingsManager.settings is None:
             print("JSON is not loaded, no range to retrieve")
             return settings_range
 
         try:
-            settings_range = JsonManager.settings[subdict.value][key]['ranges']
+            settings_range = SettingsManager.settings[subdict.value][key]['ranges']
         except KeyError:
             print(
                 "The subdict key combo does not exist, cannot retrieve range."
@@ -113,13 +113,13 @@ class JsonManager:
         Returns:
             list[tuple[str, list[Any]]]: List of key-range pairs.
         """
-        if JsonManager.settings is None:
+        if SettingsManager.settings is None:
             print("JSON is not loaded, no range to retrieve.")
             return []
 
         return [
             (key, data['ranges'])
-            for key, data in JsonManager.settings[subdict.value].items()
+            for key, data in SettingsManager.settings[subdict.value].items()
         ]
 
     @staticmethod
@@ -135,12 +135,12 @@ class JsonManager:
         """
         value: Any | None = None
 
-        if JsonManager.settings is None:
+        if SettingsManager.settings is None:
             print("JSON is not loaded, no range to retrieve.")
             return value
 
         try:
-            value = JsonManager.settings[subdict.value][key]['value']
+            value = SettingsManager.settings[subdict.value][key]['value']
         except KeyError:
             print(
                 "The given subdict key combo does not exist, cannot retrieve "
@@ -158,12 +158,12 @@ class JsonManager:
             key (str): The setting key.
             value (Any): The value to store.
         """
-        if JsonManager.settings is None:
+        if SettingsManager.settings is None:
             print("JSON is not loaded, no range to retrieve.")
             return
 
         try:
-            JsonManager.settings[subdict.value][key]['value'] = value
+            SettingsManager.settings[subdict.value][key]['value'] = value
         except KeyError:
             print(
                 "The given subdict key combo does not exist, "
