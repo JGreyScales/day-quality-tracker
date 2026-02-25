@@ -13,21 +13,18 @@ class SubDictEnum(Enum):
 
 
 class JsonManager:
-    """
-    Static manager for handling JSON configuration with custom list formatting.
-    """
+    """Static manager for handling JSON config with custom list formatting."""
     config: dict[str, dict[str, Any]] | None = None
     json_indent: Final[int] = 4
 
     @staticmethod
     def __serialize_config(data: Any, indent: int = 2, level: int = 0) -> str:
-        """
-        Recursively formats dicts vertically and lists horizontally.
+        """Recursively format dicts vertically and lists horizontally.
 
         Args:
-            data: The data to serialize.
-            indent: Spaces per indent level.
-            level: Current recursion depth.
+            data (Any): The data to serialize.
+            indent (int): Spaces per indent level.
+            level (int): Current recursion depth.
 
         Returns:
             str: The custom formatted JSON string.
@@ -49,8 +46,7 @@ class JsonManager:
 
     @staticmethod
     def save_json() -> bool:
-        """
-        Saves the config to the settings file using custom serialization.
+        """Save config to the settings file using custom serialization.
 
         Returns:
             bool: True if successful, False if config is None.
@@ -64,8 +60,7 @@ class JsonManager:
 
     @staticmethod
     def load_json() -> bool:
-        """
-        Loads the configuration from the settings file.
+        """Load the configuration from the settings file.
 
         Returns:
             bool: True if successful, False otherwise.
@@ -80,33 +75,33 @@ class JsonManager:
 
     @staticmethod
     def get_range_with_key(subdict: SubDictEnum, key: str) -> list[Any]:
-        """
-        Retrieves the ranges list for a specific subdict and key.
+        """Retrieve the ranges list for a specific subdict and key.
 
         Args:
-            subdict: The SubDictEnum category.
+            subdict (SubDictEnum): The SubDictEnum category.
             key: The setting key.
 
-        Returns:
+        Returns ():
             list[Any]: The requested ranges.
         """
         range: list[Any] = []
 
         if JsonManager.config is None:
-            print("Json is not loaded, no range to retrieve")
+            print("JSON is not loaded, no range to retrieve")
             return range
 
         try:
             range = JsonManager.config[subdict.value][key]['ranges']
         except KeyError:
-            print("that subdict key combo does not exist, cannot retrieve")
+            print(
+                "The subdict key combo does not exist, cannot retrieve range."
+            )
 
         return range
 
     @staticmethod
     def get_subdict_ranges(subdict: SubDictEnum) -> list[tuple[str, list[Any]]]:
-        """
-        Returns all range values for a given sub-dictionary.
+        """Return all range values for a given sub-dictionary.
 
         Args:
             subdict: The SubDictEnum category.
@@ -115,7 +110,7 @@ class JsonManager:
             list[tuple[str, list[Any]]]: List of key-range pairs.
         """
         if JsonManager.config is None:
-            print("Json is not loaded, no range to retrieve")
+            print("JSON is not loaded, no range to retrieve.")
             return []
 
         return [
@@ -125,8 +120,7 @@ class JsonManager:
 
     @staticmethod
     def get_value(subdict: SubDictEnum, key: str) -> Any | None:
-        """
-        Retrieves a specific value from the configuration.
+        """Retrieve a specific value from the configuration.
 
         Args:
             subdict: The SubDictEnum category.
@@ -138,33 +132,39 @@ class JsonManager:
         value: Any | None = None
 
         if JsonManager.config is None:
-            print("Json is not loaded, no range to retrieve")
+            print("JSON is not loaded, no range to retrieve.")
             return value
 
         try:
             value = JsonManager.config[subdict.value][key]['value']
         except KeyError:
-            print("that subdict key combo does not exist, cannot retrieve")
+            print(
+                "The given subdict key combo does not exist, cannot retrieve "
+                "value."
+            )
 
         return value
 
     @staticmethod
     def set_value(subdict: SubDictEnum, key: str, value: Any) -> None:
-        """
-        Sets a specific value in the configuration.
+        """Set a specific value in the configuration.
 
         Args:
-            subdict: The SubDictEnum category.
-            key: The setting key.
-            value: The value to store.
+            subdict (SubDictEnum): The SubDictEnum category.
+            key (str): The setting key.
+            value (Any): The value to store.
         """
         if JsonManager.config is None:
-            print("Json is not loaded, no range to retrieve")
+            print("JSON is not loaded, no range to retrieve.")
             return
 
         try:
             JsonManager.config[subdict.value][key]['value'] = value
         except KeyError:
-            print("that subdict key combo does not exist, cannot retrieve")
+            print(
+                "The given subdict key combo does not exist, "
+                "could not set value."
+            )
 
         return
+    

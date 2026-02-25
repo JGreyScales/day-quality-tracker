@@ -8,16 +8,14 @@ from dqt.styletext import StyleText as Txt
 
 
 class SettingsMenu:
-    """
-    Display and control configurations menu.
+    """Display and control configurations menu.
 
     This class handles the interactive terminal UI for navigating and
     modifying settings stored via the JsonManager.
     """
 
     def __init__(self) -> None:
-        """
-        Initializes the settings menu and starts the rendering process.
+        """Initialize the settings menu and starts the rendering process.
 
         If SubDictEnum.NONE_SELECTED is returned from the submenu,
         the initialization terminates early.
@@ -31,8 +29,7 @@ class SettingsMenu:
         self.display_option_list()
 
     def display_option_list(self) -> None:
-        """
-        Displays the settings and fetches user input for navigation.
+        """Display the settings and fetch user input for navigation.
 
         Both the x (values) and y (keys) directions loop infinitely.
         The UI highlights the current selection and updates the JsonManager
@@ -72,7 +69,11 @@ class SettingsMenu:
             current_val: Any = JsonManager.get_value(
                 self.chosen_menu, keys[current_yindex]
             )
-            print(f"{Txt(f'Current value of: {keys[current_yindex]} = {current_val}')}")
+            print(
+                Txt(
+                    f'Current value of: {keys[current_yindex]} = {current_val}'
+                )
+            )
 
             # Handling display rotation for keys
             cycled_keys: cycle[str] = cycle(
@@ -120,7 +121,7 @@ class SettingsMenu:
                         keys[current_yindex], 
                         chosen_values[current_xindex]
                     )
-                    if (not JsonManager.save_json()):
+                    if not JsonManager.save_json():
                         print("Error saving to json")
                         selecting = False
                 case _:
@@ -128,8 +129,7 @@ class SettingsMenu:
 
     @staticmethod
     def get_submenu() -> SubDictEnum:
-        """
-        Prompts user to select a settings category submenu.
+        """Prompt user to select a settings category submenu.
 
         Returns:
             SubDictEnum: The selected category or NONE_SELECTED to exit.
@@ -162,10 +162,9 @@ class SettingsMenu:
 
     @staticmethod
     def _getchar() -> str:
-        """
-        Returns a single key press as a string.
+        """Return a single key press as a string.
 
-        Converts hardware-specific codes into standard strings:
+        Convert hardware-specific codes into standard strings:
         'UP', 'DOWN', 'LEFT', 'RIGHT', 'ENTER', or the character pressed.
 
         Returns:
