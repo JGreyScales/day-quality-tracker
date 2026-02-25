@@ -121,6 +121,8 @@ class SettingsMenu:
                                 option_choices += str(Txt(str(cur_setting_choice)))
                             option_choices += ' '
                         print(option_choices + ']')
+                    else:
+                        vertical_range -= 1
                 else:
                     print(f"{Txt(cur_setting).dim()}")
 
