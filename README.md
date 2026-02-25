@@ -32,7 +32,8 @@ Or, to install the latest _stable_ version:
 Before using the program, ensure you have a Python interpreter installed on your
 system **(version 3.12+ required)**.
 
-To start the program, **run `main.py`**, or initialize and run the tracker 
+To start, runthe requirements installation using ```pip install -r requirements.txt``` to get the required packages
+Then, start the program, **run `main.py`**, or initialize and run the tracker 
 manually:
    
 ```python

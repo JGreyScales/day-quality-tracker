@@ -1,11 +1,18 @@
-import sys
+from enum import Enum
+import sys, os
 from itertools import cycle
 from typing import Any
+
+from readchar import readkey, key
 
 from dqt.json_manager import SubDictEnum, JsonManager
 from dqt.ui_utils import invalid_choice, menu, clear_console
 from dqt.styletext import StyleText as Txt
 
+
+class readMode(Enum):
+    input = 'input'
+    read_key = 'readkey'
 
 class SettingsMenu:
     """Display and control configurations menu.
@@ -27,6 +34,18 @@ class SettingsMenu:
             return
 
         self.display_option_list()
+
+    @staticmethod
+    def __get_best_input_method() -> readMode:
+        if not sys.stdin.isatty():
+            return readMode.input
+            
+        # PyCharm sets 'PYCHARM_HOSTED' to '1'
+        if os.environ.get("PYCHARM_HOSTED") == "1":
+            return readMode.input
+            
+        # Otherwise, we are likely in a real terminal
+        return readMode.read_key
 
     def display_option_list(self) -> None:
         """Display the settings and fetch user input for navigation.
@@ -175,40 +194,33 @@ class SettingsMenu:
         Returns:
             str: The interpreted key name or character.
         """
-        if sys.platform.startswith('win'):
-            import msvcrt
-            ch: bytes = msvcrt.getch()
-            if ch in {b'\x00', b'\xe0'}:  # special keys
-                ch2: bytes = msvcrt.getch()
-                arrows_win: dict[bytes, str] = {
-                    b'H': 'UP', b'P': 'DOWN', b'K': 'LEFT', b'M': 'RIGHT'
-                }
-                return arrows_win.get(ch2, '')
-            elif ch == b'\r':
-                return 'ENTER'
-            else:
-                try:
-                    return ch.decode('utf-8')
-                except UnicodeDecodeError:
-                    return ''
 
+        if (SettingsMenu.__get_best_input_method() == readMode.read_key):
+            key_mappings: dict[str, str] = {
+                key.DOWN: "DOWN", 
+                key.UP: "UP", 
+                key.RIGHT: "RIGHT", 
+                key.LEFT: "LEFT", 
+                key.ENTER: "ENTER"
+                }
+            entered_key: str = readkey()
+
+            return key_mappings.get(entered_key, entered_key)
+        # only other option is "input"
         else:
-            # Unix-based systems
-            import tty
-            import termios
-            fd: int | Any = sys.stdin.fileno()
-            old_settings: Any = termios.tcgetattr(fd)  # type: ignore
-            try:
-                tty.setraw(fd)  # type: ignore
-                ch_unix: str | Any = sys.stdin.read(1)  # type: ignore
-                if ch_unix == '\r' or ch_unix == '\n':  # type: ignore
-                    return 'ENTER'
-                if ch_unix == '\x1b':  # ESC sequence for arrows # type: ignore
-                    seq: str | Any = sys.stdin.read(2)  # type: ignore
-                    arrows_other: dict[str, str] = {
-                        '[A': 'UP', '[B': 'DOWN', '[C': 'RIGHT', '[D': 'LEFT'
-                    }
-                    return arrows_other.get(seq, '')
-                return ch_unix  # type: ignore
-            finally:
-                termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)  # type: ignore
+            entered_text: str = input().strip().upper()
+            
+            input_mappings: dict[str, str] = {
+                "UP": "UP",
+                "W": "UP",
+                "DOWN": "DOWN",
+                "S": "DOWN",
+                "LEFT": "LEFT",
+                "A": "LEFT",
+                "RIGHT": "RIGHT",
+                "D": "RIGHT",
+                "ENTER": "ENTER",
+                "": "ENTER" # Allows just pressing Enter to count as "ENTER"
+            }
+
+            return input_mappings.get(entered_text, entered_text)
