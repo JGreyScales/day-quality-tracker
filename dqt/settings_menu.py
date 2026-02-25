@@ -68,10 +68,12 @@ class SettingsMenu:
         while selecting:
             chosen_values: Any = values[current_yindex]
             # Slicing for the infinite loop display effect
-            cycled_values: cycle[Any] = cycle(
-                chosen_values[current_xindex - 2:]
-                + chosen_values[:current_xindex - 2]
-            )
+            cycled_values: cycle[Any] | None = None
+            if (chosen_values is not None):
+                cycled_values = cycle(
+                    chosen_values[current_xindex - 2:]
+                    + chosen_values[:current_xindex - 2]
+                )
 
             menu_output: list[str] = []
             menu_output.append("\n*❖* —————————————————————————————— *❖*")
@@ -108,16 +110,17 @@ class SettingsMenu:
                 if y == vertical_range // 2:
                     print(f"{Txt(cur_setting).green().bold()}")
                     option_choices: str = '['
-                    for x in range(horizontal_range):
-                        cur_setting_choice: Any = next(cycled_values)
-                        if x == horizontal_range // 2:
-                            option_choices += str(
-                                Txt(str(cur_setting_choice)).blue().bold()
-                            )
-                        else:
-                            option_choices += str(Txt(str(cur_setting_choice)))
-                        option_choices += ' '
-                    print(option_choices + ']')
+                    if (cycled_values is not None):
+                        for x in range(horizontal_range):
+                            cur_setting_choice: Any = next(cycled_values)
+                            if x == horizontal_range // 2:
+                                option_choices += str(
+                                    Txt(str(cur_setting_choice)).blue().bold()
+                                )
+                            else:
+                                option_choices += str(Txt(str(cur_setting_choice)))
+                            option_choices += ' '
+                        print(option_choices + ']')
                 else:
                     print(f"{Txt(cur_setting).dim()}")
 

@@ -1,7 +1,7 @@
 {
   "tracker": {
     "min_time": {
-      "value": 8,
+      "value": 20,
       "ranges": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
     },
     "min_rating": {
@@ -9,11 +9,11 @@
       "ranges": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     },
     "max_rating": {
-      "value": 9,
+      "value": 20,
       "ranges": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
     },
     "rating_inp_dp": {
-      "value": 4,
+      "value": 2,
       "ranges": [0, 1, 2, 3, 4, 5]
     },
     "linewrap_maxcol": {
@@ -34,7 +34,7 @@
     },
     "enable_ansi": {
       "value": null,
-      "ranges": [true, false]
+      "ranges": [true, false, null]
     },
     "autofill_json": {
       "value": true,
@@ -96,15 +96,15 @@
     },
     "line_color": {
       "value": null,
-      "ranges": ["blue", "red", "green", "black", "orange", "purple", "none"]
+      "ranges": ["blue", "red", "green", "black", "orange", "purple", null]
     },
     "line_style": {
       "value": "-",
-      "ranges": ["-", "--", "-.", ":", "None"]
+      "ranges": ["-", "--", "-.", ":", null]
     },
     "marker": {
       "value": "o",
-      "ranges": ["o", "s", "D", "^", "v", "x", "+", "None"]
+      "ranges": ["o", "s", "D", "^", "v", "x", "+", null]
     },
     "marker_size": {
       "value": 4,
@@ -112,7 +112,7 @@
     },
     "marker_face_color": {
       "value": null,
-      "ranges": ["blue", "red", "green", "black", "white", "none"]
+      "ranges": ["blue", "red", "green", "black", "white", null]
     },
     "marker_edge_width": {
       "value": 0,
@@ -148,7 +148,7 @@
     },
     "highest_rating_point_color": {
       "value": "green",
-      "ranges": ["green", "gold", "blue", "none"]
+      "ranges": ["green", "gold", "blue", null]
     },
     "lowest_rating_point_size": {
       "value": 20,
@@ -156,7 +156,7 @@
     },
     "lowest_rating_point_color": {
       "value": "orange",
-      "ranges": ["orange", "red", "black", "none"]
+      "ranges": ["orange", "red", "black", null]
     },
     "legend_fontsize": {
       "value": 8,
