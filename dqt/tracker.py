@@ -236,7 +236,7 @@ class Tracker:
                     self.json.backup_json_file()
                 
                 case '7' | 'm':
-                    settings_menu_object = SettingsMenu()
+                    settings_menu_object: SettingsMenu = SettingsMenu()
                     if settings_menu_object.chosen_menu == SubDictEnum.NONE_SELECTED:
                         continue
 
