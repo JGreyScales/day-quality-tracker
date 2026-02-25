@@ -53,18 +53,18 @@ class SettingsMenu:
                 chosen_values[current_xindex - 2:]
                 + chosen_values[:current_xindex - 2]
             )
-            clear_console()
 
-            print("\n*❖* —————————————————————————————— *❖*")
-            header_txt: Txt = Txt(
+            menu_output: list[str] = []
+            menu_output.append("\n*❖* —————————————————————————————— *❖*")
+            header_txt: str = Txt(
                 f"{self.chosen_menu.value.upper()} SETTINGS MENU"
-            ).blue().underline().bold()
+            ).blue().underline().bold().text
             
             help_txt: Txt = Txt(
                 "— arrow keys to navigate menu, enter to confirm, q to exit:"
             ).bold()
 
-            print(f"\n⚙️ {header_txt} {help_txt}")
+            menu_output.append(f"\n⚙️ {header_txt} {help_txt}")
 
             current_val: Any = JsonManager.get_value(
                 self.chosen_menu, keys[current_yindex]
@@ -80,16 +80,18 @@ class SettingsMenu:
                 keys[current_yindex - 3:] + keys[:current_yindex - 3]
             )
 
+            vertical_range: int = 7
+            horizontal_range: int = 5
             # Handling display rendering
-            for y in range(7):
+            for y in range(vertical_range):
                 cur_setting: str = next(cycled_keys)
                 # Highlight the middle element
-                if y == 3:
+                if y == vertical_range // 2:
                     print(f"{Txt(cur_setting).green().bold()}")
                     option_choices: str = '['
-                    for x in range(5):
+                    for x in range(horizontal_range):
                         cur_setting_choice: Any = next(cycled_values)
-                        if x == 2:
+                        if x == horizontal_range // 2:
                             option_choices += str(
                                 Txt(str(cur_setting_choice)).blue().bold()
                             )
@@ -126,6 +128,9 @@ class SettingsMenu:
                         selecting = False
                 case _:
                     pass
+
+            ## count the amount of new lines in our output and add one for the last line, add 7 for the vertical range
+            clear_console(menu_output.count("\n") + 4 + vertical_range)
 
     @staticmethod
     def get_submenu() -> SubDictEnum:

@@ -68,10 +68,22 @@ def print_wrapped(text: str, maxcol: int):
     print("\n" * leading_newlines + wrapped)
 
 
-def clear_console() -> None:
+
+def clear_console(lines_to_move_up: int) -> None:
     """
     ECMA-48 ansi escape sequence which the terminal will interpret as a
     full clear command
     """
-    print("\033c")
+    #https://en.wikipedia.org/wiki/ANSI_escape_code
+    # code 1: CPL, Cursor Lrevious Line
+    # code 2: ED, Erase In Display
+
+    # move the cursor up, so new write will override existing lines
+    # if the old line is longer then the new line, the old line will bleed over 
+    print(f"\033[{lines_to_move_up}F")
+
+    # move cursor back to the end and erase in display
+    # by default if n is missing it will go to the end of the screen
+
+    print(f"\033[J")
     return
