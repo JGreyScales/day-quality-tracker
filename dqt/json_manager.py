@@ -88,20 +88,20 @@ class JsonManager:
         Returns ():
             list[Any]: The requested ranges.
         """
-        range: list[Any] = []
+        settings_range: list[Any] = []
 
         if JsonManager.settings is None:
             print("JSON is not loaded, no range to retrieve")
-            return range
+            return settings_range
 
         try:
-            range = JsonManager.settings[subdict.value][key]['ranges']
+            settings_range = JsonManager.settings[subdict.value][key]['ranges']
         except KeyError:
             print(
                 "The subdict key combo does not exist, cannot retrieve range."
             )
 
-        return range
+        return settings_range
 
     @staticmethod
     def get_subdict_ranges(subdict: SubDictEnum) -> list[tuple[str, list[Any]]]:
