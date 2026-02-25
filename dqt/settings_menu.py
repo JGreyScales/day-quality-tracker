@@ -120,7 +120,9 @@ class SettingsMenu:
                         keys[current_yindex], 
                         chosen_values[current_xindex]
                     )
-                    JsonManager.save_json()
+                    if (not JsonManager.save_json()):
+                        print("Error saving to json")
+                        selecting = False
                 case _:
                     pass
 
