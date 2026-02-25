@@ -75,8 +75,9 @@ class SettingsMenu:
                     + chosen_values[:current_xindex - 2]
                 )
 
-            menu_output: list[str] = []
-            menu_output.append("\n*❖* —————————————————————————————— *❖*")
+            menu_output: list[str] = [
+                "\n*❖* —————————————————————————————— *❖*"
+            ]
             header_txt: str = Txt(
                 f"{self.chosen_menu.value.upper()} SETTINGS MENU"
             ).blue().underline().bold().text
