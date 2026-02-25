@@ -60,10 +60,11 @@ Or use `settings.py`:
 
 ```python
 from dqt.tracker import Tracker
-from settings import CONFIGS
- 
+from qt.json_manger import Jsonmanger
+
 dqt = Tracker()
-dqt.configure(*CONFIGS['tracker'])
+JsonManager.load_json()
+dqt.configure()
 dqt.run()
 ```
 
@@ -159,7 +160,7 @@ For example, to set the earliest hour of day a log entry is accepted to
 **10:00 PM**:
 ```python
 # (Simplified)
-CONFIGS: dict[str, dict[str, ...]] = {
+settings: dict[str, dict[str, ...]] = {
     'tracker': {
         'min_time': 22,  # Earliest hour of day a log entry is accepted...
 ```

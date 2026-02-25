@@ -28,15 +28,15 @@ if __name__ == '__main__':
         dqt: Tracker = Tracker()
         
         try:
-            print("Loading configurations...")
+            print("Loading settings...")
             if not JsonManager.load_json():
                 raise ValueError(
-                    "Configurations could not be loaded from settings.json."
+                    "Settings could not be loaded from settings.json."
                 )
     
             dqt.configure()
             dqt.graph.configure()
-            print("Config loaded")
+            print("Settings loaded")
         
         except ValueError as e:
             print("\n*!* —————————————————————————————— *!*")

@@ -21,7 +21,7 @@ class Tracker:
     RELEASE_NUM: int = 5
     SEMVER: str = 'v1.0.0'
     
-    _CONFIG_KEYS: dict[str, type | tuple[type, ...]] = {
+    _SETTING_KEYS: dict[str, type | tuple[type, ...]] = {
         'min_time': int,
         'min_rating': int,
         'max_rating': int,
@@ -260,18 +260,18 @@ class Tracker:
             TypeError: Incorrect type
         """
 
-        if JsonManager.config is None:
+        if JsonManager.settings is None:
             print("JSON manager has not been loaded, cannot configure dqt")
             return
         
-        configs: dict[str, dict[str, Any]] = JsonManager.config
+        settings: dict[str, dict[str, Any]] = JsonManager.settings
 
-        for config_name, value_dict in configs['tracker'].items():
-            if config_name not in self._CONFIG_KEYS:
+        for setting_name, value_dict in settings['tracker'].items():
+            if setting_name not in self._SETTING_KEYS:
                 raise ValueError(
-                    f"Invalid configuration option: '{config_name}'"
+                    f"Invalid configuration option: '{setting_name}'"
                 )
-            expected = self._CONFIG_KEYS[config_name]
+            expected = self._SETTING_KEYS[setting_name]
             value = value_dict['value']
             if not isinstance(value, expected):
                 expected_name = (
@@ -281,6 +281,6 @@ class Tracker:
                 )
                 raise TypeError(
                     f"Expected {expected_name} for configuration "
-                    f"'{config_name}', got {type(value).__name__} instead"
+                    f"'{setting_name}', got {type(value).__name__} instead"
                 )
-            setattr(self, config_name, value)
+            setattr(self, setting_name, value)

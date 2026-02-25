@@ -41,7 +41,7 @@ if TYPE_CHECKING:
 class Graph:
     """A class to manage graph plotting for day_quality_tracker."""
     
-    _CONFIG_KEYS: dict[str, type | tuple[type, ...]] = {
+    _SETTING_KEYS: dict[str, type | tuple[type, ...]] = {
         'graph_style': (str, NoneType),
         'graph_show_block': bool,
         'title': str,
@@ -204,18 +204,18 @@ class Graph:
             TypeError: Incorrect type
         """
 
-        if JsonManager.config is None:
+        if JsonManager.settings is None:
             print("JSON manager has not been loaded, cannot configure graph")
             return
         
-        configs: dict[str, dict[str, Any]] = JsonManager.config
+        settings: dict[str, dict[str, Any]] = JsonManager.settings
 
-        for config_name, value_dict in configs['graph'].items():
-            if config_name not in self._CONFIG_KEYS:
+        for setting_name, value_dict in settings['graph'].items():
+            if setting_name not in self._SETTING_KEYS:
                 raise ValueError(
-                    f"Invalid configuration option: '{config_name}'"
+                    f"Invalid configuration option: '{setting_name}'"
                 )
-            expected = self._CONFIG_KEYS[config_name]
+            expected = self._SETTING_KEYS[setting_name]
             value = value_dict['value']
             if not isinstance(value, expected):
                 expected_name = (
@@ -225,9 +225,9 @@ class Graph:
                 )
                 raise TypeError(
                     f"Expected {expected_name} for configuration "
-                    f"'{config_name}', got {type(value).__name__} instead"
+                    f"'{setting_name}', got {type(value).__name__} instead"
                 )
-            setattr(self, config_name, value)
+            setattr(self, setting_name, value)
         
     def _fill_missing(self, dates: list[datetime]) \
             -> tuple[list[datetime], list[float | None]]:
