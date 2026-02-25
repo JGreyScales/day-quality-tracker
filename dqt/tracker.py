@@ -3,7 +3,7 @@ from typing import Any, Literal
 from types import NoneType
 
 from dqt.dqt_json import DQTJSON
-from dqt.json_manager import JsonManager
+from dqt.json_manager import JsonManager, SubDictEnum
 from dqt.manager import Manager
 from dqt.graph import Graph
 from dqt.stats import Stats
@@ -236,8 +236,8 @@ class Tracker:
                     self.json.backup_json_file()
                 
                 case '7' | 'm':
-                    settings_menu_object = SettingsMenu()
-                    if not settings_menu_object.chosen_menu:
+                    settings_menu_object: SettingsMenu = SettingsMenu()
+                    if settings_menu_object.chosen_menu == SubDictEnum.NONE_SELECTED:
                         continue
 
                     self.configure()
