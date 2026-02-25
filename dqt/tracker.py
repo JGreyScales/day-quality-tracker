@@ -237,7 +237,8 @@ class Tracker:
                 
                 case '7' | 'm':
                     settings_menu_object: SettingsMenu = SettingsMenu()
-                    if settings_menu_object.chosen_menu == SubDictEnum.NONE_SELECTED:
+                    if (settings_menu_object.chosen_menu
+                            == SubDictEnum.NONE_SELECTED):
                         continue
 
                     self.configure()

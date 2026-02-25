@@ -10,3 +10,4 @@ class MagicNums:
         SETTINGS_FILE: The relative path to the settings option JSON file.
     """
     SETTINGS_FILE: Final[str] = "settings.json"
+    

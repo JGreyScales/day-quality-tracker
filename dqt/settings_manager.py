@@ -39,10 +39,10 @@ class SettingsManager:
                 formatted_key = json.dumps(key)
                 formatted_value = SettingsManager._serialize_config(
                     value, indent, level + 1
-                    )
+                )
                 items.append(
                     f"{indent_amount}{formatted_key}: {formatted_value}"
-                    )
+                )
 
             return "{\n" + ",\n".join(items) + f"\n{close_indent}" + "}"
 

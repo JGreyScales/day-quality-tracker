@@ -15,6 +15,7 @@ class ReadMode(Enum):
     input = 'input'
     read_key = 'readkey'
 
+
 class SettingsMenu:
     """Display and control settings options menu.
 
@@ -112,7 +113,7 @@ class SettingsMenu:
                 if y == vertical_range // 2:
                     print(f"{Txt(cur_setting).green().bold()}")
                     option_choices: str = '['
-                    if (cycled_values is not None):
+                    if cycled_values is not None:
                         for x in range(horizontal_range):
                             cur_setting_choice: Any = next(cycled_values)
                             if x == horizontal_range // 2:
@@ -192,6 +193,7 @@ class SettingsMenu:
                 case _:
                     invalid_choice(opts)
                     continue
+        return SubDictEnum.NONE_SELECTED
         
     @staticmethod
     def _getchar() -> str:
@@ -204,7 +206,7 @@ class SettingsMenu:
             str: The interpreted key name or character.
         """
 
-        if (SettingsMenu._get_best_input_method() == ReadMode.read_key):
+        if SettingsMenu._get_best_input_method() == ReadMode.read_key:
             key_mappings: dict[str, str] = {
                 key.DOWN: 'DOWN', 
                 key.UP: 'UP', 
@@ -233,3 +235,4 @@ class SettingsMenu:
             }
 
             return input_mappings.get(entered_text, entered_text.lower())
+        

@@ -75,8 +75,8 @@ def clear_console(lines_to_move_up: int) -> None:
     full clear command.
     """
     # https://en.wikipedia.org/wiki/ANSI_escape_code
-    # code 1: CPL, Cursor previous Line
-    # code 2: ED, Erase In Display
+    # Code 1: CPL, Cursor previous Line
+    # Code 2: ED, Erase In Display
 
     # Move the cursor up, so new write will override existing lines.
     # If the old line is longer then the new line, the old line will bleed over.

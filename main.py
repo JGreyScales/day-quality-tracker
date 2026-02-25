@@ -11,7 +11,7 @@ if __name__ == '__main__':
             except ModuleNotFoundError:
                 print("\n*!* —————————————————————————————— *!*")
                 print("\n❌ Error!")
-                print(f"Ensure that module 'styletext' is installed .")
+                print(f"Ensure that module 'styletext' is installed.")
                 sys.exit(1)
             
             from dqt.tracker import Tracker
