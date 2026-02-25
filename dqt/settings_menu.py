@@ -56,8 +56,8 @@ class SettingsMenu:
         upon confirmation.
         """
         # Dict is dynamically pulled from the runtime properties of the class.
-        settings: list[tuple[str, list[Any]]] = SettingsManager.get_subdict_ranges(
-            self.chosen_menu
+        settings: list[tuple[str, list[Any]]] = (
+            SettingsManager.get_subdict_ranges(self.chosen_menu)
         )
         
         current_yindex: int = 0
