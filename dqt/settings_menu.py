@@ -10,7 +10,7 @@ from dqt.ui_utils import invalid_choice, menu, clear_console
 from dqt.styletext import StyleText as Txt
 
 
-class readMode(Enum):
+class ReadMode(Enum):
     input = 'input'
     read_key = 'readkey'
 
@@ -36,16 +36,16 @@ class SettingsMenu:
         self.display_option_list()
 
     @staticmethod
-    def __get_best_input_method() -> readMode:
+    def __get_best_input_method() -> ReadMode:
         if not sys.stdin.isatty():
-            return readMode.input
+            return ReadMode.input
             
         # PyCharm sets 'PYCHARM_HOSTED' to '1'
         if os.environ.get("PYCHARM_HOSTED") == "1":
-            return readMode.input
+            return ReadMode.input
             
         # Otherwise, we are likely in a real terminal
-        return readMode.read_key
+        return ReadMode.read_key
 
     def display_option_list(self) -> None:
         """Display the settings and fetch user input for navigation.
@@ -205,7 +205,7 @@ class SettingsMenu:
             str: The interpreted key name or character.
         """
 
-        if (SettingsMenu.__get_best_input_method() == readMode.read_key):
+        if (SettingsMenu.__get_best_input_method() == ReadMode.read_key):
             key_mappings: dict[str, str] = {
                 key.DOWN: "DOWN", 
                 key.UP: "UP", 
