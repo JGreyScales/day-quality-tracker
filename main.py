@@ -15,27 +15,28 @@ if __name__ == '__main__':
                 print(Txt("\n❌ Error!").bold().red())
                 print(f"{e}.")
                 print(f"Ensure that module '{e.name}' exists in the current "
-                    f"working directory.")
+                      "working directory.")
             except ModuleNotFoundError as e:
                 print("\n*!* —————————————————————————————— *!*")
                 print("\n❌ Error!")
                 print(f"{e}.")
                 print(f"Ensure that module '{e.name}' exists in the current "
-                    f"working directory.")
+                      "working directory.")
             finally:
                 sys.exit(1)
         
         dqt: Tracker = Tracker()
         
         try:
-            print("loading config...")
-
-            if (not JsonManager.load_json()):
-                raise FileNotFoundError("Config did not load from settings.json") 
+            print("Loading configurations...")
+            if not JsonManager.load_json():
+                raise ValueError(
+                    "Configurations could not be loaded from settings.json."
+                )
     
             dqt.configure()
             dqt.graph.configure()
-            print("config loaded")
+            print("Config loaded")
         
         except ValueError as e:
             print("\n*!* —————————————————————————————— *!*")
@@ -51,11 +52,9 @@ if __name__ == '__main__':
             print("Ensure that you have passed valid configuration keys in "
                   "`settings.json`.")
             sys.exit(1)            
-
-            
+   
         try:
             dqt.run()
-            
         except KeyboardInterrupt as e:
             print("\n\n*⎋* —————————————————————————————— *⎋*")
             print("\nUser interrupted the program.")
