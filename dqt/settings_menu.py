@@ -1,5 +1,6 @@
 from enum import Enum
-import sys, os
+import sys
+import os
 from itertools import cycle
 from typing import Any
 
