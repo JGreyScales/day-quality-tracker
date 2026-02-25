@@ -46,6 +46,7 @@ Thumbs.db
 *.temp
 
 # Other
-data/dq_logs.json
+data/
+dq_logs.json
 plan.md
 testing.py
