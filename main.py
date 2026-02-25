@@ -28,10 +28,11 @@ if __name__ == '__main__':
         dqt: Tracker = Tracker()
         
         try:
+            print("loading config...")
+
             if (not JsonManager.load_json()):
                 raise FileNotFoundError("Config did not load from settings.json") 
-                            
-            print("loading config...")
+    
             dqt.configure()
             dqt.graph.configure()
             print("config loaded")
