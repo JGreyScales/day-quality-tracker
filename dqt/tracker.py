@@ -252,11 +252,11 @@ class Tracker:
                     invalid_choice(opts)
     
     def configure(self) -> None:
-        """Update configuration options via keyword arguments.
+        """Update settings option options via keyword arguments.
 
         Must be called before `run()`.
         Raises:
-            ValueError: Invalid configuration option
+            ValueError: Invalid settings option option
             TypeError: Incorrect type
         """
 
@@ -269,7 +269,7 @@ class Tracker:
         for setting_name, value_dict in settings['tracker'].items():
             if setting_name not in self._SETTING_KEYS:
                 raise ValueError(
-                    f"Invalid configuration option: '{setting_name}'"
+                    f"Invalid settings option option: '{setting_name}'"
                 )
             expected = self._SETTING_KEYS[setting_name]
             value = value_dict['value']
@@ -280,7 +280,7 @@ class Tracker:
                     else " or ".join(t.__name__ for t in expected)
                 )
                 raise TypeError(
-                    f"Expected {expected_name} for configuration "
+                    f"Expected {expected_name} for settings option "
                     f"'{setting_name}', got {type(value).__name__} instead"
                 )
             setattr(self, setting_name, value)

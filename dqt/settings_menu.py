@@ -15,7 +15,7 @@ class readMode(Enum):
     read_key = 'readkey'
 
 class SettingsMenu:
-    """Display and control configurations menu.
+    """Display and control settings options menu.
 
     This class handles the interactive terminal UI for navigating and
     modifying settings stored via the JsonManager.

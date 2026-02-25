@@ -43,7 +43,7 @@ dqt = Tracker()
 dqt.run()
 ```
 
-To set a configuration manually:
+To set a settings option manually:
 
 ```python
 # Example:
@@ -150,9 +150,10 @@ entry.
 
 ---
 
-### Custom Configurations
+### Custom Settingss
 
-To configure and customize DQT, open `settings.py`. Each configuration comes 
+# TODO update the readme
+To configure and customize DQT, open `settings.json`. Each settings option comes 
 with a description, and to change a settings, simple change the value after the 
 colon.
 

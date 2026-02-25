@@ -6,7 +6,7 @@ from dqt.MAGIC_NUMS import MagicNums
 
 
 class SubDictEnum(Enum):
-    """Store custom configurations subdict keys."""
+    """Store custom settings options subdict keys."""
     TRACKER = 'tracker'
     GRAPH = 'graph'
     NONE_SELECTED = 'none_selected'
@@ -60,7 +60,7 @@ class JsonManager:
 
     @staticmethod
     def load_json() -> bool:
-        """Load the configuration from the settings file.
+        """Load the settings option from the settings file.
 
         Returns:
             bool: True if successful, False otherwise.
@@ -120,7 +120,7 @@ class JsonManager:
 
     @staticmethod
     def get_value(subdict: SubDictEnum, key: str) -> Any | None:
-        """Retrieve a specific value from the configuration.
+        """Retrieve a specific value from the settings option.
 
         Args:
             subdict: The SubDictEnum category.
@@ -147,7 +147,7 @@ class JsonManager:
 
     @staticmethod
     def set_value(subdict: SubDictEnum, key: str, value: Any) -> None:
-        """Set a specific value in the configuration.
+        """Set a specific value in the settings option.
 
         Args:
             subdict (SubDictEnum): The SubDictEnum category.

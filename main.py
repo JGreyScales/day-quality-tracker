@@ -42,14 +42,14 @@ if __name__ == '__main__':
             print("\n*!* —————————————————————————————— *!*")
             print(Txt("\n❌ Error!").bold().red())
             print(f"{e}.")
-            print("Ensure that you have passed valid configuration keys in "
+            print("Ensure that you have passed valid settings option keys in "
                   "`settings.json`.")
             sys.exit(1)
         except FileNotFoundError as e:
             print("\n*!* —————————————————————————————— *!*")
             print(Txt("\n❌ Error!").bold().red())
             print(f"{e}.")
-            print("Ensure that you have passed valid configuration keys in "
+            print("Ensure that you have passed valid settings option keys in "
                   "`settings.json`.")
             sys.exit(1)            
    
