@@ -1,16 +1,15 @@
 from datetime import datetime
-from typing import Literal
+from typing import Any, Literal
 from types import NoneType
 
 from dqt.dqt_json import DQTJSON
+from dqt.json_manager import JsonManager
 from dqt.manager import Manager
 from dqt.graph import Graph
 from dqt.stats import Stats
 from dqt.ui_utils import cont_on_enter, err, invalid_choice, menu
 from dqt.styletext import StyleText as Txt
 from dqt.settings_menu import SettingsMenu
-
-from settings import CONFIGS
 
 _UNSET: object = object()
 _today: datetime = datetime.today()
@@ -27,7 +26,7 @@ class Tracker:
         'min_rating': int,
         'max_rating': int,
         'rating_inp_dp': int,
-        'linewrap_maxcol': (int, Literal['inf']),
+        'linewrap_maxcol': int,
         'date_format': str,
         'date_format_print': str,
         'clock_format_12': bool,
@@ -241,10 +240,8 @@ class Tracker:
                     if not settings_menu_object.chosen_menu:
                         continue
 
-                    # only refresh memory if the tracker was updated
-                    if settings_menu_object.chosen_menu.value == 'tracker':
-                        self.configure(**CONFIGS[
-                            settings_menu_object.chosen_menu.value])
+                    self.configure()
+                    self.graph.configure()
                 
                 case '8' | 'x':
                     print("\n*⎋* —————————————————————————————— *⎋*")
@@ -254,7 +251,7 @@ class Tracker:
                 case _:
                     invalid_choice(opts)
     
-    def configure(self, **configs: int | str | bool | None) -> None:
+    def configure(self) -> None:
         """Update configuration options via keyword arguments.
 
         Must be called before `run()`.
@@ -262,12 +259,20 @@ class Tracker:
             ValueError: Invalid configuration option
             TypeError: Incorrect type
         """
-        for config_name, value in configs.items():
+
+        if JsonManager.config is None:
+            print("JSON manager has not been loaded, cannot configure dqt")
+            return
+        
+        configs: dict[str, dict[str, Any]] = JsonManager.config
+
+        for config_name, value_dict in configs['tracker'].items():
             if config_name not in self._CONFIG_KEYS:
                 raise ValueError(
                     f"Invalid configuration option: '{config_name}'"
                 )
             expected = self._CONFIG_KEYS[config_name]
+            value = value_dict['value']
             if not isinstance(value, expected):
                 expected_name = (
                     expected.__name__

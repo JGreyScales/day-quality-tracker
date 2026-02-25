@@ -2,10 +2,11 @@ import sys
 import math
 from subprocess import check_call
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 from types import NoneType
 
 from dqt.dqt_json import DQTJSON
+from dqt.json_manager import JsonManager
 from dqt.ui_utils import err, confirm
 
 try:
@@ -194,7 +195,7 @@ class Graph:
         """Close the graph."""
         plt.close('all')
         
-    def configure(self, **configs: str | float | int | bool | tuple) -> None:
+    def configure(self) -> None:
         """Update configuration options via keyword arguments.
         
         Must be called before `run()`.
@@ -202,12 +203,20 @@ class Graph:
             ValueError: Invalid configuration option
             TypeError: Incorrect type
         """
-        for config_name, value in configs.items():
+
+        if JsonManager.config is None:
+            print("JSON manager has not been loaded, cannot configure graph")
+            return
+        
+        configs: dict[str, dict[str, Any]] = JsonManager.config
+
+        for config_name, value_dict in configs['graph'].items():
             if config_name not in self._CONFIG_KEYS:
                 raise ValueError(
                     f"Invalid configuration option: '{config_name}'"
                 )
             expected = self._CONFIG_KEYS[config_name]
+            value = value_dict['value']
             if not isinstance(value, expected):
                 expected_name = (
                     expected.__name__
