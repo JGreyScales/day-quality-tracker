@@ -7,7 +7,7 @@ from typing import Any
 from readchar import readkey, key
 
 from dqt.settings_manager import SubDictEnum, SettingsManager
-from dqt.ui_utils import invalid_choice, menu, clear_console
+from dqt.ui_utils import invalid_choice, menu, clear_console, err
 from dqt.styletext import StyleText as Txt
 
 
@@ -154,7 +154,7 @@ class SettingsMenu:
                         chosen_values[current_xindex]
                     )
                     if not SettingsManager.save_json():
-                        print("Error saving to json")
+                        err("Error saving to json")
                         selecting = False
                 case _:
                     pass

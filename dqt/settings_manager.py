@@ -3,6 +3,7 @@ from typing import Any, Final
 import json
 
 from dqt.MAGIC_NUMS import MagicNums
+from dqt.ui_utils import err
 
 
 class SubDictEnum(Enum):
@@ -14,7 +15,7 @@ class SubDictEnum(Enum):
 
 class SettingsManager:
     """Static manager for handling JSON settings with custom list formatting."""
-    settings: dict[str, dict[str, Any]] | None = None
+    settings: dict[str, dict[str, Any]] = {}
     json_indent: Final[int] = 4
 
     @staticmethod
@@ -55,11 +56,13 @@ class SettingsManager:
         Returns:
             bool: True if successful, False if settings is None.
         """
-        if SettingsManager.settings is None:
+        if not SettingsManager.settings:
             return False
 
         with open(MagicNums.SETTINGS_FILE, 'w') as file:
-            file.write(SettingsManager._serialize_config(SettingsManager.settings))
+            file.write(SettingsManager._serialize_config(
+                SettingsManager.settings)
+                )
         return True
 
     @staticmethod
@@ -74,7 +77,8 @@ class SettingsManager:
                 setting_config: dict[str, dict[str, Any]] = json.load(file)
             SettingsManager.settings = setting_config
             return True
-        except Exception:
+        except Exception as e:
+            err(str(e))
             return False
 
     @staticmethod
@@ -90,14 +94,16 @@ class SettingsManager:
         """
         settings_range: list[Any] = []
 
-        if SettingsManager.settings is None:
-            print("JSON is not loaded, no range to retrieve")
+        if not SettingsManager.settings:
+            err("JSON is not loaded, no range to retrieve")
             return settings_range
 
         try:
-            settings_range = SettingsManager.settings[subdict.value][setting_name]['ranges']
+            settings_range = (
+                SettingsManager.settings[subdict.value][setting_name]['ranges']
+            )
         except KeyError:
-            print(
+            err(
                 "The subdict key combo does not exist, cannot retrieve range."
             )
 
@@ -113,13 +119,15 @@ class SettingsManager:
         Returns:
             list[tuple[str, list[Any]]]: List of key-range pairs.
         """
-        if SettingsManager.settings is None:
-            print("JSON is not loaded, no range to retrieve.")
+        if not SettingsManager.settings:
+            err("JSON is not loaded, no range to retrieve.")
             return []
 
         return [
             (setting_name, data['ranges'])
-            for setting_name, data in SettingsManager.settings[subdict.value].items()
+            for setting_name, data in (
+                SettingsManager.settings[subdict.value].items()
+            )
         ]
 
     @staticmethod
@@ -135,14 +143,14 @@ class SettingsManager:
         """
         value: Any | None = None
 
-        if SettingsManager.settings is None:
-            print("JSON is not loaded, no range to retrieve.")
+        if not SettingsManager.settings:
+            err("JSON is not loaded, no range to retrieve.")
             return value
 
         try:
             value = SettingsManager.settings[subdict.value][setting_name]['value']
         except KeyError:
-            print(
+            err(
                 "The given subdict key combo does not exist, cannot retrieve "
                 "value."
             )
@@ -158,14 +166,14 @@ class SettingsManager:
             setting_name (str): The setting key.
             new_value (Any): The value to store.
         """
-        if SettingsManager.settings is None:
-            print("JSON is not loaded, no range to retrieve.")
+        if not SettingsManager.settings:
+            err("JSON is not loaded, no range to retrieve.")
             return
 
         try:
             SettingsManager.settings[subdict.value][setting_name]['value'] = new_value
         except KeyError:
-            print(
+            err(
                 "The given subdict key combo does not exist, "
                 "could not set value."
             )
