@@ -129,7 +129,7 @@ class SettingsMenu:
                 case _:
                     pass
 
-            ## count the amount of new lines in our output and add one for the last line, add 7 for the vertical range
+            ## count the amount of new lines in our output and add four for unaccounted whitespace and lines, add 7 for the vertical range
             clear_console(menu_output.count("\n") + 4 + vertical_range)
 
     @staticmethod
