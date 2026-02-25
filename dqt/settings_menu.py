@@ -171,8 +171,7 @@ class SettingsMenu:
         print("\n*❖* —————————————————————————————— *❖*")
         print(f"\n⚙️ {Txt('SETTINGS MENU').blue().underline().bold()} ")
         
-        selecting: bool = True
-        while selecting:
+        while True:
             opts: int = menu(
                 "1) [T]racker",
                 "2) [G]raph",
@@ -192,8 +191,6 @@ class SettingsMenu:
                     invalid_choice(opts)
                     continue
         
-        return SubDictEnum.NONE_SELECTED
-
     @staticmethod
     def _getchar() -> str:
         """Return a single key press as a string.
