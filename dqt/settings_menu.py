@@ -223,4 +223,4 @@ class SettingsMenu:
                 "": "ENTER" # Allows just pressing Enter to count as "ENTER"
             }
 
-            return input_mappings.get(entered_text, entered_text)
+            return input_mappings.get(entered_text, entered_text.lower())
