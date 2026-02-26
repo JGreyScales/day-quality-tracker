@@ -31,7 +31,7 @@ if __name__ == '__main__':
         try:
             print("Loading settings...")
             if not SettingsManager.load_json():
-                raise ValueError(
+                raise RuntimeError(
                     "Settings could not be loaded from settings.json."
                 )
     
@@ -39,12 +39,11 @@ if __name__ == '__main__':
             dqt.graph.configure()
             print("Settings loaded successfully.")
         
-        except ValueError as e:
+        except RuntimeError as e:
             print("\n*!* —————————————————————————————— *!*")
             print(Txt("\n❌ Error!").bold().red())
             print(f"{e}.")
-            print("Ensure that you have passed valid configuration keys in "
-                  "`settings.json`.")
+            print("Please rerun the program and try again.")
             sys.exit(1)
         except FileNotFoundError as e:
             print("\n*!* —————————————————————————————— *!*")

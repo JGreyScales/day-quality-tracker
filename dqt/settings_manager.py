@@ -80,7 +80,7 @@ class SettingsManager:
             SettingsManager.settings = setting_config
             return True
         except Exception as e:
-            err(str(e))
+            err(repr(e))
             return False
 
     @staticmethod
@@ -107,7 +107,9 @@ class SettingsManager:
             )
         except KeyError:
             err(
-                "The subdict key combo does not exist, cannot retrieve range."
+                "The subdict key combo does not exist, cannot retrieve range.",
+                "Ensure that you have passed valid setting keys in "
+                "`settings.json`."
             )
 
         return settings_range
