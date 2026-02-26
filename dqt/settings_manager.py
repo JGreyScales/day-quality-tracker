@@ -80,7 +80,7 @@ class SettingsManager:
             SettingsManager.settings = setting_config
             return True
         except Exception as e:
-            err(repr(e))
+            err(str(e))
             return False
 
     @staticmethod
