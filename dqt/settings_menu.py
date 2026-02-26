@@ -22,6 +22,7 @@ class SettingsMenu:
     This class handles the interactive terminal UI for navigating and
     modifying settings stored via the SettingsManager.
     """
+    read_mode: ReadMode
 
     def __init__(self) -> None:
         """Initialize the settings menu and starts the rendering process.
@@ -30,6 +31,8 @@ class SettingsMenu:
         the initialization terminates early.
         """
         self.chosen_menu: SubDictEnum = self.get_submenu()
+        self._get_best_input_method()
+        print(self.read_mode)
 
         # If the exit command was invoked, exit the class
         if self.chosen_menu == SubDictEnum.NONE_SELECTED:
@@ -37,17 +40,23 @@ class SettingsMenu:
 
         self.display_option_list()
 
-    @staticmethod
-    def _get_best_input_method() -> ReadMode:
+    def _get_best_input_method(self) -> None:
         if not sys.stdin.isatty():
-            return ReadMode.input
+            self.read_mode = ReadMode.input
+            return
             
+        # If we are in IDLE, we MUST use standard input
+        if 'idlelib' in sys.modules:
+            self.read_mode = ReadMode.input
+            return
+    
         # PyCharm sets 'PYCHARM_HOSTED' to '1'
         if os.environ.get("PYCHARM_HOSTED") == "1":
-            return ReadMode.input
+            self.read_mode = ReadMode.input
+            return
             
         # Otherwise, we are likely in a real terminal
-        return ReadMode.read_key
+        self.read_mode = ReadMode.read_key
 
     def display_option_list(self) -> None:
         """Display the settings and fetch user input for navigation.
@@ -78,26 +87,33 @@ class SettingsMenu:
                 )
 
             menu_output: list[str] = [
-                "\n*❖* —————————————————————————————— *❖*"
+                "*❖* —————————————————————————————— *❖*"
             ]
             header_txt: str = Txt(
                 f"{self.chosen_menu.value.upper()} SETTINGS MENU"
             ).blue().underline().bold().text
             
-            help_txt: Txt = Txt(
-                "— arrow keys to navigate menu, enter to confirm, q to exit:"
-            ).bold()
+            if (self.read_mode == ReadMode.read_key):
+                help_txt: Txt = Txt(
+                    "— arrow keys to navigate menu, enter to confirm, q to exit:"
+                ).bold()
+            else:
+                help_txt: Txt = Txt(
+                    "-- wasd to navigate menu, press enter to submit the interaction, " +
+                    "enter with no previous interaction to confirm, and q + enter to exit"
+                )
 
-            menu_output.append(f"\n⚙️ {header_txt} {help_txt}")
+            menu_output.append(f"⚙️ {header_txt} {help_txt}")
+
 
             current_val: Any = SettingsManager.get_value(
                 self.chosen_menu, keys[current_yindex]
             )
-            print(
-                Txt(
-                    f'Current value of: {keys[current_yindex]} = {current_val}'
+            menu_output.append(
+                f"Current value of: {keys[current_yindex]} = {current_val}"
                 )
-            )
+
+            print('\n'.join(menu_output))
 
             # Handling display rotation for keys
             cycled_keys: cycle[str] = cycle(
@@ -111,15 +127,21 @@ class SettingsMenu:
                 cur_setting: str = next(cycled_keys)
                 # Highlight the middle element
                 if y == vertical_range // 2:
-                    print(f"{Txt(cur_setting).green().bold()}")
+                    setting_choice: str = f"{Txt(cur_setting).green().bold()}"
+                    if (self.read_mode == ReadMode.input):
+                        setting_choice = "[" + setting_choice + "]"
+                    print(setting_choice)
                     option_choices: str = '['
                     if cycled_values is not None:
                         for x in range(horizontal_range):
                             cur_setting_choice: Any = next(cycled_values)
                             if x == horizontal_range // 2:
+                                str_cur_setting_choice = str(cur_setting_choice)
+                                if (self.read_mode == ReadMode.input):
+                                    str_cur_setting_choice = "[" + str_cur_setting_choice + "]"
                                 option_choices += str(
                                     Txt(
-                                        str(cur_setting_choice)
+                                        str(str_cur_setting_choice)
                                     ).blue().bold()
                                 )
                             else:
@@ -134,7 +156,7 @@ class SettingsMenu:
                     print(f"{Txt(cur_setting).dim()}")
 
             # Handling input
-            inputted_char: str = SettingsMenu._getchar()
+            inputted_char: str = self._getchar()
             match inputted_char:
                 case 'q':
                     selecting = False
@@ -162,7 +184,9 @@ class SettingsMenu:
 
             # count the amount of new lines in our output and add four for 
             # unaccounted whitespace and lines, add 7 for the vertical range
-            clear_console(menu_output.count("\n") + 4 + vertical_range)
+            if (self.read_mode == ReadMode.read_key):
+                print('xxx', self.read_mode)
+                clear_console(len(menu_output) + 4 + vertical_range)
 
     @staticmethod
     def get_submenu() -> SubDictEnum:
@@ -195,8 +219,7 @@ class SettingsMenu:
                     continue
         return SubDictEnum.NONE_SELECTED
         
-    @staticmethod
-    def _getchar() -> str:
+    def _getchar(self) -> str:
         """Return a single key press as a string.
 
         Convert hardware-specific codes into standard strings:
@@ -206,7 +229,7 @@ class SettingsMenu:
             str: The interpreted key name or character.
         """
 
-        if SettingsMenu._get_best_input_method() == ReadMode.read_key:
+        if self.read_mode == ReadMode.read_key:
             key_mappings: dict[str, str] = {
                 key.DOWN: 'DOWN', 
                 key.UP: 'UP', 
