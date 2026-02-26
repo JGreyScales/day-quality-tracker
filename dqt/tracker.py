@@ -151,6 +151,10 @@ class Tracker:
                     if self.json.no_logs():
                         err("You haven't entered any logs yet!")
                         continue
+                    if self.json.no_previous_logs():
+                        err("You haven't entered any previous logs yet other "
+                            "than today's!")
+                        continue
                     while True:
                         selected_d = self.manager.prompt_prev_date()
                         print(Txt("\nSelected log:").bold())
