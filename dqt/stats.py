@@ -1,12 +1,14 @@
 from datetime import datetime
 from collections import defaultdict
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, TypeAlias
 
 from dqt.dqt_json import DQTJSON
 from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
     from tracker import Tracker
+else:
+    Tracker: TypeAlias = Any
 
 
 class Stats:

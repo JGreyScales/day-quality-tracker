@@ -1,6 +1,6 @@
 from textwrap import dedent
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeAlias, Any
 
 from dqt.dqt_json import DQTJSON
 from dqt.ui_utils import (
@@ -15,6 +15,8 @@ from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
     from tracker import Tracker
+else:
+    Tracker: TypeAlias = Any
 
 _today: datetime = datetime.today()
 

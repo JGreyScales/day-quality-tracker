@@ -1,11 +1,14 @@
 import textwrap
 from time import sleep
-from typing import TYPE_CHECKING
 
+from typing import TYPE_CHECKING, TypeAlias, Any
 from dqt.styletext import StyleText as Txt
+
 
 if TYPE_CHECKING:
     from dqt.styletext import StyleText
+else:
+    StyleText: TypeAlias = Any
 
 
 def confirm(message: str, confirm_char: str = 'y') -> bool:

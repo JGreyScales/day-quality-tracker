@@ -5,13 +5,15 @@ import shutil
 import subprocess
 from pathlib import Path
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeAlias, Any
 
 from dqt.ui_utils import confirm, cont_on_enter, err, log_saved, print_wrapped
 from dqt.styletext import StyleText as Txt
 
 if TYPE_CHECKING:
     from tracker import Tracker
+else:
+    Tracker: TypeAlias = Any
 
 _UNSET: object = object()
 _today: datetime = datetime.today()

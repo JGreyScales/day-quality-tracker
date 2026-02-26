@@ -2,7 +2,7 @@ import sys
 import math
 from subprocess import check_call
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, TypeAlias
 from types import NoneType
 
 from dqt.dqt_json import DQTJSON
@@ -36,6 +36,8 @@ except ModuleNotFoundError:
 
 if TYPE_CHECKING:
     from dqt.tracker import Tracker
+else:
+    Tracker: TypeAlias = Any
 
 
 class Graph:
