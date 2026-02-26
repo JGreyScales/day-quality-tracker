@@ -60,9 +60,11 @@ class SettingsManager:
             return False
 
         with open(MagicNums.SETTINGS_FILE, 'w') as file:
-            file.write(SettingsManager._serialize_config(
-                SettingsManager.settings)
+            file.write(
+                SettingsManager._serialize_config(
+                    SettingsManager.settings
                 )
+            )
         return True
 
     @staticmethod
@@ -82,12 +84,13 @@ class SettingsManager:
             return False
 
     @staticmethod
-    def get_range_with_key(subdict: SubDictEnum, setting_name: str) -> list[Any]:
+    def get_range_with_key(subdict: SubDictEnum,
+                           setting_name: str) -> list[Any]:
         """Retrieve the ranges list for a specific subdict and key.
 
         Args:
             subdict (SubDictEnum): The SubDictEnum category.
-            key: The setting key.
+            setting_name: The setting key.
 
         Returns ():
             list[Any]: The requested ranges.
@@ -148,7 +151,9 @@ class SettingsManager:
             return value
 
         try:
-            value = SettingsManager.settings[subdict.value][setting_name]['value']
+            value = (
+                SettingsManager.settings
+            )[subdict.value][setting_name]['value']
         except KeyError:
             err(
                 "The given subdict key combo does not exist, cannot retrieve "
