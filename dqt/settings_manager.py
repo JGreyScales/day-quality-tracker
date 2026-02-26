@@ -50,13 +50,20 @@ class SettingsManager:
         return json.dumps(data)
 
     @staticmethod
-    def save_json() -> bool:
+    def save_json(_override: bool = False) -> bool:
         """Save settings to the settings file using custom serialization.
 
         Returns:
             bool: True if successful, False if settings is None.
         """
         if not SettingsManager.settings:
+            if (_override):
+                with open(MagicNums.SETTINGS_FILE, 'w') as file:
+                    file.write(
+                    SettingsManager._serialize_config(
+                        {}
+                    )
+            )
             return False
 
         with open(MagicNums.SETTINGS_FILE, 'w') as file:
@@ -68,7 +75,7 @@ class SettingsManager:
         return True
 
     @staticmethod
-    def load_json() -> bool:
+    def load_json(_depth: int=0) -> bool:
         """Load the settings option from the settings file.
 
         Returns:
@@ -81,7 +88,11 @@ class SettingsManager:
             return True
         except FileNotFoundError:
             # if file cant be found, write a base file
-            SettingsManager.save_json()
+            if (_depth > 0):
+                return False
+            if (SettingsManager.save_json(True)):
+                return SettingsManager.load_json(_depth + 1)
+            return False    
         except Exception as e:
             err(str(e))
             return False
