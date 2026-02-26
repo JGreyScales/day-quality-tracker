@@ -205,7 +205,9 @@ class Graph:
         """
 
         if not SettingsManager.settings:
-            print("JSON manager has not been loaded, cannot configure graph")
+            err(
+                "Settings manager has not been loaded, cannot configure graph"
+            )
             return
         
         settings: dict[str, dict[str, Any]] = SettingsManager.settings

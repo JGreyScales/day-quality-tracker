@@ -22,8 +22,8 @@ if __name__ == '__main__':
             print("\n*!* —————————————————————————————— *!*")
             print(Txt("\n❌ Error!").bold().red())
             print(f"{e}.")
-            print(f"Ensure that module '{e.name}' exists in the current "
-                  "working directory.")
+            print(f"Ensure that module '{e.name}' exists in the current"
+                  " working directory.")
             sys.exit(1)
         
         dqt: Tracker = Tracker()
