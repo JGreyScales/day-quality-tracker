@@ -257,7 +257,7 @@ class Tracker:
 
         Must be called before `run()`.
         Raises:
-            ValueError: Invalid settings option option
+            ValueError: Invalid settings option
             TypeError: Incorrect type
         """
 

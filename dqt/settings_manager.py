@@ -163,7 +163,9 @@ class SettingsManager:
         return value
 
     @staticmethod
-    def set_value(subdict: SubDictEnum, setting_name: str, new_value: Any) -> None:
+    def set_value(subdict: SubDictEnum,
+                  setting_name: str,
+                  new_value: Any) -> None:
         """Set a specific value in the settings option.
 
         Args:
@@ -176,7 +178,8 @@ class SettingsManager:
             return
 
         try:
-            SettingsManager.settings[subdict.value][setting_name]['value'] = new_value
+            SettingsManager.settings[subdict.value][setting_name]['value'] =\
+                new_value
         except KeyError:
             err(
                 "The given subdict key combo does not exist, "
