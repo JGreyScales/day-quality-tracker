@@ -79,6 +79,9 @@ class SettingsManager:
                 setting_config: dict[str, dict[str, Any]] = json.load(file)
             SettingsManager.settings = setting_config
             return True
+        except FileNotFoundError:
+            # if file cant be found, write a base file
+            SettingsManager.save_json()
         except Exception as e:
             err(str(e))
             return False
