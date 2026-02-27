@@ -29,7 +29,7 @@ Any addition to the project will be very much appreciated.
 6. Create a pull request and await review
 
 We will likely need to discuss the changes you make and apply some tweaks 
-and polishing before approval.
+and polishes before approval.
 
 You should receive a notification/email once your changes have been merged 
 onto the main branch of this project.
