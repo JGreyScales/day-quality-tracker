@@ -149,7 +149,9 @@ entry.
 
 ### Custom Configurations
 
-To configure and customize DQT, open `settings.py`. Each configuration comes with a description, and to change a setting, simply change the value after the colon.
+To configure and customize DQT, open `settings.py`. Each configuration comes 
+with a description, and to change a setting, simply change the value after the 
+colon.
 
 For example, to set the earliest hour of day a log entry is accepted to 
 **10:00 PM**:
