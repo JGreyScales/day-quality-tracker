@@ -8,7 +8,7 @@ from functools import lru_cache
 from readchar import readkey, key
 
 from dqt.settings_manager import SubDictEnum, SettingsManager
-from dqt.ui_utils import invalid_choice, menu, clear_console, err
+from dqt.ui_utils import invalid_choice, menu, clear_console, err, partially_clear_console
 from dqt.styletext import StyleText as Txt
 
 
@@ -33,7 +33,6 @@ class SettingsMenu:
         """
         self.chosen_menu: SubDictEnum = self.get_submenu()
         self._get_best_input_method()
-        print(self.read_mode)
 
         # If the exit command was invoked, exit the class
         if self.chosen_menu == SubDictEnum.NONE_SELECTED:
@@ -187,8 +186,10 @@ class SettingsMenu:
             # count the amount of new lines in our output and add four for 
             # unaccounted whitespace and lines, add 7 for the vertical range
             if (self.read_mode == ReadMode.read_key):
-                print('xxx', self.read_mode)
-                clear_console(len(menu_output) + 4 + vertical_range)
+                partially_clear_console(len(menu_output) + 3 + vertical_range)
+            else:
+                clear_console()
+
 
     @staticmethod
     def get_submenu() -> SubDictEnum:

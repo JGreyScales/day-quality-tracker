@@ -71,7 +71,15 @@ def print_wrapped(text: str, maxcol: int):
     print("\n" * leading_newlines + wrapped)
 
 
-def clear_console(lines_to_move_up: int) -> None:
+def clear_console() -> None:
+    """visually blank out the terminal"""
+    # very rough approach, but only valid approach inside the IDLE shell
+    # due to the shell being a GUI app and not a real terminal
+    # lacking most terminal based features
+    print('\n' * 100)
+    
+
+def partially_clear_console(lines_to_move_up: int) -> None:
     """Clear a number of lines in the console.
     
     ECMA-48 ansi escape sequence which the terminal will interpret as a
