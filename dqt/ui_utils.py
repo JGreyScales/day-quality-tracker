@@ -62,7 +62,7 @@ def menu(*options: str | StyleText,
     return len(options)
 
 
-def print_wrapped(text: str, maxcol: int):
+def print_wrapped(text: str, maxcol: int) -> None:
     """Print line-wrapped text with a maximum of `maxcol` chars per line."""
     leading_newlines = len(text) - len(text.lstrip('\n'))
     stripped = text.lstrip('\n')
