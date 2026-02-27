@@ -32,7 +32,9 @@ Or, to install the latest _stable_ version:
 Before using the program, ensure you have a Python interpreter installed on your
 system **(version 3.12+ required)**.
 
-To start, runthe requirements installation using ```pip install -r requirements.txt``` to get the required packages
+To start, run the requirements installation using 
+```pip install -r requirements.txt``` to get the required packages
+
 Then, start the program, **run `main.py`**, or initialize and run the tracker 
 manually:
    
@@ -150,12 +152,12 @@ entry.
 
 ---
 
-### Custom Settingss
+### Custom Settings
 
 # TODO update the readme
-To configure and customize DQT, open `settings.json`. Each settings option comes 
-with a description, and to change a settings, simple change the value after the 
-colon.
+To configure and customize DQT, open `settings.json`. Each settings option 
+comes with a description, and to change a settings, simple change the value 
+after the colon.
 
 For example, to set the earliest hour of day a log entry is accepted to 
 **10:00 PM**:
