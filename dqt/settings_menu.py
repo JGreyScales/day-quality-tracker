@@ -114,7 +114,6 @@ class SettingsMenu:
                 f"Current value of: {keys[current_yindex]} = {current_val}"
                 )
 
-            print('\n'.join(menu_output))
 
             # Handling display rotation for keys
             cycled_keys: cycle[str] = cycle(
@@ -131,7 +130,7 @@ class SettingsMenu:
                     setting_choice: str = f"{Txt(cur_setting).green().bold()}"
                     if (self.read_mode == ReadMode.input):
                         setting_choice = "[" + setting_choice + "]"
-                    print(setting_choice)
+                    menu_output.append(setting_choice)
                     option_choices: str = '['
                     if cycled_values is not None:
                         for x in range(horizontal_range):
@@ -150,11 +149,13 @@ class SettingsMenu:
                                     Txt(str(cur_setting_choice))
                                     )
                             option_choices += ' '
-                        print(option_choices + ']')
+                        menu_output.append(option_choices + ']')
                     else:
                         vertical_range -= 1
                 else:
-                    print(f"{Txt(cur_setting).dim()}")
+                    menu_output.append(f"{Txt(cur_setting).dim()}")
+
+            print('\n'.join(menu_output), end="")
 
             # Handling input
             inputted_char: str = self._getchar()
@@ -186,7 +187,7 @@ class SettingsMenu:
             # count the amount of new lines in our output and add four for 
             # unaccounted whitespace and lines, add 7 for the vertical range
             if (self.read_mode == ReadMode.read_key):
-                partially_clear_console(len(menu_output) + 3 + vertical_range)
+                partially_clear_console(len(menu_output) + 1)
             else:
                 clear_console()
 
