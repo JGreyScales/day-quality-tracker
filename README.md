@@ -110,7 +110,7 @@ To choose the log to edit, the program will prompt you to enter either:
 * The number of days ago the log is for
     * e.g.: yesterday → `1`, last week → `7`
 
-Choose to edit the rating or memory (or both) you entered for that day
+Choose to edit the rating or memory (or both) you entered for that day.
 
 #### See stats
 
@@ -136,8 +136,7 @@ choosing.
 
 ### Missed logs
 
-After the running the program, the program first checks if you've missed any 
-prior logs.
+After running the program, it first checks if you've missed any prior logs.
 
 You may choose to enter the missed logs immediately or skip them for later.
 
@@ -151,7 +150,7 @@ entry.
 ### Custom Configurations
 
 To configure and customize DQT, open `settings.py`. Each configuration comes 
-with a description, and to change a settings, simple change the value after the 
+with a description, and to change a setting, simply change the value after the 
 colon.
 
 For example, to set the earliest hour of day a log entry is accepted to 
