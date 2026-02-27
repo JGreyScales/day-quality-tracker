@@ -530,5 +530,10 @@ class DQTJSON:
             return False
         
         return True
-
+    
+    def no_previous_logs(self) -> bool:
+        """Return whether there are no previous logs (other than today's)."""
+        if len(self.logs) <= 1:
+            return True
+        return False
     
