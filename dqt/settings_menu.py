@@ -3,6 +3,7 @@ import sys
 import os
 from itertools import cycle
 from typing import Any
+from functools import lru_cache
 
 from readchar import readkey, key
 
@@ -40,6 +41,7 @@ class SettingsMenu:
 
         self.display_option_list()
 
+    @lru_cache
     def _get_best_input_method(self) -> None:
         if not sys.stdin.isatty():
             self.read_mode = ReadMode.input

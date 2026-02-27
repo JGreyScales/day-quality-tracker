@@ -1,4 +1,5 @@
 from typing import Final
+from pathlib import Path
 
 
 class MagicNums:
@@ -9,5 +10,8 @@ class MagicNums:
     Attributes:
         SETTINGS_FILE: The relative path to the settings option JSON file.
     """
-    SETTINGS_FILE: Final[str] = "settings.json"
     
+    # this assumes that this magic_nums file is located in a subdir from the
+    # root of the project
+    _ROOT_PATH: Final[Path] = Path(__file__).resolve().parent.parent
+    SETTINGS_FILE: Final[str] = str(_ROOT_PATH / "settings.json")
