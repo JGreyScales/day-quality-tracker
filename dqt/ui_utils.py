@@ -72,10 +72,10 @@ def print_wrapped(text: str, maxcol: int):
 
 
 def clear_console() -> None:
-    """visually blank out the terminal"""
-    # very rough approach, but only valid approach inside the IDLE shell
+    """Visually blank out the terminal."""
+    # Very rough approach, but only valid approach inside the IDLE shell
     # due to the shell being a GUI app and not a real terminal
-    # lacking most terminal based features
+    # lacking most terminal based features.
     print('\n' * 100)
     
 

@@ -60,10 +60,8 @@ class SettingsManager:
             if (_override):
                 with open(MagicNums.SETTINGS_FILE, 'w') as file:
                     file.write(
-                    SettingsManager._serialize_config(
-                        {}
+                        SettingsManager._serialize_config({})
                     )
-            )
             return False
 
         with open(MagicNums.SETTINGS_FILE, 'w') as file:
