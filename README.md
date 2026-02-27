@@ -155,8 +155,8 @@ entry.
 ### Custom Settings
 
 # TODO update the readme
-To configure and customize DQT, open `settings.json`. Each settings option 
-comes with a description, and to change a settings, simple change the value 
+To configure and customize DQT, open `settings.json`. Each setting option 
+comes with a description, and to change a setting, simply change the value 
 after the colon.
 
 For example, to set the earliest hour of day a log entry is accepted to 
